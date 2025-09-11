@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Döviz Kuru Sorgulama</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main>
+        <h1>Döviz Kuru Sorgulama</h1>
+        <p>Lütfen kurunu öğrenmek istediğiniz tarihi seçin.</p>
+        
+        <form id="kurFormu">
+            <label for="tarihInput">Tarih:</label>
+            <input type="date" id="tarihInput" required>
+            <button type="submit">Kuru Getir</button>
+        </form>
+        
+        <div id="sonucAlani">
+            <p id="sonucText">- Lütfen bir tarih seçip butona basın -</p>
+        </div>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>

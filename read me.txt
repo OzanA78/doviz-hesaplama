@@ -1,0 +1,24 @@
+#sunucuyu lokalde çalıştır:
+node server.js
+
+------------------
+## Projeyi GitHub'a Yükleme ##
+Şimdi lokaldeki proje klasörümüzü az önce oluşturduğumuz bu online depoya (Repository) bağlayacağız.
+
+Depo URL'sini Kopyalayın:
+GitHub'da deponuz oluşturulduktan sonra, yeşil renkli "< > Code" butonuna tıklayın. Açılan menüde HTTPS sekmesinin seçili olduğundan emin olun ve yandaki linki (örn: https://github.com/kullanici-adiniz/doviz-hesaplama.git) kopyalayın.
+
+Komut İstemcisini Açın:
+Bilgisayarınızda, doviz-hesaplama proje klasörünün içinde bir komut istemcisi (PowerShell/CMD) açın.
+
+Git'i Başlatın ve Bağlanın:
+Şimdi sırayla aşağıdaki komutları yazıp Enter'a basın.
+## Projeyi GitHub'a yükle (önce Repository oluştur)
+# 1. Bu klasörü bir Git deposu olarak başlat
+git init
+
+# 2. Az önce kopyaladığın depo URL'sini buraya yapıştırarak lokal depoyu online depoya bağla
+git remote add origin https://github.com/OzanA78/doviz-hesaplama.git
+
+# 3. Online depodaki .gitignore dosyasını lokal klasörüne çek
+git pull origin main

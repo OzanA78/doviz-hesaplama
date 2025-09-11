@@ -1,0 +1,84 @@
+/* Genel Sayfa Ayarları */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f0f2f5;
+    color: #1c1e21;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+/* Ana İçerik Kutusu */
+main {
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    width: 100%;
+    max-width: 400px;
+}
+
+h1 {
+    font-size: 24px;
+    color: #333;
+    margin-bottom: 10px;
+}
+
+p {
+    color: #606770;
+    margin-bottom: 25px;
+}
+
+/* Form Elemanları */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Elemanlar arası boşluk */
+}
+
+label {
+    font-weight: bold;
+    font-size: 14px;
+    text-align: left;
+}
+
+input[type="date"] {
+    padding: 10px;
+    border: 1px solid #dddfe2;
+    border-radius: 6px;
+    font-size: 16px;
+}
+
+button {
+    background-color: #1877f2;
+    color: #ffffff;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+button:hover {
+    background-color: #166fe5;
+}
+
+/* Sonuç Alanı */
+#sonucAlani {
+    margin-top: 25px;
+    padding: 15px;
+    background-color: #f7f7f7;
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+}
+
+#sonucText {
+    color: #333;
+    font-weight: bold;
+    margin: 0;
+}
