@@ -6,13 +6,23 @@ const app = express();
 const port = 3000;
 
 // --- GOOGLE SHEETS API AYARLARI ---
-const auth = new google.auth.GoogleAuth({
-    keyFile: 'credentials.json',
-    scopes: 'https://www.googleapis.com/auth/spreadsheets.readonly',
-});
+let auth;
+// Render'da çalışırken bilgileri Environment Variable'dan al
+if (process.env.GOOGLE_CREDENTIALS_JSON) {
+    const credentials = JSON.parse(process.env.GOOGLE_CREDENTIALS_JSON);
+    auth = new google.auth.GoogleAuth({
+        credentials,
+        scopes: 'https://www.googleapis.com/auth/spreadsheets.readonly',
+    });
+} else {
+    // Lokal'de çalışırken dosyadan al
+    auth = new google.auth.GoogleAuth({
+        keyFile: 'credentials.json',
+        scopes: 'https://www.googleapis.com/auth/spreadsheets.readonly',
+    });
+}
 
-// DİKKAT! Bu satırı güncellemeyi unutmayın.
-// Google E-Tablonuzun URL'sindeki .../d/...../edit kısmındaki ID'yi buraya yapıştırın.
+// DİKKAT! Bu satırı kendi ID'niz ile güncellemeyi unutmayın.
 const spreadsheetId = '1_dxzqWIgQqhONb53dxv39nVIG3JeN5iO-co8Lgbb6fw';
 
 // --- API ENDPOINT ---
