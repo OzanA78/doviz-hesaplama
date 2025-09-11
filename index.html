@@ -3,22 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Döviz Kuru Sorgulama</title>
+    <title>Gerçek Değer Hesaplama</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <main>
-        <h1>Döviz Kuru Sorgulama</h1>
-        <p>Lütfen kurunu öğrenmek istediğiniz tarihi seçin.</p>
+        <h1>Gerçek Değer Hesaplama</h1>
+        <p>Geçmişteki bir paranın bugünkü altın karşılığını hesaplayın.</p>
         
         <form id="kurFormu">
-            <label for="tarihInput">Tarih:</label>
-            <input type="date" id="tarihInput" required>
-            <button type="submit">Kuru Getir</button>
+            <div class="select-container">
+                <label for="yilInput">Yıl:</label>
+                <select id="yilInput" required></select>
+                
+                <label for="ayInput">Ay:</label>
+                <select id="ayInput" required></select>
+            </div>
+            <button type="submit">Değeri Hesapla</button>
         </form>
         
         <div id="sonucAlani">
-            <p id="sonucText">- Lütfen bir tarih seçip butona basın -</p>
+            <p id="sonucText">- Lütfen yıl ve ay seçip butona basın -</p>
         </div>
     </main>
 

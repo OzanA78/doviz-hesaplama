@@ -54,7 +54,7 @@ app.get('/get-rate', async (req, res) => {
         const record = dataRows.find(row => row[0] === requestedDate);
 
         if (record) {
-            res.json({ date: record[0], rate: record[1] });
+            res.json({ date: record[0], rate: record[1].replace(',', '.') });
         } else {
             res.status(404).json({ error: 'Belirtilen tarihe ait veri bulunamadı.' });
         }
