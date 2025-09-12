@@ -154,8 +154,8 @@ document.addEventListener('DOMContentLoaded', () => {
             totalCurrentValue += parseFloat(rawCurrentValue) || 0;
         });
 
-        const totalAmountLabelEl = document.getElementById('total-amount-label');
-        totalAmountLabelEl.innerHTML = `Harcanan Miktar: <span class="total-gold-amount">(${totalGoldAmount.toFixed(1)} gr)</span>`;
+        const totalGoldAmountEl = document.getElementById('total-gold-amount');
+        totalGoldAmountEl.textContent = `${totalGoldAmount.toFixed(1)} gr`;
         totalAmountEl.textContent = totalAmount.toLocaleString('tr-TR', {style: 'currency', currency: 'TRY', maximumFractionDigits: 0});
         
         totalCurrentValueLabelEl.innerHTML = `Bugünün Parası ile:`;
@@ -194,14 +194,19 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'Enter' || (e.key === 'Tab' && !e.shiftKey)) {
                 e.preventDefault();
                 
+                const rawAmount = amountInput.value.replace(/[^\d]/g, '');
+                const amount = parseFloat(rawAmount) || 0;
+
                 if (nextRow) {
-                    nextRow.querySelector('.amount-input').focus();
+                    const nextAmountInput = nextRow.querySelector('.amount-input');
+                    nextAmountInput.value = amount.toLocaleString('en-US');
+                    updateRow(nextRow);
+                    nextAmountInput.focus();
+                    nextAmountInput.select();
                 } 
                 else if (isLastRow) {
                     const year = row.querySelector('.year-select').value;
                     const month = row.querySelector('.month-select').value;
-                    const rawAmount = amountInput.value.replace(/[^\d]/g, '');
-                    const amount = parseFloat(rawAmount) || 0;
                     if (year && month && amount > 0) {
                         addNewRow({ date: { year, month }, amount: amount });
                     }

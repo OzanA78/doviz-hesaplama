@@ -237,11 +237,17 @@ td .current-value-cell {
 }
 
 /* YENİ: Toplam altın miktarı parantez stili */
-.total-label .total-gold-amount {
+.total-value-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.3rem;
+}
+
+.total-gold-amount {
     font-size: 0.9rem;
     font-weight: normal;
     color: #7f8c8d;
-    margin-left: 8px;
 }
 
 .navigation-link {
