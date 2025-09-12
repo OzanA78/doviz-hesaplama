@@ -1,0 +1,76 @@
+Gerçek Değer Hesaplama Projesi - Teknik Özet
+Tarih: 12 Eylül 2025
+
+1. Proje Tanımı ve Amacı
+Proje, belirli bir geçmiş tarihteki Türk Lirası miktarının, gram altın bazında bugünkü reel değerini hesaplayan bir web uygulamasıdır. Temel amaç, paranın zaman içindeki alım gücü değişimini ve enflasyon etkisini somut bir varlık üzerinden görselleştirmektir.
+
+2. Sistem Mimarisi ve Teknoloji Stack'i
+Proje, modern ve sunucusuz (serverless-adjacent) bir mimari benimsemiştir. Maliyet etkinliği ve bakım kolaylığı ön planda tutulmuştur.
+
+Backend (Sunucu Tarafı):
+
+Runtime: Node.js
+
+Framework: Express.js
+
+Fonksiyonu: Google Sheets API'si üzerinden veri çekmek, veriyi işlemek (formatlama, sıralama) ve bir RESTful API endpoint'i (/api/data) üzerinden JSON formatında frontend'e sunmak.
+
+Frontend (İstemci Tarafı):
+
+Diller: HTML5, CSS3, Vanilla JavaScript (ES6+).
+
+Fonksiyonu: Kullanıcıdan miktar ve tarih girdilerini almak, backend API'sine fetch isteği ile bağlanarak veri setini çekmek, hesaplama mantığını ((miktar / geçmiş_kur) * güncel_kur) çalıştırmak ve sonucu dinamik olarak DOM üzerinde göstermek.
+
+Veritabanı:
+
+Platform: Google Sheets.
+
+Fonksiyonu: Basit bir Key-Value (Tarih-Fiyat) veritabanı olarak görev yapar. API anahtarları ile korunan, programatik erişime açık bir veri kaynağıdır.
+
+Hosting & CI/CD (Sürekli Entegrasyon/Dağıtım):
+
+Platform: Render.com (Web Service, Free Tier).
+
+Mekanizma: Projenin GitHub deposunun main dalına yapılan her git push işlemi, Render üzerinde otomatik bir "deploy" (dağıtım) sürecini tetikler. Bu süreç, bağımlılıkların (npm install) yüklenmesini ve sunucunun yeniden başlatılmasını içerir.
+
+Versiyon Kontrolü:
+
+Sistem: Git
+
+Platform: GitHub
+
+3. Otomasyon Altyapısı: Veri Güncelleme
+Projenin veri setinin manuel müdahale olmadan güncel kalması için sunucusuz bir otomasyon mekanizması kurulmuştur.
+
+Platform: Google Apps Script.
+
+Veri Kaynağı: Türkiye Cumhuriyet Merkez Bankası (TCMB) EVDS API.
+
+Mekanizma:
+
+Apps Script, UrlFetchApp servisini kullanarak TCMB'nin API'sine kimlik doğrulamalı (API Key) bir GET isteği gönderir.
+
+Gelen JSON yanıtını ayrıştırarak (parse) en güncel gram altın fiyatını ve tarihini alır.
+
+SpreadsheetApp servisi ile projenin Google E-Tablosu'na bağlanır.
+
+E-Tablo'daki son satırın tarihini, API'den gelen son tarihle karşılaştırarak mükerrer kaydı engeller.
+
+Tarihler farklıysa, yeni veriyi appendRow() metodu ile tablonun son satırına ekler.
+
+Tetikleyici (Trigger): Apps Script, zamana dayalı (time-driven) bir tetikleyici ile her gün 22:00-23:00 saatleri arasında otomatik olarak çalışacak şekilde yapılandırılmıştır.
+
+4. Güvenlik ve Konfigürasyon Yönetimi
+Kimlik Doğrulama: Google Sheets API'sine erişim, kişisel Google hesabı yerine, yalnızca ilgili E-Tablo'ya "salt okunur" (read-only) erişim yetkisine sahip bir Hizmet Hesabı (Service Account) üzerinden sağlanmaktadır.
+
+Gizli Anahtar Yönetimi (Secret Management): Hizmet Hesabı'na ait olan credentials.json anahtar dosyası, güvenlik zafiyeti oluşturmaması için .gitignore dosyasına eklenerek GitHub deposuna yüklenmesi engellenmiştir. Render üzerindeki canlı ortamda bu anahtarın içeriği, güvenli bir şekilde Environment Variable (Ortam Değişkeni) olarak saklanmakta ve server.js tarafından çalışma zamanında okunmaktadır.
+
+5. Karşılaşılan Teknik Zorluklar ve Çözümleri
+ENOENT Hatası (Lokal ve Sunucu): Proje kodunun statik dosyaları (index.html vb.) bir /public klasöründe beklemesi, ancak dosya yapısının buna uygun olmaması nedeniyle dosya bulunamadı hatası alındı. Çözüm: Dosya yapısı, kodun beklediği public klasörlü yapıya uygun hale getirildi.
+
+Render.com Dağıtım Hatası: GitHub'a gönderilen en güncel dosya yapısının, Render'ın build cache (derleme önbelleği) mekanizması nedeniyle canlıya yansımaması ve ENOENT hatasının devam etmesi. Çözüm: "Clear build cache & deploy" seçeneği ile dağıtım tetiklenerek, Render'ın projeyi temiz bir ortamda sıfırdan kurması sağlandı.
+
+Yerelleştirilmiş Sayı Formatı Hatası: Google E-Tablosu'ndaki binlik ayraçlı (4.441,09) sayıların, parseFloat tarafından yanlış yorumlanarak (4.441) hesaplama hatasına yol açması. Çözüm: server.js'deki veri işleme mantığı, sayıları parseFloat'a göndermeden önce tüm binlik ayraçlarını (.) kaldıran ve ondalık ayracını (,) noktaya (.) çeviren bir regex işlemiyle güncellendi.
+
+6. Projenin Son Durumu
+Proje, lokalde ve canlıda stabil bir şekilde çalışmaktadır. Veri seti, herhangi bir manuel müdahaleye gerek kalmaksızın her gün otomatik olarak güncellenmektedir. Güvenlik ve konfigürasyon yönetimi, endüstri standartlarına uygun şekilde sağlanmıştır.

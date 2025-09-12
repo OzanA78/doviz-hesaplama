@@ -7,23 +7,36 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultDiv = document.getElementById('result');
 
     // Miktar alanına yazıldıkça sayıyı formatla
-    amountInput.addEventListener('input', (e) => {
-        // 1. Girdideki sayı olmayan her şeyi (noktalar dahil) temizle
-        let rawValue = e.target.value.replace(/[^\d]/g, '');
+    // app.js
 
-        // 2. Eğer girdi boşsa, işlemi bitir
-        if (!rawValue) {
-            // Eğer kullanıcı her şeyi silerse input'u boşalt
-            e.target.value = '';
-            return;
-        }
+amountInput.addEventListener('input', (e) => {
+    // 1. Girdideki sayı olmayan her şeyi (noktalar dahil) temizle
+    let rawValue = e.target.value.replace(/[^\d]/g, '');
 
-        // 3. Sayıyı Türkçe formatına göre binlik ayraçlarla formatla (1000000 -> 1.000.000)
-        const formattedValue = Number(rawValue).toLocaleString('tr-TR');
-        
-        // 4. Formatlanmış değeri tekrar input'a yaz
-        e.target.value = formattedValue;
-    });
+    // 2. Eğer girdi boşsa, input'u temizleyip işlemi bitir
+    if (!rawValue) {
+        e.target.value = '';
+        return;
+    }
+
+    // 3. Değeri sayıya çevir ve sınırı uygula
+    let numberValue = parseInt(rawValue, 10);
+    const limit = 1000000000; // 1 Milyar sınırı
+
+    // Girilen sayı limiti aşıyorsa, sayıya limit değerini ata
+    if (numberValue > limit) {
+        numberValue = limit;
+    }
+
+    // 4. Sınır kontrolünden geçmiş sayıyı Türkçe formatına göre binlik ayraçlarla formatla
+    const formattedValue = numberValue.toLocaleString('tr-TR');
+    
+    // 5. İmlecin (cursor) gereksiz yere sona atlamasını engellemek için,
+    // sadece formatlanmış değer mevcut değerden farklıysa güncelleme yap.
+    if (e.target.value !== formattedValue) {
+       e.target.value = formattedValue;
+    }
+});
 
     let historicalData = [];
 

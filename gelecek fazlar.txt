@@ -1,0 +1,20 @@
+Gelecek Geliştirme Önerileri (Sonraki Fazlar)
+Mevcut hedefleri tamamladıktan sonra projeyi daha da ileriye taşımak için aşağıdaki adımları düşünebilirsiniz:
+
+Kullanıcı Deneyimi (UX/UI) İyileştirmeleri:
+
+Grafik Entegrasyonu: Sonucu sadece metin olarak değil, aynı zamanda paranın alım gücündeki düşüşü gösteren basit bir çizgi grafikle (örn. Chart.js kullanarak) görselleştirmek, uygulamanın etkisini katlayacaktır.
+
+Sonuç Paylaşımı: Hesaplama sonucunu sosyal medyada veya bir bağlantı ile paylaşma özelliği eklemek.
+
+Fonksiyonel Geliştirmeler:
+
+Farklı Varlıklarla Karşılaştırma: Sadece gram altın değil; Dolar (USD), Euro (EUR), BIST 100 Endeksi veya hatta seçilmiş bir "temel tüketim sepeti" (enflasyon verisi) ile karşılaştırma seçenekleri sunmak. Bu, uygulamanın kapsamını genişletir.
+
+Ters Hesaplama: "Bugünün 10.000 TL'si, 2015 yılında kaç gram altına denkti?" gibi ters bir mantıkla çalışan bir araç daha eklenebilir.
+
+Teknik İyileştirmeler:
+
+API Önbellekleme (Caching): Google E-Tablosu'na yapılan API çağrıları belirli limitlere tabidir. Uygulamanız popüler hale gelirse, Node.js sunucunuzda veriyi belirli bir süre (örn. 1 saat) önbellekte (in-memory cache) tutan basit bir mekanizma kurmak, hem performansı artırır hem de API limitlerine takılma riskini azaltır.
+
+Projeniz, Türkiye'deki ekonomik okuryazarlığa katkı sunma potansiyeli taşıyan değerli bir araç olma yolunda ilerliyor. Mevcut adımları başarıyla tamamladığınızda çok daha güçlü bir altyapıya sahip olacak. Başarılar dilerim!
