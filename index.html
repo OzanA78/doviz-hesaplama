@@ -7,23 +7,28 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <main>
-        <h1>Gerçek Değer Hesaplama</h1>
+    <main class="container"> <h1>Gerçek Değer Hesaplama</h1>
         <p>Geçmişteki bir paranın bugünkü altın karşılığını hesaplayın.</p>
         
-        <form id="kurFormu">
-            <div class="select-container">
-                <label for="yilInput">Yıl:</label>
-                <select id="yilInput" required></select>
-                
-                <label for="ayInput">Ay:</label>
-                <select id="ayInput" required></select>
+        <div class="input-section">
+            <div class="input-group">
+                <label for="amountInput">Miktar (₺):</label>
+                <input type="number" id="amountInput" placeholder="Örn: 1000">
             </div>
-            <button type="submit">Değeri Hesapla</button>
-        </form>
+            <div class="input-group">
+                <label for="yearSelect">Yıl Seçin:</label>
+		        <select id="yearSelect"></select>
+            </div>
+            <div class="input-group">
+                <label for="monthSelect">Ay Seçin:</label>
+		        <select id="monthSelect"></select>
+            </div>
+        </div>
         
-        <div id="sonucAlani">
-            <p id="sonucText">- Lütfen yıl ve ay seçip butona basın -</p>
+        <button id="calculateBtn">Değeri Hesapla</button>
+        
+        <div id="result">
+            - Lütfen tüm alanları doldurup butona basın -
         </div>
     </main>
 

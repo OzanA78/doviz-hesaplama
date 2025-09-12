@@ -1,0 +1,81 @@
+### Grup 1: Node.js & NPM (Proje ve Paket Yönetimi) Komutları
+
+Bu komutlar, Node.js ortamını yönetmek, projemizi başlatmak ve gerekli kütüphaneleri (paketleri) kurmak için kullanıldı.
+
+* **`node -v`**
+    * **Ne İşe Yarar?** Bilgisayarınızda yüklü olan Node.js'in versiyon numarasını gösterir.
+    * **Biz Neden Kullandık?** Node.js kurulumunun başarılı olup olmadığını ve komut satırından erişilebilir olduğunu teyit etmek için kullandık.
+
+* **`npm -v`**
+    * **Ne İşe Yarar?** Node.js ile birlikte gelen Paket Yöneticisi'nin (NPM) versiyonunu gösterir.
+    * **Biz Neden Kullandık?** Node.js kurulumuyla birlikte `npm`'in de doğru bir şekilde kurulduğunu doğrulamak için.
+
+* **`npm init -y`**
+    * **Ne İşe Yarar?** Bulunduğu klasörde yeni bir Node.js projesi başlatır ve projenin kimliği olan `package.json` dosyasını varsayılan ayarlarla oluşturur.
+    * **Biz Neden Kullandık?** `doviz-hesaplama` projemizi resmi olarak başlatmak ve bağımlılıklarımızı (kullanacağımız paketleri) takip etmek için.
+
+* **`npm install <paket-adi>`** (Örn: `npm install express`)
+    * **Ne İşe Yarar?** Belirtilen paketi (kütüphaneyi) internetten indirir ve projenin `node_modules` klasörüne kurar. Aynı zamanda `package.json` dosyasına bu projenin o pakete bağımlı olduğunu yazar.
+    * **Biz Neden Kullandık?** Projemizin ihtiyaç duyduğu üç temel paketi kurmak için kullandık: `express` (web sunucumuzu oluşturmak için), `googleapis` (Google E-Tablolar'a bağlanmak için) ve ilk başta `xlsx` (Excel dosyası okumak için).
+
+* **`node server.js`**
+    * **Ne İşe Yarar?** Node.js ortamını kullanarak `server.js` adlı JavaScript dosyasını çalıştırır.
+    * **Biz Neden Kullandık?** Lokal bilgisayarımızda ve daha sonra Render'da web sunucumuzu başlatmak ve çalışır hale getirmek için kullandık.
+
+---
+
+### Grup 2: Git & GitHub (Versiyon Kontrolü) Komutları
+
+Bu komutlar, projemizin kod geçmişini yönetmek ve dosyalarımızı güvenli bir şekilde GitHub'a yüklemek için kullanıldı.
+
+* **`git --version`**
+    * **Ne İşe Yarar?** Bilgisayarınızda yüklü olan Git programının versiyonunu gösterir.
+    * **Biz Neden Kullandık?** GitHub'a kod yüklemeden önce Git'in kurulu olduğunu doğrulamak için.
+
+* **`git init`**
+    * **Ne İşe Yarar?** Mevcut klasörde yeni, boş bir Git deposu (repository) oluşturur.
+    * **Biz Neden Kullandık?** `doviz-hesaplama` klasörümüzü versiyon kontrolü altına almak için ilk adımı atmak amacıyla kullandık.
+
+* **`git remote add origin <url>`**
+    * **Ne İşe Yarar?** Lokaldeki Git depomuza, `origin` adında bir "takma ad" ile GitHub'daki uzak deponun URL'sini tanıtır.
+    * **Biz Neden Kullandık?** Bilgisayarımızdaki proje ile GitHub'da oluşturduğumuz boş depo arasında bir bağlantı kurmak için.
+
+* **`git pull origin main`**
+    * **Ne İşe Yarar?** Uzak depodaki (`origin`) `main` dalındaki (branch) değişiklikleri lokaldeki depomuza çeker.
+    * **Biz Neden Kullandık?** GitHub'da depo oluştururken otomatik olarak yaratılan `.gitignore` dosyasını bilgisayarımıza indirmek için.
+
+* **`git add .`**
+    * **Ne İşe Yarar?** Klasördeki tüm yeni veya değiştirilmiş dosyaları bir sonraki "commit" için "hazırlık alanına" (staging area) ekler.
+    * **Biz Neden Kullandık?** Projemizin dosyalarını GitHub'a göndermeden önce paketlemeye hazırlamak için.
+
+* **`git reset <dosya-adi>`** (Örn: `git reset credentials.json`)
+    * **Ne İşe Yarar?** Belirtilen dosyayı hazırlık alanından (staging area) çıkarır.
+    * **Biz Neden Kullandık?** **Çok önemliydi!** Yanlışlıkla `git add .` ile eklediğimiz gizli anahtar dosyamız `credentials.json`'ı, GitHub'a gönderilecek paketten çıkarmak için kullandık.
+
+* **`git commit -m "Commit Mesajı"`**
+    * **Ne İşe Yarar?** Hazırlık alanındaki tüm dosyaları, bir mesajla birlikte kalıcı olarak projenin yerel geçmişine kaydeder. Bir "kayıt noktası" oluşturur.
+    * **Biz Neden Kullandık?** Yaptığımız değişiklikleri ("Projenin ilk versiyonu", "Arayüzü güncelle" gibi) anlamlı mesajlarla paketleyip kaydetmek için.
+
+* **`git branch`**
+    * **Ne İşe Yarar?** Lokal depodaki tüm dalları (branch) listeler ve o an hangisinde olduğunuzu gösterir.
+    * **Biz Neden Kullandık?** `git push` komutumuz hata verdiğinde, lokaldeki ana dalımızın adının `master` mı yoksa `main` mi olduğunu kontrol etmek için.
+
+* **`git branch -m main`**
+    * **Ne İşe Yarar?** Mevcut dalın adını `main` olarak değiştirir.
+    * **Biz Neden Kullandık?** Lokaldeki dal adımız `master` olduğu için hata almıştık. GitHub'ın beklediği standart olan `main` ismine çevirmek için kullandık.
+
+* **`git reset --soft HEAD~1`**
+    * **Ne İşe Yarar?** En son yapılan commiti geri alır, ancak o committeki dosya değişikliklerini korur ve hazırlık alanına geri koyar.
+    * **Biz Neden Kullandık?** İçinde yanlışlıkla `credentials.json` dosyasını barındıran commiti "bozmak" için kullandık. Bu sayede dosyayı ayıklayıp yeniden, bu sefer temiz bir commit yapabildik.
+
+* **`git push -u origin main`**
+    * **Ne İşe Yarar?** Lokal depodaki tüm commit'leri, GitHub'daki `origin` adlı uzak depoya gönderir/yükler. `-u` parametresi, lokal `main` dalı ile uzak `main` dalını birbirine bağlar.
+    * **Biz Neden Kullandık?** Projemizin kodunu ve güncellemelerini internetteki GitHub depomuza yüklemek için.
+
+---
+
+### Grup 3: Genel Komut Satırı Komutları
+
+* **`cd <klasor-yolu>`** (Örn: `cd Personal\doviz-hesaplama`)
+    * **Ne İşe Yarar?** "Change Directory"nin kısaltmasıdır. Komut satırında belirtilen klasörün içine girmenizi sağlar.
+    * **Biz Neden Kullandık?** Projemizle ilgili `npm` ve `git` komutlarını çalıştırabilmek için `doviz-hesaplama` klasörümüzün içine girmek amacıyla kullandık.

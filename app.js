@@ -1,67 +1,124 @@
-// HTML'deki yeni elemanları seçiyoruz
-const kurFormu = document.getElementById('kurFormu');
-const yilInput = document.getElementById('yilInput');
-const ayInput = document.getElementById('ayInput');
-const sonucText = document.getElementById('sonucText');
+// app.js (YENİ HALİ)
 
-// Ayları ve Yılları dolduracak fonksiyonlar
-function yillariDoldur() {
-    const simdikiYil = new Date().getFullYear();
-    // 2010'dan başlayarak günümüz yılına kadar seçenekleri ekle
-    for (let yil = simdikiYil; yil >= 2010; yil--) {
-        const option = document.createElement('option');
-        option.value = yil;
-        option.textContent = yil;
-        yilInput.appendChild(option);
-    }
-}
-
-function aylariDoldur() {
-    const aylar = [
-        { value: '01', name: 'Ocak' }, { value: '02', name: 'Şubat' },
-        { value: '03', name: 'Mart' }, { value: '04', name: 'Nisan' },
-        { value: '05', name: 'Mayıs' }, { value: '06', name: 'Haziran' },
-        { value: '07', name: 'Temmuz' }, { value: '08', name: 'Ağustos' },
-        { value: '09', name: 'Eylül' }, { value: '10', name: 'Ekim' },
-        { value: '11', name: 'Kasım' }, { value: '12', name: 'Aralık' }
-    ];
-    aylar.forEach(ay => {
-        const option = document.createElement('option');
-        option.value = ay.value;
-        option.textContent = ay.name;
-        ayInput.appendChild(option);
-    });
-}
-
-// Sayfa yüklendiğinde açılır menüleri doldur
 document.addEventListener('DOMContentLoaded', () => {
-    yillariDoldur();
-    aylariDoldur();
-});
+    // HTML elementlerine referanslar
+    const yearSelect = document.getElementById('yearSelect');
+    const monthSelect = document.getElementById('monthSelect');
+    const amountInput = document.getElementById('amountInput');
+    const calculateBtn = document.getElementById('calculateBtn');
+    const resultDiv = document.getElementById('result');
 
-// Form gönderildiğinde çalışacak ana fonksiyon
-kurFormu.addEventListener('submit', async (event) => {
-    event.preventDefault(); // Sayfanın yenilenmesini engelle
+    let historicalData = [];
 
-    const secilenYil = yilInput.value;
-    const secilenAy = ayInput.value;
+    const months = [
+        { name: 'Ocak', value: '01' }, { name: 'Şubat', value: '02' },
+        { name: 'Mart', value: '03' }, { name: 'Nisan', value: '04' },
+        { name: 'Mayıs', value: '05' }, { name: 'Haziran', value: '06' },
+        { name: 'Temmuz', value: '07' }, { name: 'Ağustos', value: '08' },
+        { name: 'Eylül', value: '09' }, { name: 'Ekim', value: '10' },
+        { name: 'Kasım', value: '11' }, { name: 'Aralık', 'value': '12' }
+    ];
 
-    // Yıl ve Ay'ı birleştirip "YYYY-AA" formatını oluştur
-    const secilenTarih = `${secilenYil}-${secilenAy}`;
-    
-    sonucText.textContent = 'Veri getiriliyor, lütfen bekleyin...';
+    async function initializeApp() {
+        try {
+            // DOĞRU API ADRESİ
+            const response = await fetch('/api/data');
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Veri sunucudan alınamadı.');
+            }
+            historicalData = await response.json();
 
-    try {
-        const response = await fetch(`/get-rate?date=${secilenTarih}`);
-        const data = await response.json();
+            if (historicalData.length === 0) {
+                resultDiv.textContent = 'Hesaplama için veri bulunamadı.';
+                return;
+            }
 
-        if (response.ok) {
-            sonucText.textContent = `${data.date} tarihindeki gram altın fiyatı: ${data.rate} TL`;
-        } else {
-            sonucText.textContent = `Hata: ${data.error}`;
+            populateYears();
+            populateMonths();
+        } catch (error) {
+            console.error('Initialization Error:', error);
+            resultDiv.textContent = 'Hata: ' + error.message;
         }
-    } catch (error) {
-        console.error('Fetch hatası:', error);
-        sonucText.textContent = 'Sunucuya bağlanırken bir hata oluştu.';
     }
+
+    function populateYears() {
+        const years = [...new Set(historicalData.map(item => item.date.substring(0, 4)))];
+        years.sort((a, b) => b - a);
+        
+        yearSelect.innerHTML = ''; // Önceki verileri temizle
+        const initialOption = document.createElement('option');
+        initialOption.value = "";
+        initialOption.textContent = "Yıl Seçin";
+        yearSelect.appendChild(initialOption);
+
+        years.forEach(year => {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            yearSelect.appendChild(option);
+        });
+    }
+
+    function populateMonths() {
+        monthSelect.innerHTML = ''; // Önceki verileri temizle
+        const initialOption = document.createElement('option');
+        initialOption.value = "";
+        initialOption.textContent = "Ay Seçin";
+        monthSelect.appendChild(initialOption);
+        
+        months.forEach(month => {
+            const option = document.createElement('option');
+            option.value = month.value;
+            option.textContent = month.name;
+            monthSelect.appendChild(option);
+        });
+    }
+
+    function performCalculation() {
+        const amount = parseFloat(amountInput.value);
+        const year = yearSelect.value;
+        const month = monthSelect.value;
+
+        if (isNaN(amount) || amount <= 0) {
+            resultDiv.textContent = 'Lütfen geçerli bir miktar girin.';
+            return;
+        }
+        if (!year || !month) {
+            resultDiv.textContent = 'Lütfen bir yıl ve ay seçin.';
+            return;
+        }
+
+        const targetDate = `${year}-${month}`;
+        const historicalEntry = historicalData.find(d => d.date === targetDate);
+        const currentEntry = historicalData[historicalData.length - 1];
+
+        if (!historicalEntry) {
+            resultDiv.textContent = 'Seçtiğiniz tarih için veri bulunamadı.';
+            return;
+        }
+
+        const historicalPrice = historicalEntry.price;
+        const currentPrice = currentEntry.price;
+        const goldAmount = amount / historicalPrice;
+        const currentValue = goldAmount * currentPrice;
+
+        const formattedAmount = amount.toLocaleString('tr-TR', { minimumFractionDigits: 2 });
+        const formattedCurrentValue = currentValue.toLocaleString('tr-TR', { style: 'currency', currency: 'TRY' });
+        const selectedMonthName = months.find(m => m.value === month).name;
+
+        resultDiv.innerHTML = `
+            <strong>${year}</strong> yılı <strong>${selectedMonthName}</strong> ayındaki <strong>${formattedAmount} ₺</strong>,
+            <br>
+            bugünün yaklaşık <strong>${formattedCurrentValue}</strong> değerindedir.
+        `;
+    }
+    
+    // Butonun form içinde submit (gönderme) eylemini engelle ve hesaplamayı çalıştır
+    calculateBtn.addEventListener('click', (event) => {
+        event.preventDefault(); // Sayfanın yeniden yüklenmesini engelle
+        performCalculation();
+    });
+
+    initializeApp();
 });

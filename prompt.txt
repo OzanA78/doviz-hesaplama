@@ -1,0 +1,40 @@
+Gerçek Değer Hesaplama Projesi - Mevcut Durum Özeti
+
+Projenin Amacı: Geçmişteki bir tarihte belirli bir miktar Türk Lirası'nın, gram altın cinsinden bugünkü gerçek değerini hesaplayan bir web uygulaması oluşturmak. Bu, paranın zaman içindeki alım gücü kaybını göstermeyi amaçlıyor.
+
+Projenin Mevcut Durumu:
+Proje internette canlı ve çalışır durumda.
+
+Canlı Adres: https://gercekdeger.onrender.com
+
+Hosting: Render.com üzerinde "Free" plan ile barındırılıyor.
+
+Veritabanı: Google E-Tablolar.
+
+Veri: Şu anki veri kaynağı, aylık gram altın fiyatlarıdır (YYYY-AA formatında). Veri kaynağındaki ondalık ayraçları virgüldür.
+
+Teknoloji ve Mimari:
+
+Backend (Sunucu): Node.js ve Express.js ile yazıldı. Sunucu kodu (server.js), Google E-Tablosu'ndan gelen virgüllü sayıları (68,33) otomatik olarak noktalı formata (68.33) çevirecek şekilde güncellendi.
+
+Frontend (Arayüz): HTML, CSS ve vanilla JavaScript (app.js) kullanılıyor. Kullanıcı arayüzü, günlük tarih seçimi yerine, daha kullanışlı olan "Yıl" ve "Ay" için iki ayrı açılır menüye dönüştürüldü.
+
+Versiyon Kontrolü: Proje kodları bir GitHub deposunda tutuluyor. Gizli anahtarları içeren credentials.json dosyası, güvenlik nedeniyle .gitignore dosyasına eklenerek depoya yüklenmesi engellendi.
+
+Güvenlik ve Anahtar Yönetimi: credentials.json dosyasının içeriği, Render'ın "Environment Variables" (Ortam Değişkenleri) bölümünde GOOGLE_CREDENTIALS_JSON anahtarı altında güvenli bir şekilde saklanıyor. server.js kodu, Render ortamında çalışırken bu değişkenden, lokalde çalışırken ise dosyadan okuyacak şekilde yapılandırıldı.
+
+Son Tamamlanan Adımlar:
+
+Uygulama başarıyla Render üzerinde canlıya alındı.
+
+Veri kaynağı günlük Dolar kurundan, aylık Gram Altın fiyatlarına çevrildi.
+
+Arayüz, bu aylık veri yapısına uygun olarak Yıl/Ay seçimi yapacak şekilde güncellendi.
+
+Kodlar, bu değişiklikleri yansıtacak şekilde revize edildi ve GitHub üzerinden Render'a deploy edildi.
+
+Sıradaki Adımlar:
+
+Google E-Tablosu'nu, TCMB'nin EVDS sisteminden çekilecek olan son 15 yıllık geçmiş altın verisiyle toplu olarak doldurmak.
+
+Google Apps Script kullanarak, her ay güncel altın verisini TCMB'den otomatik olarak çekip E-Tablo'ya ekleyen bir otomasyon script'i yazmak.
