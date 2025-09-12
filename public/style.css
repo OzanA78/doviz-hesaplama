@@ -121,3 +121,91 @@ input[type="tel"],
     line-height: 1.5;
     text-align: center;
 }
+/* style.css (EN ALTINA EKLEYİN) */
+
+/* --- Tablo Sayfası Stilleri --- */
+
+.table-container {
+    overflow-x: auto; /* Küçük ekranlarda tabloyu kaydırılabilir yap */
+    margin-bottom: 2rem;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+th, td {
+    padding: 0.8rem;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    color: #34495e;
+}
+
+td {
+    vertical-align: middle;
+}
+
+/* Tablo içindeki input ve select stilleri */
+td select, td input {
+    width: 100%;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background-color: #fff;
+}
+
+td input.amount-input {
+    text-align: right;
+}
+
+td .rate-cell, td .current-value-cell {
+    font-weight: 500;
+}
+
+.totals-container {
+    background-color: #ecf0f1;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-top: 1rem;
+    border-left: 5px solid #3498db;
+}
+
+.total-item {
+    display: flex;
+    justify-content: space-between;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.total-item:first-child {
+    margin-bottom: 0.75rem;
+}
+
+.total-label {
+    color: #34495e;
+}
+
+.navigation-link {
+    text-align: center;
+    margin-top: 2rem;
+}
+
+.navigation-link a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.2s;
+}
+
+.navigation-link a:hover {
+    color: #2980b9;
+}

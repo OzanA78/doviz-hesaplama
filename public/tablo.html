@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detaylı Değer Hesaplama Tablosu</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <main class="container">
+        <h1>Detaylı Hesaplama Tablosu</h1>
+        <p>Farklı tarihlerdeki birden fazla miktarın toplu değerini hesaplayın.</p>
+        
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Yıl</th>
+                        <th>Ay</th>
+                        <th>Kur (1 Gr Altın)</th>
+                        <th>Miktar (₺)</th>
+                        <th>Güncel Değer (₺)</th>
+                    </tr>
+                </thead>
+                <tbody id="calculation-table-body">
+                    </tbody>
+            </table>
+        </div>
+
+        <div class="totals-container" id="totals-container">
+            <div class="total-item">
+                <span class="total-label">Toplam Miktar:</span>
+                <span id="total-amount" class="total-value">0,00 ₺</span>
+            </div>
+            <div class="total-item">
+                <span class="total-label">Toplam Güncel Değer:</span>
+                <span id="total-current-value" class="total-value">0 ₺</span>
+            </div>
+        </div>
+
+        <div class="navigation-link">
+            <a href="index.html">Tekli Hesaplama Sayfasına Dön</a>
+        </div>
+    </main>
+
+    <script src="tablo.js"></script>
+</body>
+</html>
