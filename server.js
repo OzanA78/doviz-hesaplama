@@ -44,17 +44,25 @@ app.get('/api/data', async (req, res) => {
         }
 
         const data = allRows.slice(1).map(row => {
-            // Güvenlik olarak row[0] ve row[1]'in varlığını kontrol et
             if (!row[0] || !row[1]) return null;
 
-            const formattedPrice = parseFloat(row[1].replace(',', '.'));
+            // --- YENİ VE DÜZELTİLMİŞ KISIM ---
+            // '4.441,09' gibi bir metni doğru sayıya çevirmek için:
+            // 1. Binlik ayracı olan noktaları kaldır ('4441,09')
+            // 2. Ondalık ayracı olan virgülü noktaya çevir ('4441.09')
+            const priceString = row[1]
+                .replace(/\./g, '') // Bütün noktaları kaldır
+                .replace(',', '.');  // Virgülü noktaya çevir
+            
+            const formattedPrice = parseFloat(priceString);
+            // --- DÜZELTME SONU ---
+
             return {
-                date: row[0], // YYYY-AA
+                date: row[0],
                 price: formattedPrice
             };
-        }).filter(item => item !== null); // Hatalı veya boş satırları filtrele
+        }).filter(item => item !== null);
 
-        // Veriyi tarihe göre eskiden yeniye sırala
         data.sort((a, b) => a.date.localeCompare(b.date));
 
         res.json(data);
