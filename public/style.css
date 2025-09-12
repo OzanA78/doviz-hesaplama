@@ -216,7 +216,7 @@ td .rate-cell, td .current-value-cell {
 }
 
 .navigation-link {
-    text-align: center;
+    text-align: right;
     margin: 1.5rem 0;
 }
 
