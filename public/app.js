@@ -10,8 +10,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // app.js
 
 amountInput.addEventListener('input', (e) => {
-    // 1. Girdideki sayı olmayan her şeyi (noktalar dahil) temizle
+    // --- HATA AYIKLAMA İÇİN EKLENDİ ---
+    console.log("--- Input Event Başladı ---");
+    console.log("1. Tarayıcıdaki ham girdi:", e.target.value);
+    // --- HATA AYIKLAMA SONU ---
+
+    // 1. Girdideki sayı olmayan her şeyi temizle
     let rawValue = e.target.value.replace(/[^\d]/g, '');
+    
+    // --- HATA AYIKLAMA İÇİN EKLENDİ ---
+    console.log("2. Sadece rakamlardan oluşan ham değer:", rawValue);
+    // --- HATA AYIKLAMA SONU ---
 
     // 2. Eğer girdi boşsa, input'u temizleyip işlemi bitir
     if (!rawValue) {
@@ -21,18 +30,28 @@ amountInput.addEventListener('input', (e) => {
 
     // 3. Değeri sayıya çevir ve sınırı uygula
     let numberValue = parseInt(rawValue, 10);
+
+    // --- HATA AYIKLAMA İÇİN EKLENDİ ---
+    console.log("3. Sayıya çevrilmiş değer (parseInt sonrası):", numberValue);
+    // --- HATA AYIKLAMA SONU ---
+    
     const limit = 1000000000; // 1 Milyar sınırı
 
     // Girilen sayı limiti aşıyorsa, sayıya limit değerini ata
     if (numberValue > limit) {
         numberValue = limit;
+        // --- HATA AYIKLAMA İÇİN EKLENDİ ---
+        console.log("4. Limit uygulandı! Sayının yeni değeri:", numberValue);
+        // --- HATA AYIKLAMA SONU ---
     }
 
     // 4. Sınır kontrolünden geçmiş sayıyı Türkçe formatına göre binlik ayraçlarla formatla
     const formattedValue = numberValue.toLocaleString('tr-TR');
     
-    // 5. İmlecin (cursor) gereksiz yere sona atlamasını engellemek için,
-    // sadece formatlanmış değer mevcut değerden farklıysa güncelleme yap.
+    // --- HATA AYIKLAMA İÇİN EKLENDİ ---
+    console.log("5. Ekrana yazılacak son formatlanmış değer:", formattedValue);
+    // --- HATA AYIKLAMA SONU ---
+    
     if (e.target.value !== formattedValue) {
        e.target.value = formattedValue;
     }
