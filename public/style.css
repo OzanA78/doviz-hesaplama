@@ -15,10 +15,12 @@ body {
     color: #333;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
     min-height: 100vh;
     padding: 1rem;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
 }
 
 /* Ana Konteyner */
@@ -33,6 +35,9 @@ body {
 
 .container.table-view {
     max-width: 800px;
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 2rem);
 }
 
 h1 {
@@ -130,14 +135,26 @@ input[type="tel"],
 
 /* --- Tablo Sayfası Stilleri --- */
 .table-container {
-    overflow-x: auto;
+    flex: 1;
+    overflow: auto;
     margin-bottom: 2rem;
+    position: relative;
+    background: #fff;
+    border-radius: 8px;
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     font-size: 0.95rem;
+    background: #fff;
+}
+
+thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+    background: #f8f9fa;
 }
 
 th, td {
@@ -150,10 +167,13 @@ th {
     background-color: #f8f9fa;
     font-weight: 600;
     color: #34495e;
+    position: sticky;
+    top: 0;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-th:nth-child(1), td:nth-child(1) { min-width: 100px; } /* Yıl Kolonu */
-th:nth-child(2), td:nth-child(2) { min-width: 110px; } /* Ay Kolonu */
+th:nth-child(1), td:nth-child(1) { min-width: 150px; } /* Yıl Kolonu */
+th:nth-child(2), td:nth-child(2) { min-width: 150px; } /* Ay Kolonu */
 
 td {
     vertical-align: middle;
@@ -161,11 +181,15 @@ td {
 
 td select, td input {
     width: 100%;
-    padding: 0.5rem;
-    font-size: 0.9rem;
+    padding: 0.7rem;
+    font-size: 1rem;
     border: 1px solid #ccc;
     border-radius: 6px;
     background-color: #fff;
+}
+
+td select {
+    cursor: pointer;
 }
 
 td input.amount-input {
@@ -178,8 +202,13 @@ td input.amount-input {
     color: #7f8c8d;
 }
 
-td .rate-cell, td .current-value-cell {
+td .rate-cell {
     font-weight: 500;
+}
+
+td .current-value-cell {
+    font-weight: 600;
+    font-size: 1.1rem;
 }
 
 .totals-container {

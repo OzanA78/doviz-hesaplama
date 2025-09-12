@@ -34,14 +34,14 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function addNewRow(previousDate = null) {
+    function addNewRow(previousData = null) {
         const newRow = document.createElement('tr');
         
         const years = [...new Set(historicalData.map(item => item.date.substring(0, 4)))].sort((a, b) => b - a);
         
         let nextDate = { year: '', month: '' };
-        if (previousDate) {
-            const date = new Date(`${previousDate.year}-${previousDate.month}-01`);
+        if (previousData && previousData.date) {
+            const date = new Date(`${previousData.date.year}-${previousData.date.month}-01`);
             date.setMonth(date.getMonth() + 1);
             nextDate.year = date.getFullYear().toString();
             nextDate.month = ('0' + (date.getMonth() + 1)).slice(-2);
@@ -66,6 +66,12 @@ document.addEventListener('DOMContentLoaded', () => {
             <td class="current-value-cell">-</td>
         `;
 
+        const amountInput = newRow.querySelector('.amount-input');
+        if (previousData && previousData.amount) {
+            const formattedAmount = previousData.amount.toLocaleString('en-US');
+            amountInput.value = formattedAmount;
+        }
+
         tableBody.appendChild(newRow);
         attachEventListeners(newRow);
 
@@ -73,7 +79,7 @@ document.addEventListener('DOMContentLoaded', () => {
             updateRow(newRow);
         }
         
-        newRow.querySelector('.amount-input').focus();
+        amountInput.focus();
         
         // Yeni satır eklendiğinde en aşağıya scroll et
         totalsContainer.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -173,6 +179,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (e.target.value !== formattedValue) {
                     e.target.value = formattedValue;
                 }
+            } else {
+                e.target.value = '';
             }
             updateRow(row);
         });
@@ -195,7 +203,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const rawAmount = amountInput.value.replace(/[^\d]/g, '');
                     const amount = parseFloat(rawAmount) || 0;
                     if (year && month && amount > 0) {
-                        addNewRow({ year, month });
+                        addNewRow({ date: { year, month }, amount: amount });
                     }
                 }
             }
