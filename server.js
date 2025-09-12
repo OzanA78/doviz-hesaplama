@@ -1,5 +1,3 @@
-// server.js (YENİ HALİ)
-
 const express = require('express');
 const path = require('path');
 const { google } = require('googleapis');
@@ -25,16 +23,15 @@ if (process.env.GOOGLE_CREDENTIALS_JSON) {
 const spreadsheetId = '1_dxzqWIgQqhONb53dxv39nVIG3JeN5iO-co8Lgbb6fw';
 
 // --- STATİK DOSYALARI SUNMA ---
-// HTML, CSS, JS dosyalarını sunmak için public klasörünü kullanmak daha doğru bir yöntemdir.
-// Şimdilik ana dizini kullanmaya devam edelim.
-app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join(__dirname, 'public')));
+
 
 // --- API ENDPOINT (TÜM VERİYİ GÖNDER) ---
 app.get('/api/data', async (req, res) => {
     try {
         const client = await auth.getClient();
         const googleSheets = google.sheets({ version: 'v4', auth: client });
-        const range = 'Sayfa1!A:B'; // A ve B sütunlarını al
+        const range = 'Sayfa1!A:B';
 
         const response = await googleSheets.spreadsheets.values.get({
             spreadsheetId: spreadsheetId,
@@ -42,19 +39,23 @@ app.get('/api/data', async (req, res) => {
         });
 
         const allRows = response.data.values;
-        if (!allRows || allRows.length <= 1) { // Başlık satırı hariç veri var mı?
+        if (!allRows || allRows.length <= 1) {
             return res.status(404).json({ error: 'E-Tabloda hiç veri bulunamadı.' });
         }
 
-        // Başlık satırını (ilk satır) atla ve verileri formatla
         const data = allRows.slice(1).map(row => {
-            // Virgülü noktaya çevir
+            // Güvenlik olarak row[0] ve row[1]'in varlığını kontrol et
+            if (!row[0] || !row[1]) return null;
+
             const formattedPrice = parseFloat(row[1].replace(',', '.'));
             return {
-                date: row[0],      // Tarih (Örn: 2023-05)
-                price: formattedPrice // Fiyat (Örn: 1250.75)
+                date: row[0], // YYYY-AA
+                price: formattedPrice
             };
-        });
+        }).filter(item => item !== null); // Hatalı veya boş satırları filtrele
+
+        // Veriyi tarihe göre eskiden yeniye sırala
+        data.sort((a, b) => a.date.localeCompare(b.date));
 
         res.json(data);
 
@@ -63,6 +64,12 @@ app.get('/api/data', async (req, res) => {
         res.status(500).json({ error: 'Google Sheets verisi alınırken sunucu hatası oluştu.' });
     }
 });
+
+// Ana sayfa için yönlendirme
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 
 // Sunucuyu başlat
 app.listen(port, () => {
