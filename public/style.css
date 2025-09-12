@@ -65,6 +65,7 @@ label {
 /* --- YENİLENMİŞ VE BİRLEŞTİRİLMİŞ GİRDİ STİLLERİ --- */
 /* Bu kural, tüm girdi alanlarının tutarlı ve doğru boyutta olmasını sağlar. */
 input[type="number"],
+input[type="tel"],
 #yearSelect,
 #monthSelect {
     font-size: 1.1rem;  /* Daha makul bir font boyutu */
