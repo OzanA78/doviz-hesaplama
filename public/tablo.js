@@ -2,7 +2,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // HTML Elementleri
     const tableBody = document.getElementById('calculation-table-body');
     const totalAmountEl = document.getElementById('total-amount');
+    const totalAmountLabelEl = document.getElementById('total-amount-label');
     const totalCurrentValueEl = document.getElementById('total-current-value');
+    const totalCurrentValueLabelEl = document.getElementById('total-current-value-label');
+    const totalsContainer = document.getElementById('totals-container');
 
     // Global Durum Değişkenleri
     let historicalData = [];
@@ -16,8 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
         { name: 'Kasım', value: '11' }, { name: 'Aralık', value: '12' }
     ];
 
-    // --- Başlangıç Fonksiyonları ---
-
     async function initializeApp() {
         try {
             const response = await fetch('/api/data');
@@ -27,14 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (historicalData.length === 0) return;
 
             currentGoldPrice = historicalData[historicalData.length - 1].price;
-            addNewRow(); // Başlangıçta ilk satırı ekle
+            addNewRow();
         } catch (error) {
             console.error('Initialization Error:', error);
             alert('Hata: Veri yüklenemedi. Lütfen sayfayı yenileyin.');
         }
     }
-
-    // --- Ana Fonksiyonlar ---
 
     function addNewRow(previousDate = null) {
         const newRow = document.createElement('tr');
@@ -64,19 +63,20 @@ document.addEventListener('DOMContentLoaded', () => {
             </td>
             <td class="rate-cell">-</td>
             <td><input type="tel" class="amount-input" placeholder="0" inputmode="numeric"></td>
+            <td class="gold-amount-cell">-</td>
             <td class="current-value-cell">-</td>
         `;
 
         tableBody.appendChild(newRow);
         attachEventListeners(newRow);
 
-        // Eğer tarih önceden seçili geldiyse, kuru otomatik olarak güncelle
         if (nextDate.year && nextDate.month) {
             updateRow(newRow);
         }
         
-        // Yeni satırdaki miktar alanına odaklan
         newRow.querySelector('.amount-input').focus();
+        
+        totalsContainer.scrollIntoView({ behavior: 'smooth', block: 'end' });
     }
 
     function updateRow(row) {
@@ -88,6 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const amount = parseFloat(rawAmount) || 0;
 
         const rateCell = row.querySelector('.rate-cell');
+        const goldAmountCell = row.querySelector('.gold-amount-cell');
         const currentValueCell = row.querySelector('.current-value-cell');
 
         if (year && month) {
@@ -96,30 +97,30 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (dateData) {
                 const historicalPrice = dateData.price;
-                rateCell.textContent = formatCurrency(historicalPrice, 'TRY');
+                rateCell.textContent = formatCurrency(historicalPrice, 'USD');
 
                 if (amount > 0) {
-                    const currentValue = (amount / historicalPrice) * currentGoldPrice;
-                    currentValueCell.textContent = formatCurrency(currentValue, 'TRY', 0);
+                    const goldAmount = amount / historicalPrice;
+                    const currentValue = goldAmount * currentGoldPrice;
+                    
+                    goldAmountCell.textContent = `${goldAmount.toFixed(2)} gr`;
+                    currentValueCell.textContent = formatCurrency(currentValue, 'USD', 0);
                 } else {
+                    goldAmountCell.textContent = '-';
                     currentValueCell.textContent = '-';
                 }
             } else {
                 rateCell.textContent = 'Veri Yok';
+                goldAmountCell.textContent = '-';
                 currentValueCell.textContent = '-';
             }
         } else {
             rateCell.textContent = '-';
+            goldAmountCell.textContent = '-';
             currentValueCell.textContent = '-';
         }
 
         updateTotals();
-
-        // Yeni satır ekleme koşulunu kontrol et
-        const isLastRow = row === tableBody.lastElementChild;
-        if (isLastRow && year && month && amount > 0) {
-            addNewRow({ year, month });
-        }
     }
 
     function updateTotals() {
@@ -129,45 +130,100 @@ document.addEventListener('DOMContentLoaded', () => {
         const rows = tableBody.querySelectorAll('tr');
         rows.forEach(row => {
             const rawAmount = row.querySelector('.amount-input').value.replace(/[^\d]/g, '');
-            totalAmount += parseFloat(rawAmount) || 0;
+            const amount = parseFloat(rawAmount) || 0;
+            totalAmount += amount;
 
-            const currentValueText = row.querySelector('.current-value-cell').textContent;
-            const rawCurrentValue = currentValueText.replace(/[^\d]/g, '');
-            totalCurrentValue += parseFloat(rawCurrentValue) || 0;
+            const rateText = row.querySelector('.rate-cell').textContent;
+            if (amount > 0 && rateText !== '-' && rateText !== 'Veri Yok') {
+                const rawRate = rateText.replace(/[^\d.]/g, '');
+                const rate = parseFloat(rawRate) || 0;
+                if (rate > 0) {
+                    const goldAmount = amount / rate;
+                    totalCurrentValue += goldAmount * currentGoldPrice;
+                }
+            }
         });
 
-        totalAmountEl.textContent = formatCurrency(totalAmount, 'TRY');
-        totalCurrentValueEl.textContent = formatCurrency(totalCurrentValue, 'TRY', 0);
+        const totalGoldAmount = rows.length > 0 ? totalCurrentValue / currentGoldPrice : 0;
+        
+        // GÜNCELLENDİ: Etiket ve formatlama istekleri
+        totalAmountLabelEl.innerHTML = `Toplam Miktar: <span class="total-gold-amount">(${totalGoldAmount.toFixed(2)} gr)</span>`;
+        totalAmountEl.textContent = formatCurrency(totalAmount, 'USD', 0); // Küsüratsız
+        
+        totalCurrentValueLabelEl.textContent = 'Bugünün Parası ile:';
+        totalCurrentValueEl.textContent = formatCurrency(totalCurrentValue, 'USD', 0);
     }
-
-    // --- Yardımcı Fonksiyonlar ve Event Listeners ---
 
     function attachEventListeners(row) {
         row.querySelector('.year-select').addEventListener('change', () => updateRow(row));
         row.querySelector('.month-select').addEventListener('change', () => updateRow(row));
         
         const amountInput = row.querySelector('.amount-input');
+        
+        amountInput.addEventListener('focus', (e) => {
+            e.target.select();
+        });
+
         amountInput.addEventListener('input', (e) => {
-            // Miktar girdisini formatla
+            // GÜNCELLENDİ: 10 hane limiti
             let rawValue = e.target.value.replace(/[^\d]/g, '');
+            if (rawValue.length > 10) {
+                rawValue = rawValue.substring(0, 10);
+            }
+            
             if (rawValue) {
-                const formattedValue = parseInt(rawValue, 10).toLocaleString('tr-TR');
+                const formattedValue = parseInt(rawValue, 10).toLocaleString('en-US');
                 if (e.target.value !== formattedValue) {
                     e.target.value = formattedValue;
                 }
+            } else {
+                e.target.value = '';
             }
             updateRow(row);
+        });
+
+        amountInput.addEventListener('keydown', (e) => {
+            const isLastRow = row === tableBody.lastElementChild;
+            const nextRow = row.nextElementSibling;
+            const prevRow = row.previousElementSibling;
+            const isFirstRow = row === tableBody.firstElementChild;
+
+            if (e.key === 'Enter' || (e.key === 'Tab' && !e.shiftKey)) {
+                e.preventDefault();
+                
+                if (nextRow) {
+                    nextRow.querySelector('.amount-input').focus();
+                } 
+                else if (isLastRow) {
+                    const year = row.querySelector('.year-select').value;
+                    const month = row.querySelector('.month-select').value;
+                    const rawAmount = amountInput.value.replace(/[^\d]/g, '');
+                    const amount = parseFloat(rawAmount) || 0;
+                    if (year && month && amount > 0) {
+                        addNewRow({ year, month });
+                    }
+                }
+            }
+
+            if (e.key === 'Tab' && e.shiftKey) {
+                if (isFirstRow) return;
+                
+                if (prevRow) {
+                    e.preventDefault();
+                    prevRow.querySelector('.amount-input').focus();
+                }
+            }
         });
     }
 
     function formatCurrency(value, currency, maximumFractionDigits = 2) {
-        return value.toLocaleString('tr-TR', {
+        // GÜNCELLENDİ: Sayı formatı isteği
+        return value.toLocaleString('en-US', {
             style: 'currency',
             currency: currency,
             maximumFractionDigits: maximumFractionDigits
         });
     }
 
-    // Uygulamayı Başlat
     initializeApp();
 });
