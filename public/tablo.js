@@ -199,8 +199,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 if (nextRow) {
                     const nextAmountInput = nextRow.querySelector('.amount-input');
-                    nextAmountInput.value = amount.toLocaleString('en-US');
-                    updateRow(nextRow);
+                    if (!nextAmountInput.value) { // Eğer alt satır boşsa
+                        nextAmountInput.value = amount.toLocaleString('en-US');
+                        updateRow(nextRow);
+                    }
                     nextAmountInput.focus();
                     nextAmountInput.select();
                 } 
