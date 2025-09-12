@@ -148,8 +148,11 @@ document.addEventListener('DOMContentLoaded', () => {
             totalCurrentValue += parseFloat(rawCurrentValue) || 0;
         });
 
+        const totalAmountLabelEl = document.getElementById('total-amount-label');
+        totalAmountLabelEl.innerHTML = `Harcanan Miktar: <span class="total-gold-amount">(${totalGoldAmount.toFixed(1)} gr)</span>`;
         totalAmountEl.textContent = totalAmount.toLocaleString('tr-TR', {style: 'currency', currency: 'TRY', maximumFractionDigits: 0});
-        totalCurrentValueLabelEl.innerHTML = `Bugünün Parası ile: <span class="total-gold-amount">(${totalGoldAmount.toFixed(1)} gr)</span>`;
+        
+        totalCurrentValueLabelEl.innerHTML = `Bugünün Parası ile:`;
         totalCurrentValueEl.textContent = totalCurrentValue.toLocaleString('tr-TR', {style: 'currency', currency: 'TRY', maximumFractionDigits: 0});
     }
 
@@ -198,7 +201,10 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             if (e.key === 'Tab' && e.shiftKey) {
-                if (isFirstRow) return; // İlk satırdaysak, hiçbir şey yapma
+                if (isFirstRow) {
+                    e.preventDefault(); // İlk satırdayken odağın dışarı çıkmasını engelle
+                    return;
+                }
                 
                 if (prevRow) {
                     e.preventDefault();
