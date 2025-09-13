@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Mobil için Yıl/Ay'ı tek hücrede birleştir
         if (isMobile) {
             newRow.innerHTML = `
-                <td class="date-cell" colspan="2" style="width: 25%;">
+                <td class="date-cell" colspan="2">
                     <div class="date-container">
                         <select class="year-select">
                             <option value="">Yıl</option>
