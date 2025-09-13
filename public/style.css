@@ -197,9 +197,15 @@ table {
 
 @media (max-width: 768px) {
     table {
-        font-size: 0.85rem;
+        font-size: 0.75rem;
         width: 100%;
         min-width: unset;
+    }
+    
+    th {
+        font-size: 0.7rem;
+        padding: 0.4rem 0.3rem;
+        white-space: nowrap;
     }
 }
 
@@ -287,6 +293,21 @@ td .current-value-cell {
     font-size: 1.1rem;
 }
 
+@media (max-width: 768px) {
+    td .rate-cell {
+        font-size: 0.7rem;
+    }
+    
+    td .current-value-cell {
+        font-size: 0.7rem;
+    }
+    
+    td input.amount-input {
+        font-size: 0.7rem;
+        padding: 0.4rem;
+    }
+}
+
 .totals-container {
     background-color: #ecf0f1;
     border-radius: 8px;
@@ -316,7 +337,17 @@ td .current-value-cell {
 
 @media (max-width: 768px) {
     .total-item {
-        font-size: 1.1rem;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .total-gold-amount {
+        font-size: 0.75rem;
+    }
+    
+    .totals-container {
+        padding: 0.75rem;
+        margin-top: 0.5rem;
     }
 }
 
