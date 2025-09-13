@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Mobil için Yıl/Ay'ı tek hücrede birleştir
         if (isMobile) {
             newRow.innerHTML = `
-                <td class="date-cell" colspan="2">
+                <td class="date-cell" colspan="2" style="width: 25%;">
                     <div class="date-container">
                         <select class="year-select">
                             <option value="">Yıl</option>
@@ -68,9 +68,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     </div>
                 </td>
                 <td class="rate-cell" style="display:none;">-</td>
-                <td class="amount-cell"><input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10"></td>
-                <td class="gold-amount-cell">-</td>
-                <td class="current-value-cell">-</td>
+                <td class="amount-cell">
+                    <input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10">
+                    <div class="sub-values-container">
+                        <span class="sub-value gold-amount-sub-value">-</span>
+                        <span class="sub-value current-value-sub-value">-</span>
+                    </div>
+                </td>
+                <td class="gold-amount-cell" style="display:none;">-</td>
+                <td class="current-value-cell" style="display:none;">-</td>
             `;
         } else {
             newRow.innerHTML = `
@@ -124,6 +130,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const goldAmountCell = row.querySelector('.gold-amount-cell');
         const currentValueCell = row.querySelector('.current-value-cell');
 
+        // Mobil için alt değerleri de seç
+        const goldAmountSubValue = row.querySelector('.gold-amount-sub-value');
+        const currentValueSubValue = row.querySelector('.current-value-sub-value');
+
         if (year && month) {
             const targetDate = `${year}-${month}`;
             const dateData = historicalData.find(d => d.date.startsWith(targetDate));
@@ -136,21 +146,40 @@ document.addEventListener('DOMContentLoaded', () => {
                     const goldAmount = amount / historicalPrice;
                     const currentValue = goldAmount * currentGoldPrice;
                     
-                    goldAmountCell.textContent = `${goldAmount.toFixed(1)} gr`;
-                    currentValueCell.textContent = formatCurrency(currentValue, 'TRY', 0);
+                    const goldText = `${goldAmount.toFixed(1)} gr`;
+                    const currentText = formatCurrency(currentValue, 'TRY', 0);
+
+                    goldAmountCell.textContent = goldText;
+                    currentValueCell.textContent = currentText;
+                    if(isMobile) {
+                        goldAmountSubValue.textContent = goldText;
+                        currentValueSubValue.textContent = currentText;
+                    }
                 } else {
                     goldAmountCell.textContent = '-';
                     currentValueCell.textContent = '-';
+                    if(isMobile) {
+                        goldAmountSubValue.textContent = '-';
+                        currentValueSubValue.textContent = '-';
+                    }
                 }
             } else {
                 rateCell.textContent = 'Veri Yok';
                 goldAmountCell.textContent = '-';
                 currentValueCell.textContent = '-';
+                if(isMobile) {
+                    goldAmountSubValue.textContent = 'Veri Yok';
+                    currentValueSubValue.textContent = '-';
+                }
             }
         } else {
             rateCell.textContent = '-';
             goldAmountCell.textContent = '-';
             currentValueCell.textContent = '-';
+            if(isMobile) {
+                goldAmountSubValue.textContent = '-';
+                currentValueSubValue.textContent = '-';
+            }
         }
 
         updateTotals();
