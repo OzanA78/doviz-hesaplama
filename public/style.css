@@ -51,7 +51,14 @@ body {
 
 @media (max-width: 768px) {
     .container.table-view {
-        padding: 0.5rem;
+        padding: 0.25rem;
+        border-radius: 0;
+    }
+    
+    .container {
+        padding: 1rem;
+        border-radius: 0;
+        box-shadow: none;
     }
 }
 
@@ -104,6 +111,19 @@ input[type="tel"],
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+@media (max-width: 768px) {
+    input[type="text"],
+    input[type="tel"] {
+        font-size: 0.9rem;
+    }
+    
+    .amount-input {
+        font-size: 0.85rem !important;
+    }
 }
 
 /* Seçim kutularına özel sağda ok ikonu ekleme */
@@ -172,11 +192,14 @@ table {
     border-collapse: collapse;
     font-size: 0.95rem;
     background: #fff;
+    table-layout: fixed;
 }
 
 @media (max-width: 768px) {
     table {
-        font-size: 0.9rem;
+        font-size: 0.85rem;
+        width: 100%;
+        min-width: unset;
     }
 }
 
@@ -191,6 +214,15 @@ th, td {
     padding: 0.8rem 1rem;
     text-align: left;
     border-bottom: 1px solid #ddd;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+@media (max-width: 768px) {
+    th, td {
+        padding: 0.6rem 0.5rem;
+    }
 }
 
 th {
