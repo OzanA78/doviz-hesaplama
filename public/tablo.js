@@ -5,6 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalCurrentValueEl = document.getElementById('total-current-value');
     const totalCurrentValueLabelEl = document.getElementById('total-current-value-label');
     const totalsContainer = document.getElementById('totals-container');
+    const deviceTypeEl = document.querySelector('.device-type');
+
+    // Cihaz tipini tespit et ve göster
+    const isMobile = window.innerWidth <= 768;
+    deviceTypeEl.textContent = isMobile ? '(Mobil)' : '(Web)';
 
     // Global Durum Değişkenleri
     let historicalData = [];

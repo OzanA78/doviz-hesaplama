@@ -28,6 +28,23 @@ body {
     bottom: 0;
 }
 
+/* Başlık Konteyner */
+.header-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.device-type {
+    font-size: 0.8rem;
+    color: #666;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    background-color: #f0f0f0;
+}
+
 /* Ana Konteyner */
 .container {
     background-color: #ffffff;
