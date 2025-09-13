@@ -5,11 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalCurrentValueEl = document.getElementById('total-current-value');
     const totalCurrentValueLabelEl = document.getElementById('total-current-value-label');
     const totalsContainer = document.getElementById('totals-container');
-    const deviceTypeEl = document.querySelector('.device-type');
+    const deviceIndicatorEl = document.querySelector('.device-indicator');
 
-    // Cihaz tipini göster
+    // Cihaz tipini ayarla
     const isMobile = window.innerWidth <= 768;
-    deviceTypeEl.textContent = isMobile ? '(Mobil)' : '(Web)';
+    deviceIndicatorEl.textContent = isMobile ? '(Mobil)' : '(Web)';
 
     // Global Durum Değişkenleri
     let historicalData = [];
@@ -52,25 +52,46 @@ document.addEventListener('DOMContentLoaded', () => {
             nextDate.month = ('0' + (date.getMonth() + 1)).slice(-2);
         }
 
-        const isMobile = window.innerWidth <= 768;
-        
-        newRow.innerHTML = `
-            <td class="date-stacked" colspan="${isMobile ? '2' : '1'}">
-                <select class="year-select">
-                    <option value="">Yıl</option>
-                    ${years.map(y => `<option value="${y}" ${y === nextDate.year ? 'selected' : ''}>${y}</option>`).join('')}
-                </select>
-                ${!isMobile ? '</td><td>' : ''}
-                <select class="month-select">
-                    <option value="">Ay</option>
-                    ${months.map(m => `<option value="${m.value}" ${m.value === nextDate.month ? 'selected' : ''}>${m.name}</option>`).join('')}
-                </select>
-            </td>
-            <td class="rate-cell">-</td>
-            <td><input type="tel" class="amount-input" placeholder="0" inputmode="numeric"></td>
-            <td class="gold-amount-cell">-</td>
-            <td class="current-value-cell">-</td>
-        `;
+        // Mobil için Yıl/Ay'ı tek hücrede birleştir
+        if (isMobile) {
+            newRow.innerHTML = `
+                <td class="date-cell" colspan="2">
+                    <div class="date-container">
+                        <select class="year-select">
+                            <option value="">Yıl</option>
+                            ${years.map(y => `<option value="${y}" ${y === nextDate.year ? 'selected' : ''}>${y}</option>`).join('')}
+                        </select>
+                        <select class="month-select">
+                            <option value="">Ay</option>
+                            ${months.map(m => `<option value="${m.value}" ${m.value === nextDate.month ? 'selected' : ''}>${m.name}</option>`).join('')}
+                        </select>
+                    </div>
+                </td>
+                <td class="rate-cell" style="display:none;">-</td>
+                <td class="amount-cell"><input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10"></td>
+                <td class="gold-amount-cell">-</td>
+                <td class="current-value-cell">-</td>
+            `;
+        } else {
+            newRow.innerHTML = `
+                <td>
+                    <select class="year-select">
+                        <option value="">Yıl</option>
+                        ${years.map(y => `<option value="${y}" ${y === nextDate.year ? 'selected' : ''}>${y}</option>`).join('')}
+                    </select>
+                </td>
+                <td>
+                    <select class="month-select">
+                        <option value="">Ay</option>
+                        ${months.map(m => `<option value="${m.value}" ${m.value === nextDate.month ? 'selected' : ''}>${m.name}</option>`).join('')}
+                    </select>
+                </td>
+                <td class="rate-cell">-</td>
+                <td class="amount-cell"><input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10"></td>
+                <td class="gold-amount-cell">-</td>
+                <td class="current-value-cell">-</td>
+            `;
+        }
 
         const amountInput = newRow.querySelector('.amount-input');
         if (previousData && previousData.amount) {
@@ -180,10 +201,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         amountInput.addEventListener('input', (e) => {
             let rawValue = e.target.value.replace(/[^\d]/g, '');
-            // Maksimum 8 basamak (99999999) kontrolü
+            
+            // Maksimum 8 haneye sınırla (99,999,999)
             if (rawValue.length > 8) {
-                rawValue = rawValue.slice(0, 8);
+                rawValue = rawValue.substring(0, 8);
             }
+
             if (rawValue) {
                 const formattedValue = parseInt(rawValue, 10).toLocaleString('en-US');
                 if (e.target.value !== formattedValue) {
