@@ -69,6 +69,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </td>
                 <td class="rate-cell" style="display:none;">-</td>
                 <td class="amount-cell">
+                    <label class="mobile-amount-label">Miktar</label>
                     <input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10">
                     <div class="sub-values-container">
                         <span class="sub-value gold-amount-sub-value">-</span>
@@ -152,7 +153,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     goldAmountCell.textContent = goldText;
                     currentValueCell.textContent = currentText;
                     if(isMobile) {
-                        goldAmountSubValue.textContent = goldText;
+                        goldAmountSubValue.textContent = `${goldText} (${formatCurrency(historicalPrice, 'TRY', 0)})`;
                         currentValueSubValue.textContent = currentText;
                     }
                 } else {

@@ -192,6 +192,15 @@ td {
     vertical-align: middle;
 }
 
+/* YENİ: Satır renklerini ayarla */
+tbody tr:nth-child(odd) {
+    background-color: #f8f8f8; /* Açık Gri */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #eeeeee; /* Koyu Gri */
+}
+
 td select, td input {
     width: 100%;
     padding: 0.7rem;
@@ -273,6 +282,15 @@ td select, td input {
     td.amount-cell {
         min-width: 120px; /* 10,000,000 sığması için */
         vertical-align: top;
+        position: relative; /* Etiketin konumlandırılması için */
+    }
+
+    .mobile-amount-label {
+        display: block;
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #34495e;
+        margin-bottom: 0.2rem;
     }
 
     .sub-values-container {
@@ -301,6 +319,7 @@ td select, td input {
     }
 
     /* YENİ: Mobilde gereksiz kolonları gizle */
+    th:nth-child(3), /* Kur kolonu */
     .gold-amount-cell, .current-value-cell,
     th:nth-child(5), th:nth-child(6) {
         display: none;
