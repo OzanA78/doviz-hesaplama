@@ -5,11 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalCurrentValueEl = document.getElementById('total-current-value');
     const totalCurrentValueLabelEl = document.getElementById('total-current-value-label');
     const totalsContainer = document.getElementById('totals-container');
-    const deviceTypeEl = document.querySelector('.device-type');
-
-    // Cihaz tipini tespit et ve göster
-    const isMobile = window.innerWidth <= 768;
-    deviceTypeEl.textContent = isMobile ? '(Mobil)' : '(Web)';
 
     // Global Durum Değişkenleri
     let historicalData = [];
@@ -53,17 +48,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         newRow.innerHTML = `
-            <td class="date-cell" colspan="2">
-                <div class="date-container">
-                    <select class="year-select">
-                        <option value="">Yıl</option>
-                        ${years.map(y => `<option value="${y}" ${y === nextDate.year ? 'selected' : ''}>${y}</option>`).join('')}
-                    </select>
-                    <select class="month-select">
-                        <option value="">Ay</option>
-                        ${months.map(m => `<option value="${m.value}" ${m.value === nextDate.month ? 'selected' : ''}>${m.name}</option>`).join('')}
-                    </select>
-                </div>
+            <td>
+                <select class="year-select">
+                    <option value="">Yıl</option>
+                    ${years.map(y => `<option value="${y}" ${y === nextDate.year ? 'selected' : ''}>${y}</option>`).join('')}
+                </select>
+            </td>
+            <td>
+                <select class="month-select">
+                    <option value="">Ay</option>
+                    ${months.map(m => `<option value="${m.value}" ${m.value === nextDate.month ? 'selected' : ''}>${m.name}</option>`).join('')}
+                </select>
             </td>
             <td class="rate-cell">-</td>
             <td><input type="tel" class="amount-input" placeholder="0" inputmode="numeric"></td>
@@ -199,21 +194,14 @@ document.addEventListener('DOMContentLoaded', () => {
             if (e.key === 'Enter' || (e.key === 'Tab' && !e.shiftKey)) {
                 e.preventDefault();
                 
-                const rawAmount = amountInput.value.replace(/[^\d]/g, '');
-                const amount = parseFloat(rawAmount) || 0;
-
                 if (nextRow) {
-                    const nextAmountInput = nextRow.querySelector('.amount-input');
-                    if (!nextAmountInput.value) { // Eğer alt satır boşsa
-                        nextAmountInput.value = amount.toLocaleString('en-US');
-                        updateRow(nextRow);
-                    }
-                    nextAmountInput.focus();
-                    nextAmountInput.select();
+                    nextRow.querySelector('.amount-input').focus();
                 } 
                 else if (isLastRow) {
                     const year = row.querySelector('.year-select').value;
                     const month = row.querySelector('.month-select').value;
+                    const rawAmount = amountInput.value.replace(/[^\d]/g, '');
+                    const amount = parseFloat(rawAmount) || 0;
                     if (year && month && amount > 0) {
                         addNewRow({ date: { year, month }, amount: amount });
                     }

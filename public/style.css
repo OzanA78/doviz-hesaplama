@@ -5,13 +5,8 @@
     padding: 0;
 }
 
-html, body {
-    scroll-behavior: smooth;
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
-    overflow: hidden;
+html {
+    scroll-behavior: smooth; /* YENİ: Yumuşak kaydırma için eklendi */
 }
 
 body {
@@ -21,28 +16,11 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-}
-
-/* Başlık Konteyner */
-.header-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    margin-bottom: 0.5rem;
-}
-
-.device-type {
-    font-size: 0.8rem;
-    color: #666;
-    padding: 0.3rem 0.6rem;
-    border-radius: 4px;
-    background-color: #f0f0f0;
+    min-height: 100vh;
+    padding: 1rem;
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
 }
 
 /* Ana Konteyner */
@@ -57,34 +35,16 @@ body {
 
 .container.table-view {
     max-width: 800px;
-    width: 100%;
     display: flex;
     flex-direction: column;
-    height: 100%;
-    position: relative;
-    overflow: hidden;
-    padding: 1rem;
-}
-
-@media (max-width: 768px) {
-    .container.table-view {
-        padding: 0.25rem;
-        border-radius: 0;
-    }
-    
-    .container {
-        padding: 1rem;
-        border-radius: 0;
-        box-shadow: none;
-    }
+    height: calc(100vh - 2rem);
 }
 
 h1 {
     font-size: 1.8rem;
-    margin: 0.5rem 0;
+    margin-bottom: 0.5rem;
     color: #2c3e50;
     text-align: center;
-    flex-shrink: 0;
 }
 
 p {
@@ -128,19 +88,6 @@ input[type="tel"],
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    -webkit-user-select: none;
-    user-select: none;
-}
-
-@media (max-width: 768px) {
-    input[type="text"],
-    input[type="tel"] {
-        font-size: 0.9rem;
-    }
-    
-    .amount-input {
-        font-size: 0.85rem !important;
-    }
 }
 
 /* Seçim kutularına özel sağda ok ikonu ekleme */
@@ -190,18 +137,10 @@ input[type="tel"],
 .table-container {
     flex: 1;
     overflow: auto;
-    margin: 1rem 0;
+    margin-bottom: 2rem;
     position: relative;
     background: #fff;
     border-radius: 8px;
-    -webkit-overflow-scrolling: touch; /* iOS için daha iyi scroll */
-}
-
-@media (max-width: 768px) {
-    .table-container {
-        margin: 0.5rem 0;
-        border-radius: 0;
-    }
 }
 
 table {
@@ -209,21 +148,6 @@ table {
     border-collapse: collapse;
     font-size: 0.95rem;
     background: #fff;
-    table-layout: fixed;
-}
-
-@media (max-width: 768px) {
-    table {
-        font-size: 0.75rem;
-        width: 100%;
-        min-width: unset;
-    }
-    
-    th {
-        font-size: 0.7rem;
-        padding: 0.4rem 0.3rem;
-        white-space: nowrap;
-    }
 }
 
 thead {
@@ -237,15 +161,6 @@ th, td {
     padding: 0.8rem 1rem;
     text-align: left;
     border-bottom: 1px solid #ddd;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
-@media (max-width: 768px) {
-    th, td {
-        padding: 0.6rem 0.5rem;
-    }
 }
 
 th {
@@ -257,18 +172,8 @@ th {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-@media (max-width: 768px) {
-    th:nth-child(1), td.date-cell { width: 25%; min-width: unset; } /* Yıl/Ay birleşik */
-    th:nth-child(3), td:nth-child(3) { display: none; } /* Kur kolonunu gizle */
-    th:nth-child(4), td:nth-child(4) { width: 35%; min-width: unset; } /* Miktar - daha geniş */
-    th:nth-child(5), td:nth-child(5) { width: 20%; min-width: unset; } /* Altın */
-    th:nth-child(6), td:nth-child(6) { width: 20%; min-width: unset; } /* Güncel */
-
-    /* Başlık hücrelerini düzenle */
-    th:nth-child(1) { display: none; } /* İlk Yıl başlığını gizle */
-    th:nth-child(2):before { content: 'Yıl/'; } /* Ay başlığına Yıl ekle */
-    th:nth-child(3) { display: none; } /* Kur başlığını gizle */
-}
+th:nth-child(1), td:nth-child(1) { min-width: 150px; } /* Yıl Kolonu */
+th:nth-child(2), td:nth-child(2) { min-width: 150px; } /* Ay Kolonu */
 
 td {
     vertical-align: middle;
@@ -281,46 +186,10 @@ td select, td input {
     border: 1px solid #ccc;
     border-radius: 6px;
     background-color: #fff;
-    -webkit-appearance: none;
-    appearance: none;
-}
-
-@media (max-width: 768px) {
-    td select, td input {
-        padding: 0.4rem;
-        font-size: 0.75rem;
-    }
-
-    td.date-cell {
-        padding: 0.2rem !important;
-    }
-
-    .date-container {
-        display: flex;
-        flex-direction: column;
-        gap: 0.2rem;
-    }
-
-    .date-container select {
-        margin: 0;
-        padding: 0.3rem;
-        min-width: unset;
-    }
-
-    td input.amount-input {
-        width: 100%;
-        padding: 0.4rem;
-        font-size: 0.8rem;
-    }
 }
 
 td select {
     cursor: pointer;
-    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23666%22%20d%3D%22M287%2069.4a17.6%2C17.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2C17.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
-    background-repeat: no-repeat;
-    background-position: right 0.5rem center;
-    background-size: 0.8em auto;
-    padding-right: 2rem;
 }
 
 td input.amount-input {
@@ -342,78 +211,21 @@ td .current-value-cell {
     font-size: 1.1rem;
 }
 
-@media (max-width: 768px) {
-    td .rate-cell {
-        font-size: 0.65rem;
-    }
-    
-    td .current-value-cell {
-        font-size: 0.65rem;
-    }
-    
-    td input.amount-input {
-        font-size: 0.65rem;
-        padding: 0.3rem;
-        width: 90%;
-        text-align: right;
-    }
-    
-    td input[type="number"] {
-        -moz-appearance: textfield;
-    }
-    
-    td input[type="number"]::-webkit-inner-spin-button,
-    td input[type="number"]::-webkit-outer-spin-button {
-        -webkit-appearance: none;
-        margin: 0;
-    }
-}
-
 .totals-container {
     background-color: #ecf0f1;
     border-radius: 8px;
     padding: 1.5rem;
-    margin-bottom: 0.5rem;
+    margin-top: 1rem;
     border-left: 5px solid #3498db;
-    flex-shrink: 0;
-    width: 100%;
-}
-
-@media (max-width: 768px) {
-    .totals-container {
-        padding: 1rem;
-        border-radius: 0;
-        margin-bottom: 0;
-    }
 }
 
 .total-item {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: center; /* YENİ: Dikeyde hizalama için eklendi */
     font-size: 1.2rem;
     font-weight: bold;
     color: #2c3e50;
-}
-
-@media (max-width: 768px) {
-    .total-item {
-        font-size: 0.8rem;
-        margin-bottom: 0.5rem;
-    }
-    
-    .total-gold-amount {
-        font-size: 0.7rem;
-    }
-    
-    .totals-container {
-        padding: 0.5rem;
-        margin-top: 0.5rem;
-    }
-    
-    .total-value {
-        font-size: 0.8rem;
-    }
 }
 
 .total-item:first-child {
