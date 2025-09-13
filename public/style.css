@@ -258,12 +258,15 @@ th {
 }
 
 @media (max-width: 768px) {
-    th:nth-child(1), td:nth-child(1) { width: 15%; min-width: unset; } /* Yıl */
-    th:nth-child(2), td:nth-child(2) { width: 15%; min-width: unset; } /* Ay */
+    th:nth-child(1), td.date-cell { width: 30%; min-width: unset; } /* Yıl/Ay birleşik */
     th:nth-child(3), td:nth-child(3) { width: 20%; min-width: unset; } /* Kur */
     th:nth-child(4), td:nth-child(4) { width: 15%; min-width: unset; } /* Miktar */
     th:nth-child(5), td:nth-child(5) { width: 15%; min-width: unset; } /* Altın */
     th:nth-child(6), td:nth-child(6) { width: 20%; min-width: unset; } /* Güncel */
+
+    /* Başlık hücrelerini düzenle */
+    th:nth-child(1) { display: none; } /* İlk Yıl başlığını gizle */
+    th:nth-child(2):before { content: 'Yıl/'; } /* Ay başlığına Yıl ekle */
 }
 
 td {
@@ -283,8 +286,24 @@ td select, td input {
 
 @media (max-width: 768px) {
     td select, td input {
-        padding: 0.6rem;
-        font-size: 0.95rem;
+        padding: 0.4rem;
+        font-size: 0.75rem;
+    }
+
+    td.date-cell {
+        padding: 0.2rem !important;
+    }
+
+    .date-container {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+    }
+
+    .date-container select {
+        margin: 0;
+        padding: 0.3rem;
+        min-width: unset;
     }
 }
 

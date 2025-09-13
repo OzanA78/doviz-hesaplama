@@ -53,17 +53,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         newRow.innerHTML = `
-            <td>
-                <select class="year-select">
-                    <option value="">Yıl</option>
-                    ${years.map(y => `<option value="${y}" ${y === nextDate.year ? 'selected' : ''}>${y}</option>`).join('')}
-                </select>
-            </td>
-            <td>
-                <select class="month-select">
-                    <option value="">Ay</option>
-                    ${months.map(m => `<option value="${m.value}" ${m.value === nextDate.month ? 'selected' : ''}>${m.name}</option>`).join('')}
-                </select>
+            <td class="date-cell" colspan="2">
+                <div class="date-container">
+                    <select class="year-select">
+                        <option value="">Yıl</option>
+                        ${years.map(y => `<option value="${y}" ${y === nextDate.year ? 'selected' : ''}>${y}</option>`).join('')}
+                    </select>
+                    <select class="month-select">
+                        <option value="">Ay</option>
+                        ${months.map(m => `<option value="${m.value}" ${m.value === nextDate.month ? 'selected' : ''}>${m.name}</option>`).join('')}
+                    </select>
+                </div>
             </td>
             <td class="rate-cell">-</td>
             <td><input type="tel" class="amount-input" placeholder="0" inputmode="numeric"></td>
