@@ -240,8 +240,14 @@ th {
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-th:nth-child(1), td:nth-child(1) { min-width: 150px; } /* Yıl Kolonu */
-th:nth-child(2), td:nth-child(2) { min-width: 150px; } /* Ay Kolonu */
+@media (max-width: 768px) {
+    th:nth-child(1), td:nth-child(1) { width: 15%; min-width: unset; } /* Yıl */
+    th:nth-child(2), td:nth-child(2) { width: 15%; min-width: unset; } /* Ay */
+    th:nth-child(3), td:nth-child(3) { width: 20%; min-width: unset; } /* Kur */
+    th:nth-child(4), td:nth-child(4) { width: 15%; min-width: unset; } /* Miktar */
+    th:nth-child(5), td:nth-child(5) { width: 15%; min-width: unset; } /* Altın */
+    th:nth-child(6), td:nth-child(6) { width: 20%; min-width: unset; } /* Güncel */
+}
 
 td {
     vertical-align: middle;
@@ -295,16 +301,28 @@ td .current-value-cell {
 
 @media (max-width: 768px) {
     td .rate-cell {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
     }
     
     td .current-value-cell {
-        font-size: 0.7rem;
+        font-size: 0.65rem;
     }
     
     td input.amount-input {
-        font-size: 0.7rem;
-        padding: 0.4rem;
+        font-size: 0.65rem;
+        padding: 0.3rem;
+        width: 90%;
+        text-align: right;
+    }
+    
+    td input[type="number"] {
+        -moz-appearance: textfield;
+    }
+    
+    td input[type="number"]::-webkit-inner-spin-button,
+    td input[type="number"]::-webkit-outer-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
     }
 }
 
@@ -337,17 +355,21 @@ td .current-value-cell {
 
 @media (max-width: 768px) {
     .total-item {
-        font-size: 0.9rem;
+        font-size: 0.8rem;
         margin-bottom: 0.5rem;
     }
     
     .total-gold-amount {
-        font-size: 0.75rem;
+        font-size: 0.7rem;
     }
     
     .totals-container {
-        padding: 0.75rem;
+        padding: 0.5rem;
         margin-top: 0.5rem;
+    }
+    
+    .total-value {
+        font-size: 0.8rem;
     }
 }
 
