@@ -5,6 +5,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalCurrentValueEl = document.getElementById('total-current-value');
     const totalCurrentValueLabelEl = document.getElementById('total-current-value-label');
     const totalsContainer = document.getElementById('totals-container');
+    const deviceTypeEl = document.querySelector('.device-type');
+
+    // Cihaz tipini göster
+    const isMobile = window.innerWidth <= 768;
+    deviceTypeEl.textContent = isMobile ? '(Mobil)' : '(Web)';
 
     // Global Durum Değişkenleri
     let historicalData = [];
@@ -47,14 +52,15 @@ document.addEventListener('DOMContentLoaded', () => {
             nextDate.month = ('0' + (date.getMonth() + 1)).slice(-2);
         }
 
+        const isMobile = window.innerWidth <= 768;
+        
         newRow.innerHTML = `
-            <td>
+            <td class="date-stacked" colspan="${isMobile ? '2' : '1'}">
                 <select class="year-select">
                     <option value="">Yıl</option>
                     ${years.map(y => `<option value="${y}" ${y === nextDate.year ? 'selected' : ''}>${y}</option>`).join('')}
                 </select>
-            </td>
-            <td>
+                ${!isMobile ? '</td><td>' : ''}
                 <select class="month-select">
                     <option value="">Ay</option>
                     ${months.map(m => `<option value="${m.value}" ${m.value === nextDate.month ? 'selected' : ''}>${m.name}</option>`).join('')}
@@ -174,6 +180,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         amountInput.addEventListener('input', (e) => {
             let rawValue = e.target.value.replace(/[^\d]/g, '');
+            // Maksimum 8 basamak (99999999) kontrolü
+            if (rawValue.length > 8) {
+                rawValue = rawValue.slice(0, 8);
+            }
             if (rawValue) {
                 const formattedValue = parseInt(rawValue, 10).toLocaleString('en-US');
                 if (e.target.value !== formattedValue) {

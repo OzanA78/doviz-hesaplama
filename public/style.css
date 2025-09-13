@@ -33,6 +33,19 @@ body {
     max-width: 500px;
 }
 
+.header-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+}
+
+.device-type {
+    font-size: 0.9rem;
+    color: #666;
+}
+
 .container.table-view {
     max-width: 800px;
     display: flex;
@@ -189,19 +202,38 @@ td select, td input {
 }
 
 @media (max-width: 768px) {
-    td:nth-child(3) {
-        display: none; /* Kur kolonunu mobilde gizle */
+    .container.table-view {
+        padding: 0;
+        margin: 0;
+        max-width: 100%;
     }
-    th:nth-child(3) {
-        display: none; /* Kur kolonu başlığını mobilde gizle */
+
+    .table-container {
+        margin: 0;
+        border-radius: 0;
     }
+
+    /* Yıl ve Ay düzeni */
+    .date-stacked {
+        display: flex;
+        flex-direction: column;
+        gap: 0.2rem;
+        padding: 0.3rem !important;
+    }
+
+    .date-stacked select {
+        margin: 0;
+        padding: 0.3rem;
+        font-size: 0.75rem;
+    }
+
+    /* Miktar alanı */
     td input.amount-input {
         font-size: 0.8rem;
         padding: 0.5rem;
-    }
-    td select {
-        padding: 0.3rem;
-        font-size: 0.8rem;
+        width: 100%;
+        user-select: none;
+        -webkit-user-select: none;
     }
 }
 
