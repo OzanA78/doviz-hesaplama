@@ -37,8 +37,8 @@ body {
     max-width: 800px;
     display: flex;
     flex-direction: column;
-    height: calc(100vh - 2rem);
-    overflow: hidden; /* Eklendi */
+    height: 100%; /* Değiştirildi */
+    overflow: hidden;
 }
 
 h1 {
