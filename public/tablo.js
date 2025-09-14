@@ -238,9 +238,53 @@ document.addEventListener('DOMContentLoaded', () => {
         totalCurrentValueEl.textContent = totalCurrentValue.toLocaleString('tr-TR', {style: 'currency', currency: 'TRY', maximumFractionDigits: 0});
     }
 
+    function updateSubsequentRows(changedRow) {
+        const year = changedRow.querySelector('.year-select').value;
+        const month = changedRow.querySelector('.month-select').value;
+        
+        // Eğer yıl veya ay seçili değilse işlem yapma
+        if (!year || !month) return;
+        
+        const allRows = Array.from(tableBody.querySelectorAll('tr'));
+        const changedIndex = allRows.indexOf(changedRow);
+        
+        // Değişen satırın altındaki satırları bul
+        const subsequentRows = allRows.slice(changedIndex + 1);
+        
+        let currentDate = new Date(`${year}-${month}-01`);
+        
+        subsequentRows.forEach((row, index) => {
+            // Her bir alt satır için tarihi 1 ay ileri al
+            currentDate.setMonth(currentDate.getMonth() + 1);
+            
+            const newYear = currentDate.getFullYear().toString();
+            const newMonth = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+            
+            // Yıl ve ay select'lerini güncelle
+            const yearSelect = row.querySelector('.year-select');
+            const monthSelect = row.querySelector('.month-select');
+            
+            // Sadece mevcut yıllar arasında olan tarihleri güncelle
+            const yearOption = yearSelect.querySelector(`option[value="${newYear}"]`);
+            if (yearOption) {
+                yearSelect.value = newYear;
+                monthSelect.value = newMonth;
+                
+                // Satırı güncelle
+                updateRow(row);
+            }
+        });
+    }
+
     function attachEventListeners(row) {
-        row.querySelector('.year-select').addEventListener('change', () => updateRow(row));
-        row.querySelector('.month-select').addEventListener('change', () => updateRow(row));
+        row.querySelector('.year-select').addEventListener('change', () => {
+            updateRow(row);
+            updateSubsequentRows(row);
+        });
+        row.querySelector('.month-select').addEventListener('change', () => {
+            updateRow(row);
+            updateSubsequentRows(row);
+        });
         
         const amountInput = row.querySelector('.amount-input');
         
