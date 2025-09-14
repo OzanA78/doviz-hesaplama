@@ -78,6 +78,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <option value="">Ay</option>
                         ${months.map(m => `<option value="${m.value}" ${m.value === selectedMonth ? 'selected' : ''}>${m.name}</option>`).join('')}
                     </select>
+                    <div class="rate-info-container">
+                        <span class="rate-info">-</span>
+                    </div>
                 </td>
                 <td class="amount-cell">
                     <div class="mobile-amount-wrapper">
@@ -102,6 +105,9 @@ document.addEventListener('DOMContentLoaded', () => {
                         <option value="">Ay</option>
                         ${months.map(m => `<option value="${m.value}" ${m.value === selectedMonth ? 'selected' : ''}>${m.name}</option>`).join('')}
                     </select>
+                    <div class="rate-info-container">
+                        <span class="rate-info">-</span>
+                    </div>
                 </td>
                 <td class="amount-cell">
                     <input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10">
@@ -146,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Alt değerleri seç (hem mobil hem web için)
         const goldAmountSubValue = row.querySelector('.gold-amount-sub-value');
         const currentValueSubValue = row.querySelector('.current-value-sub-value');
+        const rateInfo = row.querySelector('.rate-info');
 
         if (year && month) {
             const targetDate = `${year}-${month}`;
@@ -153,26 +160,30 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (dateData) {
                 const historicalPrice = dateData.price;
+                
+                // Ay altında kur bilgisi
+                rateInfo.textContent = `Kur: ${formatCurrency(historicalPrice, 'TRY', 0)}`;
 
                 if (amount > 0) {
                     const goldAmount = amount / historicalPrice;
                     const currentValue = goldAmount * currentGoldPrice;
                     
-                    const goldText = `${goldAmount.toFixed(1)} gr`;
-                    const currentText = formatCurrency(currentValue, 'TRY', 0);
-
-                    // Alt değerleri güncelle
-                    goldAmountSubValue.textContent = `${goldText} (Kur: ${formatCurrency(historicalPrice, 'TRY', 0)})`;
-                    currentValueSubValue.textContent = `${goldText} (Güncel: ${formatCurrency(currentGoldPrice, 'TRY', 0)}) = ${currentText}`;
+                    // Sol alt: Altın miktarı (altın renginde)
+                    goldAmountSubValue.textContent = `${goldAmount.toFixed(1)} gr`;
+                    
+                    // Sağ alt: Güncel değer + güncel kur
+                    currentValueSubValue.textContent = `${formatCurrency(currentValue, 'TRY', 0)} (Güncel Kur: ${formatCurrency(currentGoldPrice, 'TRY', 0)})`;
                 } else {
                     goldAmountSubValue.textContent = '-';
                     currentValueSubValue.textContent = '-';
                 }
             } else {
+                rateInfo.textContent = 'Veri Yok';
                 goldAmountSubValue.textContent = 'Veri Yok';
                 currentValueSubValue.textContent = '-';
             }
         } else {
+            rateInfo.textContent = '-';
             goldAmountSubValue.textContent = '-';
             currentValueSubValue.textContent = '-';
             if(isMobile) {
@@ -200,7 +211,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentValueSubValue = row.querySelector('.current-value-sub-value');
             
             if (goldAmountSubValue && goldAmountSubValue.textContent !== '-' && goldAmountSubValue.textContent !== 'Veri Yok') {
-                // "5.2 gr (Kur: ₺2,500)" formatından altın miktarını çıkar
+                // "66.7 gr" formatından altın miktarını çıkar
                 const goldText = goldAmountSubValue.textContent;
                 const goldMatch = goldText.match(/([0-9,.]+)\s*gr/);
                 if (goldMatch) {
@@ -210,9 +221,9 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             if (currentValueSubValue && currentValueSubValue.textContent !== '-' && currentValueSubValue.textContent !== 'Veri Yok') {
-                // "74.1 gr (Güncel: ₺4,445) = ₺329,267" formatından son değeri çıkar
+                // "296,073 ₺ (Güncel Kur: 4,441 ₺)" formatından değeri çıkar
                 const currentText = currentValueSubValue.textContent;
-                const valueMatch = currentText.match(/=\s*([₺\d,.]+)/);
+                const valueMatch = currentText.match(/^([₺\d,.]+)/);
                 if (valueMatch) {
                     const rawCurrentValue = valueMatch[1].replace(/[^\d,]/g, '').replace(',', '.');
                     totalCurrentValue += parseFloat(rawCurrentValue) || 0;

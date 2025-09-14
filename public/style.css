@@ -264,8 +264,8 @@ td select, td input {
 .sub-values-container {
     margin-top: 0.5rem;
     display: flex;
-    flex-direction: column;
-    gap: 0.2rem;
+    justify-content: space-between;
+    gap: 0.5rem;
 }
 
 .sub-value {
@@ -276,11 +276,25 @@ td select, td input {
 
 .gold-amount-sub-value {
     color: #d4af37; /* Altın rengi */
+    flex: 0 0 auto; /* Sol tarafa sabitlenmiş */
 }
 
 .current-value-sub-value {
     color: #27ae60; /* Yeşil */
     font-weight: 600;
+    text-align: right; /* Sağa yaslanmış */
+    flex: 1; /* Kalan alanı kapla */
+}
+
+/* Kur bilgisi stili */
+.rate-info-container {
+    margin-top: 0.5rem;
+}
+
+.rate-info {
+    font-size: 0.8rem;
+    color: #666;
+    font-weight: 500;
 }
 
 /* Mobil Cihazlar İçin Özel Stiller */
