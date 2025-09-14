@@ -217,6 +217,12 @@ td select, td input {
 
 /* Mobil Cihazlar İçin Özel Stiller */
 @media (max-width: 768px) {
+    .mobile-header {
+        display: table-row;
+    }
+    .table-container thead tr:not(.mobile-header) {
+        display: none;
+    }
     #mobile-view-toggle {
         display: none;
     }
@@ -278,7 +284,7 @@ td select, td input {
 
     .date-container {
         display: flex;
-        flex-direction: column;
+        flex-direction: row;
         gap: 0.2rem;
     }
 
