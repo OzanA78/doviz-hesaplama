@@ -251,6 +251,18 @@ document.addEventListener('DOMContentLoaded', () => {
         // Değişen satırın altındaki satırları bul
         const subsequentRows = allRows.slice(changedIndex + 1);
         
+        // Eğer alt satır yoksa işlem yapma
+        if (subsequentRows.length === 0) return;
+        
+        // Onay mesajı göster
+        const monthNames = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 
+                           'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
+        const currentMonthName = monthNames[parseInt(month) - 1];
+        
+        const confirmMessage = `Seçilen tarih: ${currentMonthName} ${year}\n\nAlt ${subsequentRows.length} satırın tarihlerini otomatik olarak sıralı aylar şeklinde güncellemek ister misiniz?\n\n(Sonraki satırlar sırasıyla: ${monthNames[parseInt(month)]} ${year}, ${monthNames[parseInt(month) + 1] || monthNames[0]} ${parseInt(month) + 1 > 12 ? parseInt(year) + 1 : year}... şeklinde olacak)`;
+        
+        if (!confirm(confirmMessage)) return;
+        
         let currentDate = new Date(`${year}-${month}-01`);
         
         subsequentRows.forEach((row, index) => {
