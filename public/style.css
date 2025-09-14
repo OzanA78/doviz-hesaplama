@@ -284,12 +284,13 @@ td select, td input {
 
     .date-container {
         display: flex;
-        flex-direction: row;
+        flex-wrap: nowrap;
         gap: 0.2rem;
     }
 
     .date-container select {
         width: 50%;
+        flex-shrink: 0;
         padding: 0.4rem;
         font-size: 0.75rem;
     }
