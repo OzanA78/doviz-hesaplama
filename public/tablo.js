@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Mobil için Yıl/Ay'ı tek hücrede birleştir
         if (isMobile) {
             newRow.innerHTML = `
-                <td class="date-cell" colspan="2">
+                <td class="date-cell">
                     <div class="date-container">
                         <select class="year-select">
                             <option value="">Yıl</option>
@@ -102,7 +102,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         </select>
                     </div>
                 </td>
-                <td class="rate-cell" style="display:none;">-</td>
                 <td class="amount-cell">
                     <div class="mobile-amount-wrapper">
                         <input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10">
@@ -112,8 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
                         <span class="sub-value current-value-sub-value">-</span>
                     </div>
                 </td>
-                <td class="gold-amount-cell" style="display:none;">-</td>
-                <td class="current-value-cell" style="display:none;">-</td>
             `;
         } else {
             newRow.innerHTML = `

@@ -218,9 +218,9 @@ td select, td input {
 /* Mobil Cihazlar İçin Özel Stiller */
 @media (max-width: 768px) {
     .mobile-header {
-        display: table-row;
+        display: table-row !important;
     }
-    .table-container thead tr:not(.mobile-header) {
+    .web-header {
         display: none;
     }
     #mobile-view-toggle {
