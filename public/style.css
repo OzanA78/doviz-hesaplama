@@ -302,26 +302,30 @@ td select, td input {
 
 /* Kur bilgisi stili */
 .rate-info-container {
-    position: absolute;
-    bottom: 0.3rem;
-    right: 0.5rem;
-    z-index: 2;
+    display: inline-block;
+    margin-left: 1rem;
+    vertical-align: middle;
 }
 
 .rate-info {
-    font-size: 0.7rem;
+    font-size: 0.8rem;
     color: #666;
     font-weight: 500;
-    background: rgba(255, 255, 255, 0.9);
-    padding: 0.2rem 0.4rem;
-    border-radius: 4px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    background: rgba(240, 240, 240, 0.8);
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 /* Ay kolonu özel stilleri */
 .month-cell, td:nth-child(2) {
-    position: relative;
     vertical-align: top;
+}
+
+.month-cell .month-select, td:nth-child(2) .month-select {
+    display: inline-block;
+    width: auto;
+    min-width: 120px;
 }
 
 /* Mobil Cihazlar İçin Özel Stiller */
