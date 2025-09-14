@@ -302,13 +302,26 @@ td select, td input {
 
 /* Kur bilgisi stili */
 .rate-info-container {
-    margin-top: 0.5rem;
+    position: absolute;
+    bottom: 0.3rem;
+    right: 0.5rem;
+    z-index: 2;
 }
 
 .rate-info {
-    font-size: 0.8rem;
+    font-size: 0.7rem;
     color: #666;
     font-weight: 500;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 0.2rem 0.4rem;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+/* Ay kolonu özel stilleri */
+.month-cell, td:nth-child(2) {
+    position: relative;
+    vertical-align: top;
 }
 
 /* Mobil Cihazlar İçin Özel Stiller */

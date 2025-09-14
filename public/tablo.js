@@ -232,10 +232,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const totalGoldAmountEl = document.getElementById('total-gold-amount');
         totalGoldAmountEl.textContent = `${totalGoldAmount.toFixed(1)} gr`;
-        totalAmountEl.textContent = totalAmount.toLocaleString('tr-TR', {style: 'currency', currency: 'TRY', maximumFractionDigits: 0});
+        totalAmountEl.textContent = formatCurrency(totalAmount, 'TRY', 0);
         
         totalCurrentValueLabelEl.innerHTML = `Bugünün Parası ile:`;
-        totalCurrentValueEl.textContent = totalCurrentValue.toLocaleString('tr-TR', {style: 'currency', currency: 'TRY', maximumFractionDigits: 0});
+        totalCurrentValueEl.textContent = formatCurrency(totalCurrentValue, 'TRY', 0);
     }
 
     function updateSubsequentRows(changedRow) {
@@ -358,11 +358,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function formatCurrency(value, currency, maximumFractionDigits = 2) {
-        return value.toLocaleString('tr-TR', {
-            style: 'currency',
-            currency: currency,
+        // ###,###.## formatı için
+        const formatted = value.toLocaleString('tr-TR', {
+            minimumFractionDigits: maximumFractionDigits,
             maximumFractionDigits: maximumFractionDigits
         });
+        
+        return `${formatted} ${currency === 'TRY' ? '₺' : currency}`;
     }
 
     // Modern Modal Fonksiyonları
