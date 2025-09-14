@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     const currentText = formatCurrency(currentValue, 'TRY', 0);
 
                     // Alt değerleri güncelle
-                    goldAmountSubValue.textContent = `${goldText} (${formatCurrency(historicalPrice, 'TRY', 0)})`;
+                    goldAmountSubValue.textContent = `${goldText} (Kur: ${formatCurrency(historicalPrice, 'TRY', 0)})`;
                     currentValueSubValue.textContent = currentText;
                 } else {
                     goldAmountSubValue.textContent = '-';
@@ -200,7 +200,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentValueSubValue = row.querySelector('.current-value-sub-value');
             
             if (goldAmountSubValue && goldAmountSubValue.textContent !== '-' && goldAmountSubValue.textContent !== 'Veri Yok') {
-                // "5.2 gr (2,500 ₺)" formatından altın miktarını çıkar
+                // "5.2 gr (Kur: ₺2,500)" formatından altın miktarını çıkar
                 const goldText = goldAmountSubValue.textContent;
                 const goldMatch = goldText.match(/([0-9,.]+)\s*gr/);
                 if (goldMatch) {
