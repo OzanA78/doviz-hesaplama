@@ -18,7 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const mainContainer = document.querySelector('.container.table-view');
 
     // Cihaz tipini ayarla
-    let isMobile = false; // window.innerWidth <= 768;
+    let isMobile = window.innerWidth <= 768;
     deviceIndicatorEl.textContent = isMobile ? '(Mobil)' : '(Web)';
 
     // Global Durum Değişkenleri
@@ -255,8 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
         totalCurrentValueEl.textContent = totalCurrentValue.toLocaleString('tr-TR', {style: 'currency', currency: 'TRY', maximumFractionDigits: 0});
     }
 
-    mobileViewToggle.style.display = 'none';
-    /* mobileViewToggle.addEventListener('click', (e) => {
+    mobileViewToggle.addEventListener('click', (e) => {
         e.preventDefault();
         mainContainer.classList.toggle('mobile-emulation');
         
@@ -267,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
         deviceIndicatorEl.textContent = isMobile ? '(Mobil)' : '(Web)';
 
         rebuildTableForView();
-    }); */
+    });
 
     function attachEventListeners(row) {
         row.querySelector('.year-select').addEventListener('change', () => updateRow(row));
