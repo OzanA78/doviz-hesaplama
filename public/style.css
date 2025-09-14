@@ -336,6 +336,7 @@ td select, td input {
 
     /* YENİ: Mobilde gereksiz kolonları gizle */
     th:nth-child(3), /* Kur kolonu */
+    th:nth-child(4), /* Miktar kolonu */
     .gold-amount-cell, .current-value-cell,
     th:nth-child(5), th:nth-child(6) {
         display: none;
@@ -464,6 +465,7 @@ td select, td input {
 }
 
 .container.mobile-emulation th:nth-child(3),
+.container.mobile-emulation th:nth-child(4),
 .container.mobile-emulation .gold-amount-cell,
 .container.mobile-emulation .current-value-cell,
 .container.mobile-emulation th:nth-child(5),
