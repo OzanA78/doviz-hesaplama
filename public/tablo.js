@@ -195,18 +195,26 @@ document.addEventListener('DOMContentLoaded', () => {
             const amount = parseFloat(rawAmount) || 0;
             totalAmount += amount;
 
-            const rateText = row.querySelector('.rate-cell').textContent;
-            if (amount > 0 && rateText !== '-' && rateText !== 'Veri Yok') {
-                const rawRate = rateText.replace(/[^\d,]/g, '').replace(',', '.');
-                const rate = parseFloat(rawRate) || 0;
-                if(rate > 0) {
-                    totalGoldAmount += (amount / rate);
+            // Yeni yapıda alt değerlerden bilgileri al
+            const goldAmountSubValue = row.querySelector('.gold-amount-sub-value');
+            const currentValueSubValue = row.querySelector('.current-value-sub-value');
+            
+            if (goldAmountSubValue && goldAmountSubValue.textContent !== '-' && goldAmountSubValue.textContent !== 'Veri Yok') {
+                // "5.2 gr (2,500 ₺)" formatından altın miktarını çıkar
+                const goldText = goldAmountSubValue.textContent;
+                const goldMatch = goldText.match(/([0-9,.]+)\s*gr/);
+                if (goldMatch) {
+                    const goldAmount = parseFloat(goldMatch[1].replace(',', '.')) || 0;
+                    totalGoldAmount += goldAmount;
                 }
             }
             
-            const currentValueText = row.querySelector('.current-value-cell').textContent;
-            const rawCurrentValue = currentValueText.replace(/[^\d,]/g, '').replace(',', '.');
-            totalCurrentValue += parseFloat(rawCurrentValue) || 0;
+            if (currentValueSubValue && currentValueSubValue.textContent !== '-' && currentValueSubValue.textContent !== 'Veri Yok') {
+                // "15,000 ₺" formatından değeri çıkar
+                const currentText = currentValueSubValue.textContent;
+                const rawCurrentValue = currentText.replace(/[^\d,]/g, '').replace(',', '.');
+                totalCurrentValue += parseFloat(rawCurrentValue) || 0;
+            }
         });
 
         const totalGoldAmountEl = document.getElementById('total-gold-amount');
