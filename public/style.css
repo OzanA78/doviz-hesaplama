@@ -58,10 +58,10 @@ h1 {
 
 .header-container {
     text-align: center;
-    margin-bottom: 1.5rem;
+    margin-bottom: 1rem;
     flex-shrink: 0;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 2rem;
+    padding: 1.2rem;
     border-radius: 15px;
     box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
     backdrop-filter: blur(10px);
@@ -223,7 +223,7 @@ thead {
 }
 
 th, td {
-    padding: 0.8rem 1rem;
+    padding: 0.5rem 0.8rem;
     text-align: left;
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
@@ -246,7 +246,7 @@ th:nth-child(1), td:nth-child(1) { min-width: 150px; } /* Yıl Kolonu */
 th:nth-child(2), td:nth-child(2) { min-width: 150px; } /* Ay Kolonu */
 
 td {
-    vertical-align: middle;
+    vertical-align: top;
     transition: background-color 0.2s ease;
 }
 
@@ -260,18 +260,58 @@ tbody tr:nth-child(even) {
 }
 
 tbody tr:hover {
-    background-color: rgba(179, 230, 230, 0.8) !important;
-    transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.05)) !important;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
 }
 
 td select, td input {
     width: 100%;
-    padding: 0.7rem;
-    font-size: 1rem;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    background-color: #fff;
+    padding: 0.6rem 0.8rem;
+    font-size: 0.9rem;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.9));
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    font-weight: 500;
+    color: #2d3748;
+}
+
+td select:focus, td input:focus {
+    outline: none;
+    border-color: #667eea;
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2), 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
+}
+
+td select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23667eea%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%2C9%2012%2C15%2018%2C9%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E');
+    background-repeat: no-repeat;
+    background-position: right 0.7rem center;
+    background-size: 1rem;
+    padding-right: 2.5rem;
+    cursor: pointer;
+}
+
+td select:focus {
+    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23764ba2%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%2C9%2012%2C15%2018%2C9%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E');
+}
+
+td input.amount-input {
+    text-align: right;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+td input.amount-input::placeholder {
+    color: #a0aec0;
+    font-weight: 400;
+    font-style: italic;
 }
 
 /* Alt değerler için stil */
@@ -283,21 +323,28 @@ td select, td input {
 }
 
 .sub-value {
-    font-size: 0.8rem;
-    color: #666;
-    font-weight: 500;
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .gold-amount-sub-value {
-    color: #d4af37; /* Altın rengi */
-    flex: 0 0 auto; /* Sol tarafa sabitlenmiş */
+    color: #ffffff;
+    background: linear-gradient(135deg, #f1c40f, #f39c12);
+    flex: 0 0 auto;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .current-value-sub-value {
-    color: #27ae60; /* Yeşil */
+    color: #ffffff;
+    background: linear-gradient(135deg, #27ae60, #2ecc71);
     font-weight: 600;
-    text-align: right; /* Sağa yaslanmış */
-    flex: 1; /* Kalan alanı kapla */
+    text-align: right;
+    flex: 1;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 /* Kur bilgisi stili */
@@ -318,10 +365,6 @@ td select, td input {
 }
 
 /* Ay kolonu özel stilleri */
-.month-cell, td:nth-child(2) {
-    vertical-align: top;
-}
-
 .month-cell .month-select, td:nth-child(2) .month-select {
     display: inline-block;
     width: auto;
@@ -378,7 +421,7 @@ td select, td input {
     }
 
     th, td {
-        padding: 0.25rem;
+        padding: 0.2rem;
         font-size: 0.75rem;
         vertical-align: middle;
     }
@@ -399,6 +442,10 @@ td select, td input {
         width: 100%;
         padding: 0.4rem;
         font-size: 0.75rem;
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        border-radius: 6px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     }
 
     /* YENİ: Miktar hücresini ve içindeki alt değerleri stillendir */
@@ -430,12 +477,13 @@ td select, td input {
     }
 
     .sub-value {
-        font-size: 0.7rem;
-        color: #555;
-        background-color: #f7f7f7;
-        padding: 0.15rem 0.3rem;
+        font-size: 0.65rem;
+        font-weight: 600;
+        padding: 0.2rem 0.4rem;
         border-radius: 4px;
         white-space: nowrap;
+        backdrop-filter: blur(5px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
     }
 
     td input.amount-input {
@@ -443,8 +491,14 @@ td select, td input {
         -moz-user-select: none; /* Firefox */
         -ms-user-select: none; /* Internet Explorer/Edge */
         user-select: none; /* Standart */
-        font-size: 0.8rem;
+        font-size: 0.75rem;
         padding: 0.4rem;
+        border: 1px solid rgba(102, 126, 234, 0.3);
+        border-radius: 6px;
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        text-align: right;
+        font-weight: 600;
     }
 
     /* YENİ: Mobilde gereksiz kolonları gizle */
@@ -511,7 +565,7 @@ td select, td input {
 
 .container.mobile-emulation th,
 .container.mobile-emulation td {
-    padding: 0.25rem;
+    padding: 0.2rem;
     font-size: 0.75rem;
     vertical-align: middle;
 }
@@ -569,12 +623,13 @@ td select, td input {
 }
 
 .container.mobile-emulation .sub-value {
-    font-size: 0.7rem;
-    color: #555;
-    background-color: #f7f7f7;
-    padding: 0.15rem 0.3rem;
+    font-size: 0.65rem;
+    font-weight: 600;
+    padding: 0.2rem 0.4rem;
     border-radius: 4px;
     white-space: nowrap;
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .container.mobile-emulation td input.amount-input {
@@ -582,8 +637,14 @@ td select, td input {
     -moz-user-select: none;
     -ms-user-select: none;
     user-select: none;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     padding: 0.4rem;
+    border: 1px solid rgba(102, 126, 234, 0.3);
+    border-radius: 6px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(248, 250, 252, 0.95));
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    text-align: right;
+    font-weight: 600;
 }
 
 .container.mobile-emulation th:nth-child(3),
@@ -637,21 +698,22 @@ td .current-value-cell {
 }
 
 .totals-container {
-    background-color: #ecf0f1;
-    border-radius: 8px;
-    padding: 0.75rem 1.5rem; /* Değiştirildi */
-    margin-top: 0; /* Değiştirildi */
-    border-left: 5px solid #3498db;
-    flex-shrink: 0; /* Eklendi */
+    background: transparent;
+    border-radius: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+    flex-shrink: 0;
 }
 
 .total-item {
     display: flex;
     justify-content: space-between;
-    align-items: center; /* YENİ: Dikeyde hizalama için eklendi */
-    font-size: 1.2rem;
+    align-items: center;
+    font-size: 1rem;
     font-weight: bold;
-    color: #2c3e50;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .total-item:first-child {
@@ -659,7 +721,8 @@ td .current-value-cell {
 }
 
 .total-label {
-    color: #34495e;
+    color: #ffffff;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 /* YENİ: Toplam altın miktarı parantez stili */
@@ -671,9 +734,10 @@ td .current-value-cell {
 }
 
 .total-gold-amount {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     font-weight: normal;
-    color: #7f8c8d;
+    color: #f1c40f;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
 .navigation-link {
@@ -792,4 +856,29 @@ td .current-value-cell {
 .modal-btn-no:hover {
     transform: translateY(-2px);
     box-shadow: 0 6px 20px rgba(231, 76, 60, 0.6);
+}
+
+/* Modern Footer Stilleri */
+.footer-container {
+    margin-top: 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+    flex-shrink: 0;
+}
+
+.footer-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+    pointer-events: none;
 }
