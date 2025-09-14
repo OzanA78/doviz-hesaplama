@@ -163,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
                     // Alt değerleri güncelle
                     goldAmountSubValue.textContent = `${goldText} (Kur: ${formatCurrency(historicalPrice, 'TRY', 0)})`;
-                    currentValueSubValue.textContent = currentText;
+                    currentValueSubValue.textContent = `${goldText} (Güncel: ${formatCurrency(currentGoldPrice, 'TRY', 0)}) = ${currentText}`;
                 } else {
                     goldAmountSubValue.textContent = '-';
                     currentValueSubValue.textContent = '-';
@@ -210,10 +210,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             if (currentValueSubValue && currentValueSubValue.textContent !== '-' && currentValueSubValue.textContent !== 'Veri Yok') {
-                // "15,000 ₺" formatından değeri çıkar
+                // "74.1 gr (Güncel: ₺4,445) = ₺329,267" formatından son değeri çıkar
                 const currentText = currentValueSubValue.textContent;
-                const rawCurrentValue = currentText.replace(/[^\d,]/g, '').replace(',', '.');
-                totalCurrentValue += parseFloat(rawCurrentValue) || 0;
+                const valueMatch = currentText.match(/=\s*([₺\d,.]+)/);
+                if (valueMatch) {
+                    const rawCurrentValue = valueMatch[1].replace(/[^\d,]/g, '').replace(',', '.');
+                    totalCurrentValue += parseFloat(rawCurrentValue) || 0;
+                }
             }
         });
 
