@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Set dynamic height for mobile browsers
+    const setAppHeight = () => {
+        const doc = document.documentElement;
+        doc.style.setProperty('--app-height', `${window.innerHeight}px`);
+    };
+    window.addEventListener('resize', setAppHeight);
+    setAppHeight();
+
     // HTML Elementleri
     const tableBody = document.getElementById('calculation-table-body');
     const totalAmountEl = document.getElementById('total-amount');
