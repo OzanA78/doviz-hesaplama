@@ -104,7 +104,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 </td>
                 <td class="rate-cell" style="display:none;">-</td>
                 <td class="amount-cell">
-                    <input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10">
+                    <div class="mobile-amount-wrapper">
+                        <span class="mobile-amount-label">Miktar (₺)</span>
+                        <input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10">
+                    </div>
                     <div class="sub-values-container">
                         <span class="sub-value gold-amount-sub-value">-</span>
                         <span class="sub-value current-value-sub-value">-</span>

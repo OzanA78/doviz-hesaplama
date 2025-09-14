@@ -295,6 +295,20 @@ td select, td input {
         position: relative; /* Etiketin konumlandırılması için */
     }
 
+    .mobile-amount-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        margin-bottom: 0.2rem;
+    }
+
+    .mobile-amount-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #34495e;
+        white-space: nowrap;
+    }
+
     .sub-values-container {
         display: flex;
         justify-content: space-between;
@@ -408,6 +422,20 @@ td select, td input {
     min-width: 120px;
     vertical-align: top;
     position: relative;
+}
+
+.container.mobile-emulation .mobile-amount-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.2rem;
+}
+
+.container.mobile-emulation .mobile-amount-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #34495e;
+    white-space: nowrap;
 }
 
 .container.mobile-emulation .sub-values-container {
