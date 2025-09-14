@@ -89,10 +89,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Mobil için Yıl/Ay'ı tek hücrede birleştir
         if (isMobile) {
+            const monthName = months.find(m => m.value === selectedMonth)?.name || "";
             newRow.innerHTML = `
                 <td class="date-cell" colspan="2">
                     <div class="date-container">
-                        <span>${selectedYear} / ${months.find(m => m.value === selectedMonth)?.name}</span>
+                        <span>${selectedYear} ${monthName ? `/ ${monthName}` : ""}</span>
                     </div>
                 </td>
                 <td class="rate-cell" style="display:none;">-</td>
