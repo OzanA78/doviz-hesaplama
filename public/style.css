@@ -150,11 +150,10 @@ input[type="tel"],
 .table-container {
     flex: 1;
     overflow: auto;
-    margin-bottom: 1rem; /* Değiştirildi */
+    margin-bottom: 0; /* Değiştirildi */
     position: relative;
     background: #fff;
     border-radius: 8px;
-    margin-top: 1rem; /* Eklendi */
 }
 
 table {
@@ -266,12 +265,11 @@ td select, td input {
 
     .date-cell {
         padding: 0.2rem !important;
-        width: 50%; /* Eklendi: Genişliği yarıya düşür */
     }
 
     .date-container {
         display: flex;
-        flex-direction: column;
+        flex-direction: row; /* Değiştirildi */
         gap: 0.2rem;
     }
 
@@ -333,8 +331,8 @@ td select, td input {
     }
 
     .totals-container {
-        padding: 0.75rem;
-        margin-top: 0; /* Değiştirildi */
+        padding: 0.5rem 0.75rem; /* Değiştirildi */
+        margin-top: 0;
     }
 
     .total-item {
@@ -372,9 +370,10 @@ td .current-value-cell {
 .totals-container {
     background-color: #ecf0f1;
     border-radius: 8px;
-    padding: 1rem 1.5rem; /* Değiştirildi */
-    margin-top: 1rem;
+    padding: 0.5rem 1.5rem; /* Değiştirildi */
+    margin-top: 0; /* Değiştirildi */
     border-left: 5px solid #3498db;
+    flex-shrink: 0; /* Eklendi */
 }
 
 .total-item {
