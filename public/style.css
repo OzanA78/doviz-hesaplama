@@ -367,36 +367,6 @@ td select, td input {
         background-color: #f8f9fa;
         text-align: center;
     }
-
-    thead th:nth-child(1) {
-        content: "Yıl";
-    }
-
-    thead th:nth-child(2) {
-        content: "Ay";
-    }
-
-    thead th:nth-child(3) {
-        content: "Miktar (TL)";
-    }
-
-    /* Adjusted mobile header visibility */
-    thead th {
-        visibility: visible;
-        content: unset;
-    }
-
-    thead th:nth-child(1)::after {
-        content: "Yıl";
-    }
-
-    thead th:nth-child(2)::after {
-        content: "Ay";
-    }
-
-    thead th:nth-child(3)::after {
-        content: "Miktar (TL)";
-    }
 }
 
 .container.mobile-emulation {

@@ -89,16 +89,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Mobil için Yıl/Ay'ı tek hücrede birleştir
         if (isMobile) {
-            const monthName = months.find(m => m.value === selectedMonth)?.name || "";
             newRow.innerHTML = `
                 <td class="date-cell" colspan="2">
                     <div class="date-container">
-                        <span>${selectedYear} ${monthName ? `/ ${monthName}` : ""}</span>
+                        <select class="year-select">
+                            <option value="">Yıl</option>
+                            ${years.map(y => `<option value="${y}" ${y === selectedYear ? 'selected' : ''}>${y}</option>`).join('')}
+                        </select>
+                        <select class="month-select">
+                            <option value="">Ay</option>
+                            ${months.map(m => `<option value="${m.value}" ${m.value === selectedMonth ? 'selected' : ''}>${m.name}</option>`).join('')}
+                        </select>
                     </div>
                 </td>
                 <td class="rate-cell" style="display:none;">-</td>
                 <td class="amount-cell">
-                    <input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10">
+                    <div class="mobile-amount-wrapper">
+                        <input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10">
+                    </div>
+                    <div class="sub-values-container">
+                        <span class="sub-value gold-amount-sub-value">-</span>
+                        <span class="sub-value current-value-sub-value">-</span>
+                    </div>
                 </td>
                 <td class="gold-amount-cell" style="display:none;">-</td>
                 <td class="current-value-cell" style="display:none;">-</td>
