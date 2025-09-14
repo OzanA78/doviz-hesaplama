@@ -254,37 +254,38 @@ document.addEventListener('DOMContentLoaded', () => {
         // Eğer alt satır yoksa işlem yapma
         if (subsequentRows.length === 0) return;
         
-        // Onay mesajı göster
+        // Modern modal ile onay al
         const monthNames = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 
                            'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
         const currentMonthName = monthNames[parseInt(month) - 1];
         
-        const confirmMessage = `Seçilen tarih: ${currentMonthName} ${year}\n\nAlt ${subsequentRows.length} satırın tarihlerini otomatik olarak sıralı aylar şeklinde güncellemek ister misiniz?\n\n(Sonraki satırlar sırasıyla: ${monthNames[parseInt(month)]} ${year}, ${monthNames[parseInt(month) + 1] || monthNames[0]} ${parseInt(month) + 1 > 12 ? parseInt(year) + 1 : year}... şeklinde olacak)`;
+        const message = `Alt ${subsequentRows.length} satırın tarihlerini ${currentMonthName} ${year} tarihinden başlayarak sıralı şekilde güncellemek istiyor musunuz?`;
         
-        if (!confirm(confirmMessage)) return;
-        
-        let currentDate = new Date(`${year}-${month}-01`);
-        
-        subsequentRows.forEach((row, index) => {
-            // Her bir alt satır için tarihi 1 ay ileri al
-            currentDate.setMonth(currentDate.getMonth() + 1);
+        showConfirmModal(message, () => {
+            // Evet seçildiğinde
+            let currentDate = new Date(`${year}-${month}-01`);
             
-            const newYear = currentDate.getFullYear().toString();
-            const newMonth = ('0' + (currentDate.getMonth() + 1)).slice(-2);
-            
-            // Yıl ve ay select'lerini güncelle
-            const yearSelect = row.querySelector('.year-select');
-            const monthSelect = row.querySelector('.month-select');
-            
-            // Sadece mevcut yıllar arasında olan tarihleri güncelle
-            const yearOption = yearSelect.querySelector(`option[value="${newYear}"]`);
-            if (yearOption) {
-                yearSelect.value = newYear;
-                monthSelect.value = newMonth;
+            subsequentRows.forEach((row, index) => {
+                // Her bir alt satır için tarihi 1 ay ileri al
+                currentDate.setMonth(currentDate.getMonth() + 1);
                 
-                // Satırı güncelle
-                updateRow(row);
-            }
+                const newYear = currentDate.getFullYear().toString();
+                const newMonth = ('0' + (currentDate.getMonth() + 1)).slice(-2);
+                
+                // Yıl ve ay select'lerini güncelle
+                const yearSelect = row.querySelector('.year-select');
+                const monthSelect = row.querySelector('.month-select');
+                
+                // Sadece mevcut yıllar arasında olan tarihleri güncelle
+                const yearOption = yearSelect.querySelector(`option[value="${newYear}"]`);
+                if (yearOption) {
+                    yearSelect.value = newYear;
+                    monthSelect.value = newMonth;
+                    
+                    // Satırı güncelle
+                    updateRow(row);
+                }
+            });
         });
     }
 
@@ -366,6 +367,47 @@ document.addEventListener('DOMContentLoaded', () => {
             currency: currency,
             maximumFractionDigits: maximumFractionDigits
         });
+    }
+
+    // Modern Modal Fonksiyonları
+    function showConfirmModal(message, onConfirm) {
+        const modal = document.getElementById('confirmModal');
+        const modalMessage = document.getElementById('modalMessage');
+        const modalYes = document.getElementById('modalYes');
+        const modalNo = document.getElementById('modalNo');
+        
+        modalMessage.textContent = message;
+        modal.classList.add('show');
+        
+        // Event listener'ları temizle
+        modalYes.replaceWith(modalYes.cloneNode(true));
+        modalNo.replaceWith(modalNo.cloneNode(true));
+        
+        // Yeni event listener'ları ekle
+        document.getElementById('modalYes').addEventListener('click', () => {
+            modal.classList.remove('show');
+            onConfirm();
+        });
+        
+        document.getElementById('modalNo').addEventListener('click', () => {
+            modal.classList.remove('show');
+        });
+        
+        // Overlay'e tıklandığında kapat
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('show');
+            }
+        });
+        
+        // ESC tuşu ile kapat
+        const escHandler = (e) => {
+            if (e.key === 'Escape') {
+                modal.classList.remove('show');
+                document.removeEventListener('keydown', escHandler);
+            }
+        };
+        document.addEventListener('keydown', escHandler);
     }
 
     // Uygulamayı Başlat
