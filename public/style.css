@@ -43,17 +43,51 @@ body {
 }
 
 h1 {
-    font-size: 1.8rem;
+    font-size: 2.2rem;
     margin-bottom: 0.5rem;
-    color: #2c3e50;
+    color: #ffffff;
     text-align: center;
     display: inline;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    font-weight: 700;
 }
 
 .header-container {
     text-align: center;
-    margin-bottom: 0.5rem;
-    flex-shrink: 0; /* Eklendi */
+    margin-bottom: 1.5rem;
+    flex-shrink: 0;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 2rem;
+    border-radius: 15px;
+    box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.header-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0.05) 100%);
+    pointer-events: none;
+}
+
+.header-container h1 {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background: none !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
 }
 
 .device-indicator {
@@ -172,22 +206,26 @@ thead {
     position: sticky;
     top: 0;
     z-index: 1;
-    background: #f8f9fa;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
 th, td {
     padding: 0.8rem 1rem;
     text-align: left;
-    border-bottom: 1px solid #ddd;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
 
 th {
-    background-color: #f8f9fa;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
     font-weight: 600;
-    color: #34495e;
+    color: #ffffff;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-size: 0.85rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border: none;
     position: sticky;
     top: 0;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
 th:nth-child(1), td:nth-child(1) { min-width: 150px; } /* Yıl Kolonu */
@@ -195,15 +233,22 @@ th:nth-child(2), td:nth-child(2) { min-width: 150px; } /* Ay Kolonu */
 
 td {
     vertical-align: middle;
+    transition: background-color 0.2s ease;
 }
 
 /* YENİ: Satır renklerini ayarla */
 tbody tr:nth-child(odd) {
-    background-color: #f8f8f8; /* Açık Gri */
+    background-color: rgba(224, 247, 247, 0.6); /* Açık Turkuaz */
 }
 
 tbody tr:nth-child(even) {
-    background-color: #c8c8c8; /* Daha Koyu Gri */
+    background-color: rgba(255, 255, 255, 0.8); /* Beyaz */
+}
+
+tbody tr:hover {
+    background-color: rgba(179, 230, 230, 0.8) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 td select, td input {
@@ -213,6 +258,29 @@ td select, td input {
     border: 1px solid #ccc;
     border-radius: 6px;
     background-color: #fff;
+}
+
+/* Alt değerler için stil */
+.sub-values-container {
+    margin-top: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.sub-value {
+    font-size: 0.8rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.gold-amount-sub-value {
+    color: #d4af37; /* Altın rengi */
+}
+
+.current-value-sub-value {
+    color: #27ae60; /* Yeşil */
+    font-weight: 600;
 }
 
 /* Mobil Cihazlar İçin Özel Stiller */

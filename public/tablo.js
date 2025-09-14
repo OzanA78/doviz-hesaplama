@@ -14,7 +14,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalCurrentValueLabelEl = document.getElementById('total-current-value-label');
     const totalsContainer = document.getElementById('totals-container');
     const deviceIndicatorEl = document.querySelector('.device-indicator');
-    const mobileViewToggle = document.getElementById('mobile-view-toggle');
     const mainContainer = document.querySelector('.container.table-view');
 
     // Cihaz tipini ayarla
@@ -47,28 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error('Initialization Error:', error);
             alert('Hata: Veri yüklenemedi. Lütfen sayfayı yenileyin.');
         }
-    }
-
-    function rebuildTableForView() {
-        const rowsData = [];
-        tableBody.querySelectorAll('tr').forEach(row => {
-            rowsData.push({
-                year: row.querySelector('.year-select').value,
-                month: row.querySelector('.month-select').value,
-                amount: row.querySelector('.amount-input').value.replace(/[^\d]/g, '')
-            });
-        });
-
-        tableBody.innerHTML = '';
-
-        if (rowsData.length === 0) {
-            addNewRow();
-            return;
-        }
-
-        rowsData.forEach(data => {
-            addNewRow(null, data);
-        });
     }
 
     function addNewRow(previousData = null, existingData = null) {
@@ -126,10 +103,13 @@ document.addEventListener('DOMContentLoaded', () => {
                         ${months.map(m => `<option value="${m.value}" ${m.value === selectedMonth ? 'selected' : ''}>${m.name}</option>`).join('')}
                     </select>
                 </td>
-                <td class="rate-cell">-</td>
-                <td class="amount-cell"><input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10"></td>
-                <td class="gold-amount-cell">-</td>
-                <td class="current-value-cell">-</td>
+                <td class="amount-cell">
+                    <input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10">
+                    <div class="sub-values-container">
+                        <span class="sub-value gold-amount-sub-value">-</span>
+                        <span class="sub-value current-value-sub-value">-</span>
+                    </div>
+                </td>
             `;
         }
 
@@ -163,11 +143,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const rawAmount = amountInput.value.replace(/[^\d]/g, '');
         const amount = parseFloat(rawAmount) || 0;
 
-        const rateCell = row.querySelector('.rate-cell');
-        const goldAmountCell = row.querySelector('.gold-amount-cell');
-        const currentValueCell = row.querySelector('.current-value-cell');
-
-        // Mobil için alt değerleri de seç
+        // Alt değerleri seç (hem mobil hem web için)
         const goldAmountSubValue = row.querySelector('.gold-amount-sub-value');
         const currentValueSubValue = row.querySelector('.current-value-sub-value');
 
@@ -177,7 +153,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             if (dateData) {
                 const historicalPrice = dateData.price;
-                rateCell.textContent = formatCurrency(historicalPrice, 'TRY');
 
                 if (amount > 0) {
                     const goldAmount = amount / historicalPrice;
@@ -186,33 +161,20 @@ document.addEventListener('DOMContentLoaded', () => {
                     const goldText = `${goldAmount.toFixed(1)} gr`;
                     const currentText = formatCurrency(currentValue, 'TRY', 0);
 
-                    goldAmountCell.textContent = goldText;
-                    currentValueCell.textContent = currentText;
-                    if(isMobile) {
-                        goldAmountSubValue.textContent = `${goldText} (${formatCurrency(historicalPrice, 'TRY', 0)})`;
-                        currentValueSubValue.textContent = currentText;
-                    }
+                    // Alt değerleri güncelle
+                    goldAmountSubValue.textContent = `${goldText} (${formatCurrency(historicalPrice, 'TRY', 0)})`;
+                    currentValueSubValue.textContent = currentText;
                 } else {
-                    goldAmountCell.textContent = '-';
-                    currentValueCell.textContent = '-';
-                    if(isMobile) {
-                        goldAmountSubValue.textContent = '-';
-                        currentValueSubValue.textContent = '-';
-                    }
-                }
-            } else {
-                rateCell.textContent = 'Veri Yok';
-                goldAmountCell.textContent = '-';
-                currentValueCell.textContent = '-';
-                if(isMobile) {
-                    goldAmountSubValue.textContent = 'Veri Yok';
+                    goldAmountSubValue.textContent = '-';
                     currentValueSubValue.textContent = '-';
                 }
+            } else {
+                goldAmountSubValue.textContent = 'Veri Yok';
+                currentValueSubValue.textContent = '-';
             }
         } else {
-            rateCell.textContent = '-';
-            goldAmountCell.textContent = '-';
-            currentValueCell.textContent = '-';
+            goldAmountSubValue.textContent = '-';
+            currentValueSubValue.textContent = '-';
             if(isMobile) {
                 goldAmountSubValue.textContent = '-';
                 currentValueSubValue.textContent = '-';
@@ -254,19 +216,6 @@ document.addEventListener('DOMContentLoaded', () => {
         totalCurrentValueLabelEl.innerHTML = `Bugünün Parası ile:`;
         totalCurrentValueEl.textContent = totalCurrentValue.toLocaleString('tr-TR', {style: 'currency', currency: 'TRY', maximumFractionDigits: 0});
     }
-
-    mobileViewToggle.addEventListener('click', (e) => {
-        e.preventDefault();
-        mainContainer.classList.toggle('mobile-emulation');
-        
-        const isEmulatingMobile = mainContainer.classList.contains('mobile-emulation');
-        isMobile = window.innerWidth <= 768 || isEmulatingMobile;
-        
-        mobileViewToggle.textContent = isEmulatingMobile ? 'Web görünüme geç' : 'Mobil görünüme geç';
-        deviceIndicatorEl.textContent = isMobile ? '(Mobil)' : '(Web)';
-
-        rebuildTableForView();
-    });
 
     function attachEventListeners(row) {
         row.querySelector('.year-select').addEventListener('change', () => updateRow(row));
