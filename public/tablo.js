@@ -18,7 +18,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Cihaz tipini ayarla
     let isMobile = window.innerWidth <= 768;
-    deviceIndicatorEl.textContent = isMobile ? '(Mobil)' : '(Web)';
 
     // Global Durum Değişkenleri
     let historicalData = [];
