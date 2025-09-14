@@ -268,26 +268,6 @@ td select, td input {
         display: none;
     }
 
-    /* Mobile fixed header showing Year, Month, Amount (TL) */
-    .mobile-fixed-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 0.5rem 0.75rem;
-        background: #f8f9fa;
-        border-bottom: 1px solid #e0e0e0;
-        position: sticky;
-        top: 0;
-        z-index: 3;
-        gap: 0.5rem;
-    }
-
-    .mobile-fixed-header .col {
-        font-weight: 700;
-        font-size: 0.85rem;
-        color: #34495e;
-    }
-
     .date-cell-header {
         display: table-cell;
     }
@@ -298,7 +278,7 @@ td select, td input {
 
     .date-container {
         display: flex;
-        flex-direction: row; /* side-by-side year & month */
+        flex-direction: column;
         gap: 0.2rem;
     }
 
@@ -316,8 +296,17 @@ td select, td input {
     }
 
     .mobile-amount-wrapper {
-        display: block; /* remove inline label, keep input only */
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
         margin-bottom: 0.2rem;
+    }
+
+    .mobile-amount-label {
+        font-size: 0.7rem;
+        font-weight: 600;
+        color: #34495e;
+        white-space: nowrap;
     }
 
     .sub-values-container {
@@ -368,6 +357,27 @@ td select, td input {
 
     .total-gold-amount {
         font-size: 0.75rem;
+    }
+
+    /* Mobil cihazlar için sabit header */
+    thead th {
+        position: sticky;
+        top: 0;
+        z-index: 10;
+        background-color: #f8f9fa;
+        text-align: center;
+    }
+
+    thead th:nth-child(1) {
+        content: "Yıl";
+    }
+
+    thead th:nth-child(2) {
+        content: "Ay";
+    }
+
+    thead th:nth-child(3) {
+        content: "Miktar (TL)";
     }
 }
 

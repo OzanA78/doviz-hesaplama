@@ -7,17 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     window.addEventListener('resize', setAppHeight);
     setAppHeight();
 
-    // Keep header alignment and mobile-mode in sync on resize
-    window.addEventListener('resize', () => {
-        const prevIsMobile = isMobile;
-        isMobile = window.innerWidth <= 768 || mainContainer.classList.contains('mobile-emulation');
-        if (prevIsMobile !== isMobile) {
-            rebuildTableForView();
-            ensureMobileFixedHeader();
-        }
-        setTimeout(() => alignMobileHeaderColumns(), 120);
-    });
-
     // HTML Elementleri
     const tableBody = document.getElementById('calculation-table-body');
     const totalAmountEl = document.getElementById('total-amount');
@@ -27,67 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const deviceIndicatorEl = document.querySelector('.device-indicator');
     const mobileViewToggle = document.getElementById('mobile-view-toggle');
     const mainContainer = document.querySelector('.container.table-view');
-        // Mobile fixed header placeholder (will be inserted when mobile)
-        let mobileFixedHeader = null;
 
     // Cihaz tipini ayarla
     let isMobile = window.innerWidth <= 768;
     deviceIndicatorEl.textContent = isMobile ? '(Mobil)' : '(Web)';
-
-    // Ensure mobile fixed header presence and alignment
-    function ensureMobileFixedHeader() {
-        const tableContainer = document.querySelector('.table-container');
-        // Remove existing if desktop
-        if (!isMobile) {
-            if (mobileFixedHeader && mobileFixedHeader.parentNode) {
-                mobileFixedHeader.parentNode.removeChild(mobileFixedHeader);
-                mobileFixedHeader = null;
-            }
-            return;
-        }
-
-        // Create fixed header if missing
-        if (!mobileFixedHeader) {
-            mobileFixedHeader = document.createElement('div');
-            mobileFixedHeader.className = 'mobile-fixed-header';
-            mobileFixedHeader.innerHTML = `
-                <div class="col">Yıl</div>
-                <div class="col">Ay</div>
-                <div class="col">Miktar (TL)</div>
-            `;
-            tableContainer.parentNode.insertBefore(mobileFixedHeader, tableContainer);
-        }
-        // align after insertion
-        setTimeout(() => alignMobileHeaderColumns(), 50);
-    }
-
-    function alignMobileHeaderColumns() {
-        if (!mobileFixedHeader || !isMobile) return;
-
-        const firstRow = tableBody.querySelector('tr');
-        if (!firstRow) return;
-
-        const yearSelect = firstRow.querySelector('.year-select');
-        const monthSelect = firstRow.querySelector('.month-select');
-        const amountInput = firstRow.querySelector('.amount-input');
-
-        const cols = mobileFixedHeader.querySelectorAll('.col');
-        cols.forEach(c => c.style.width = '');
-
-        if (yearSelect && monthSelect && amountInput && cols.length >= 3) {
-            const yearRect = yearSelect.getBoundingClientRect();
-            const monthRect = monthSelect.getBoundingClientRect();
-            const amountRect = amountInput.getBoundingClientRect();
-
-            cols[0].style.width = `${Math.round(yearRect.width)}px`;
-            cols[1].style.width = `${Math.round(monthRect.width)}px`;
-            cols[2].style.width = `${Math.round(amountRect.width)}px`;
-        } else {
-            const total = mobileFixedHeader.getBoundingClientRect().width;
-            const w = Math.floor(total / 3);
-            cols.forEach(c => c.style.width = `${w}px`);
-        }
-    }
 
     // Global Durum Değişkenleri
     let historicalData = [];
@@ -118,9 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function rebuildTableForView() {
-            // Ensure mobile fixed header presence/absence according to isMobile
-            ensureMobileFixedHeader();
-
         const rowsData = [];
         tableBody.querySelectorAll('tr').forEach(row => {
             rowsData.push({
@@ -163,25 +92,12 @@ document.addEventListener('DOMContentLoaded', () => {
             newRow.innerHTML = `
                 <td class="date-cell" colspan="2">
                     <div class="date-container">
-                        <select class="year-select">
-                            <option value="">Yıl</option>
-                            ${years.map(y => `<option value="${y}" ${y === selectedYear ? 'selected' : ''}>${y}</option>`).join('')}
-                        </select>
-                        <select class="month-select">
-                            <option value="">Ay</option>
-                            ${months.map(m => `<option value="${m.value}" ${m.value === selectedMonth ? 'selected' : ''}>${m.name}</option>`).join('')}
-                        </select>
+                        <span>${selectedYear} / ${months.find(m => m.value === selectedMonth)?.name}</span>
                     </div>
                 </td>
                 <td class="rate-cell" style="display:none;">-</td>
                 <td class="amount-cell">
-                        <div class="mobile-amount-wrapper">
-                            <input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10">
-                        </div>
-                    <div class="sub-values-container">
-                        <span class="sub-value gold-amount-sub-value">-</span>
-                        <span class="sub-value current-value-sub-value">-</span>
-                    </div>
+                    <input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10">
                 </td>
                 <td class="gold-amount-cell" style="display:none;">-</td>
                 <td class="current-value-cell" style="display:none;">-</td>
@@ -206,8 +122,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td class="current-value-cell">-</td>
             `;
         }
-
-                // ...ensureMobileFixedHeader moved to top-level...
 
         const amountInput = newRow.querySelector('.amount-input');
         if (existingData && existingData.amount) {
@@ -342,8 +256,6 @@ document.addEventListener('DOMContentLoaded', () => {
         deviceIndicatorEl.textContent = isMobile ? '(Mobil)' : '(Web)';
 
         rebuildTableForView();
-        ensureMobileFixedHeader();
-        setTimeout(() => alignMobileHeaderColumns(), 80);
     });
 
     function attachEventListeners(row) {
