@@ -274,23 +274,16 @@ td select, td input {
         display: none;
     }
 
-    .date-cell-header {
-        display: table-cell;
+    .date-cell-header, .date-cell, .date-container {
+        display: contents;
     }
 
-    .date-cell {
-        padding: 0.2rem !important;
-    }
-
-    .date-container {
-        display: flex;
-        flex-wrap: nowrap;
-        gap: 0.2rem;
-    }
-
-    .date-container select {
+    .year-cell, .month-cell {
         width: 50%;
-        flex-shrink: 0;
+    }
+
+    .year-cell select, .month-cell select {
+        width: 100%;
         padding: 0.4rem;
         font-size: 0.75rem;
     }

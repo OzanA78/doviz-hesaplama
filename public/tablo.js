@@ -90,17 +90,17 @@ document.addEventListener('DOMContentLoaded', () => {
         // Mobil için Yıl/Ay'ı tek hücrede birleştir
         if (isMobile) {
             newRow.innerHTML = `
-                <td class="date-cell">
-                    <div class="date-container">
-                        <select class="year-select">
-                            <option value="">Yıl</option>
-                            ${years.map(y => `<option value="${y}" ${y === selectedYear ? 'selected' : ''}>${y}</option>`).join('')}
-                        </select>
-                        <select class="month-select">
-                            <option value="">Ay</option>
-                            ${months.map(m => `<option value="${m.value}" ${m.value === selectedMonth ? 'selected' : ''}>${m.name}</option>`).join('')}
-                        </select>
-                    </div>
+                <td class="year-cell">
+                    <select class="year-select">
+                        <option value="">Yıl</option>
+                        ${years.map(y => `<option value="${y}" ${y === selectedYear ? 'selected' : ''}>${y}</option>`).join('')}
+                    </select>
+                </td>
+                <td class="month-cell">
+                    <select class="month-select">
+                        <option value="">Ay</option>
+                        ${months.map(m => `<option value="${m.value}" ${m.value === selectedMonth ? 'selected' : ''}>${m.name}</option>`).join('')}
+                    </select>
                 </td>
                 <td class="amount-cell">
                     <div class="mobile-amount-wrapper">
