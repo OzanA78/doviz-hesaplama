@@ -16,10 +16,9 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
-    min-height: 100vh;
+    height: 100vh; /* Değiştirildi */
     padding: 1rem;
     margin: 0;
-    height: 100vh;
     overflow: hidden;
 }
 
@@ -39,6 +38,7 @@ body {
     flex-direction: column;
     height: 100%; /* Değiştirildi */
     overflow: hidden;
+    width: 100%; /* Eklendi */
 }
 
 h1 {
@@ -216,6 +216,10 @@ td select, td input {
 
 /* Mobil Cihazlar İçin Özel Stiller */
 @media (max-width: 768px) {
+    #mobile-view-toggle {
+        display: none;
+    }
+
     h1 {
         font-size: 1.2rem;
     }
@@ -226,11 +230,11 @@ td select, td input {
 
     p {
         font-size: 0.8rem;
-        margin-bottom: 0.5rem;
+        margin-bottom: 1rem;
     }
 
     .navigation-link {
-        margin: 0.25rem 0; /* Değiştirildi */
+        margin: 0.5rem 0;
     }
 
     body {
@@ -272,15 +276,14 @@ td select, td input {
 
     .date-container {
         display: flex;
-        flex-direction: row; /* Değiştirildi */
+        flex-direction: column;
         gap: 0.2rem;
     }
 
     .date-container select {
-        width: 50%; /* Değiştirildi */
+        width: 100%;
         padding: 0.4rem;
         font-size: 0.75rem;
-        flex: 1; /* Eklendi */
     }
 
     /* YENİ: Miktar hücresini ve içindeki alt değerleri stillendir */
@@ -335,8 +338,8 @@ td select, td input {
     }
 
     .totals-container {
-        padding: 0.5rem 0.75rem; /* Değiştirildi */
-        margin-top: 0; /* Değiştirildi */
+        padding: 0.75rem;
+        margin-top: 0.5rem;
     }
 
     .total-item {
@@ -346,6 +349,130 @@ td select, td input {
     .total-gold-amount {
         font-size: 0.75rem;
     }
+}
+
+.container.mobile-emulation {
+    max-width: 500px;
+}
+
+.container.mobile-emulation h1 {
+    font-size: 1.2rem;
+}
+
+.container.mobile-emulation .device-indicator {
+    font-size: 0.8rem;
+}
+
+.container.mobile-emulation p {
+    font-size: 0.8rem;
+    margin-bottom: 1rem;
+}
+
+.container.mobile-emulation .navigation-link {
+    margin: 0.5rem 0;
+}
+
+.container.mobile-emulation .table-container {
+    margin-left: -0.5rem;
+    margin-right: -0.5rem;
+    border-radius: 0;
+}
+
+.container.mobile-emulation th,
+.container.mobile-emulation td {
+    padding: 0.25rem;
+    font-size: 0.75rem;
+    vertical-align: middle;
+}
+
+.container.mobile-emulation .year-header,
+.container.mobile-emulation .month-header {
+    display: none;
+}
+
+.container.mobile-emulation .date-cell-header {
+    display: table-cell;
+}
+
+.container.mobile-emulation .date-cell {
+    padding: 0.2rem !important;
+}
+
+.container.mobile-emulation .date-container {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.container.mobile-emulation .date-container select {
+    width: 100%;
+    padding: 0.4rem;
+    font-size: 0.75rem;
+}
+
+.container.mobile-emulation td.amount-cell {
+    min-width: 120px;
+    vertical-align: top;
+    position: relative;
+}
+
+.container.mobile-emulation .mobile-amount-label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #34495e;
+    margin-bottom: 0.2rem;
+}
+
+.container.mobile-emulation .sub-values-container {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 0.25rem;
+    gap: 0.5rem;
+}
+
+.container.mobile-emulation .sub-value {
+    font-size: 0.7rem;
+    color: #555;
+    background-color: #f7f7f7;
+    padding: 0.15rem 0.3rem;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+.container.mobile-emulation td input.amount-input {
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    font-size: 0.8rem;
+    padding: 0.4rem;
+}
+
+.container.mobile-emulation th:nth-child(3),
+.container.mobile-emulation .gold-amount-cell,
+.container.mobile-emulation .current-value-cell,
+.container.mobile-emulation th:nth-child(5),
+.container.mobile-emulation th:nth-child(6) {
+    display: none;
+}
+
+.container.mobile-emulation .gold-amount-cell,
+.container.mobile-emulation .current-value-cell {
+    font-size: 0.75rem;
+}
+
+.container.mobile-emulation .totals-container {
+    padding: 0.75rem;
+    margin-top: 0.5rem;
+}
+
+.container.mobile-emulation .total-item {
+    font-size: 0.9rem;
+}
+
+.container.mobile-emulation .total-gold-amount {
+    font-size: 0.75rem;
 }
 
 td select {

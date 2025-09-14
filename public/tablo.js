@@ -6,9 +6,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalCurrentValueLabelEl = document.getElementById('total-current-value-label');
     const totalsContainer = document.getElementById('totals-container');
     const deviceIndicatorEl = document.querySelector('.device-indicator');
+    const mobileViewToggle = document.getElementById('mobile-view-toggle');
+    const mainContainer = document.querySelector('.container.table-view');
 
     // Cihaz tipini ayarla
-    const isMobile = window.innerWidth <= 768;
+    let isMobile = window.innerWidth <= 768;
     deviceIndicatorEl.textContent = isMobile ? '(Mobil)' : '(Web)';
 
     // Global Durum Değişkenleri
@@ -39,7 +41,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function addNewRow(previousData = null) {
+    function rebuildTableForView() {
+        const rowsData = [];
+        tableBody.querySelectorAll('tr').forEach(row => {
+            rowsData.push({
+                year: row.querySelector('.year-select').value,
+                month: row.querySelector('.month-select').value,
+                amount: row.querySelector('.amount-input').value.replace(/[^\d]/g, '')
+            });
+        });
+
+        tableBody.innerHTML = '';
+
+        if (rowsData.length === 0) {
+            addNewRow();
+            return;
+        }
+
+        rowsData.forEach(data => {
+            addNewRow(null, data);
+        });
+    }
+
+    function addNewRow(previousData = null, existingData = null) {
         const newRow = document.createElement('tr');
         
         const years = [...new Set(historicalData.map(item => item.date.substring(0, 4)))].sort((a, b) => b - a);
@@ -52,6 +76,9 @@ document.addEventListener('DOMContentLoaded', () => {
             nextDate.month = ('0' + (date.getMonth() + 1)).slice(-2);
         }
 
+        const selectedYear = existingData ? existingData.year : nextDate.year;
+        const selectedMonth = existingData ? existingData.month : nextDate.month;
+
         // Mobil için Yıl/Ay'ı tek hücrede birleştir
         if (isMobile) {
             newRow.innerHTML = `
@@ -59,11 +86,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="date-container">
                         <select class="year-select">
                             <option value="">Yıl</option>
-                            ${years.map(y => `<option value="${y}" ${y === nextDate.year ? 'selected' : ''}>${y}</option>`).join('')}
+                            ${years.map(y => `<option value="${y}" ${y === selectedYear ? 'selected' : ''}>${y}</option>`).join('')}
                         </select>
                         <select class="month-select">
                             <option value="">Ay</option>
-                            ${months.map(m => `<option value="${m.value}" ${m.value === nextDate.month ? 'selected' : ''}>${m.name}</option>`).join('')}
+                            ${months.map(m => `<option value="${m.value}" ${m.value === selectedMonth ? 'selected' : ''}>${m.name}</option>`).join('')}
                         </select>
                     </div>
                 </td>
@@ -84,13 +111,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 <td>
                     <select class="year-select">
                         <option value="">Yıl</option>
-                        ${years.map(y => `<option value="${y}" ${y === nextDate.year ? 'selected' : ''}>${y}</option>`).join('')}
+                        ${years.map(y => `<option value="${y}" ${y === selectedYear ? 'selected' : ''}>${y}</option>`).join('')}
                     </select>
                 </td>
                 <td>
                     <select class="month-select">
                         <option value="">Ay</option>
-                        ${months.map(m => `<option value="${m.value}" ${m.value === nextDate.month ? 'selected' : ''}>${m.name}</option>`).join('')}
+                        ${months.map(m => `<option value="${m.value}" ${m.value === selectedMonth ? 'selected' : ''}>${m.name}</option>`).join('')}
                     </select>
                 </td>
                 <td class="rate-cell">-</td>
@@ -101,7 +128,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const amountInput = newRow.querySelector('.amount-input');
-        if (previousData && previousData.amount) {
+        if (existingData && existingData.amount) {
+            const formattedAmount = parseInt(existingData.amount, 10).toLocaleString('en-US');
+            amountInput.value = formattedAmount;
+        } else if (previousData && previousData.amount) {
             const formattedAmount = previousData.amount.toLocaleString('en-US');
             amountInput.value = formattedAmount;
         }
@@ -109,14 +139,14 @@ document.addEventListener('DOMContentLoaded', () => {
         tableBody.appendChild(newRow);
         attachEventListeners(newRow);
 
-        if (nextDate.year && nextDate.month) {
+        if ((selectedYear && selectedMonth) || (amountInput.value && amountInput.value !== '0')) {
             updateRow(newRow);
         }
         
-        amountInput.focus();
-        
-        // Yeni satır eklendiğinde en aşağıya scroll et
-        totalsContainer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        if (!existingData) {
+            amountInput.focus();
+            totalsContainer.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }
     }
 
     function updateRow(row) {
@@ -218,6 +248,19 @@ document.addEventListener('DOMContentLoaded', () => {
         totalCurrentValueLabelEl.innerHTML = `Bugünün Parası ile:`;
         totalCurrentValueEl.textContent = totalCurrentValue.toLocaleString('tr-TR', {style: 'currency', currency: 'TRY', maximumFractionDigits: 0});
     }
+
+    mobileViewToggle.addEventListener('click', (e) => {
+        e.preventDefault();
+        mainContainer.classList.toggle('mobile-emulation');
+        
+        const isEmulatingMobile = mainContainer.classList.contains('mobile-emulation');
+        isMobile = window.innerWidth <= 768 || isEmulatingMobile;
+        
+        mobileViewToggle.textContent = isEmulatingMobile ? 'Web görünüme geç' : 'Mobil görünüme geç';
+        deviceIndicatorEl.textContent = isMobile ? '(Mobil)' : '(Web)';
+
+        rebuildTableForView();
+    });
 
     function attachEventListeners(row) {
         row.querySelector('.year-select').addEventListener('change', () => updateRow(row));
