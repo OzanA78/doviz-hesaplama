@@ -255,11 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (subsequentRows.length === 0) return;
         
         // Modern modal ile onay al
-        const monthNames = ['Ocak', 'Şubat', 'Mart', 'Nisan', 'Mayıs', 'Haziran', 
-                           'Temmuz', 'Ağustos', 'Eylül', 'Ekim', 'Kasım', 'Aralık'];
-        const currentMonthName = monthNames[parseInt(month) - 1];
-        
-        const message = `Alt ${subsequentRows.length} satırın tarihlerini ${currentMonthName} ${year} tarihinden başlayarak sıralı şekilde güncellemek istiyor musunuz?`;
+        const message = `Kalan satırların tarihleri otomatik güncellensin mi?`;
         
         showConfirmModal(message, () => {
             // Evet seçildiğinde
