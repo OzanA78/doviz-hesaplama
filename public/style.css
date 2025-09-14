@@ -216,7 +216,7 @@ td select, td input {
 }
 
 /* Mobil Cihazlar İçin Özel Stiller */
-/* @media (max-width: 768px) {
+@media (max-width: 768px) {
     .mobile-header {
         display: table-row !important;
     }
@@ -367,7 +367,7 @@ td select, td input {
         background-color: #f8f9fa;
         text-align: center;
     }
-} */
+}
 
 .container.mobile-emulation {
     max-width: 500px;
