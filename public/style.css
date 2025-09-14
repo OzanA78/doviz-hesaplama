@@ -50,7 +50,7 @@ h1 {
 
 .header-container {
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem; /* Değiştirildi */
 }
 
 .device-indicator {
@@ -63,7 +63,7 @@ h1 {
 p {
     font-size: 1rem;
     color: #7f8c8d;
-    margin-bottom: 1rem; /* Değiştirildi */
+    margin-bottom: 0.5rem; /* Değiştirildi */
     text-align: center;
 }
 
@@ -150,7 +150,7 @@ input[type="tel"],
 .table-container {
     flex: 1;
     overflow: auto;
-    margin-bottom: 0; /* Değiştirildi */
+    margin-bottom: 0.5rem; /* Değiştirildi */
     position: relative;
     background: #fff;
     border-radius: 8px;
@@ -198,7 +198,7 @@ tbody tr:nth-child(odd) {
 }
 
 tbody tr:nth-child(even) {
-    background-color: #e0e0e0; /* Daha Koyu Gri */
+    background-color: #dcdcdc; /* Daha Koyu Gri */
 }
 
 td select, td input {
@@ -222,12 +222,11 @@ td select, td input {
 
     p {
         font-size: 0.8rem;
-        margin-bottom: 1rem;
+        margin-bottom: 0.5rem; /* Değiştirildi */
     }
 
     .navigation-link {
-        margin: 0.5rem 0;
-        font-size: 0.9rem; /* Eklendi */
+        margin: 0 0 0.5rem 0; /* Değiştirildi */
     }
 
     body {
@@ -265,6 +264,7 @@ td select, td input {
 
     .date-cell {
         padding: 0.2rem !important;
+        width: 50%; /* Eklendi */
     }
 
     .date-container {
@@ -277,6 +277,7 @@ td select, td input {
         width: 100%;
         padding: 0.4rem;
         font-size: 0.75rem;
+        flex: 1; /* Eklendi */
     }
 
     /* YENİ: Miktar hücresini ve içindeki alt değerleri stillendir */
@@ -332,7 +333,7 @@ td select, td input {
 
     .totals-container {
         padding: 0.5rem 0.75rem; /* Değiştirildi */
-        margin-top: 0;
+        margin-top: auto; /* Değiştirildi */
     }
 
     .total-item {
@@ -370,10 +371,10 @@ td .current-value-cell {
 .totals-container {
     background-color: #ecf0f1;
     border-radius: 8px;
-    padding: 0.5rem 1.5rem; /* Değiştirildi */
-    margin-top: 0; /* Değiştirildi */
+    padding: 0.75rem 1.5rem; /* Değiştirildi */
+    margin-top: auto; /* Değiştirildi */
     border-left: 5px solid #3498db;
-    flex-shrink: 0; /* Eklendi */
+    flex-shrink: 0;
 }
 
 .total-item {
@@ -409,7 +410,7 @@ td .current-value-cell {
 
 .navigation-link {
     text-align: right;
-    margin: 0.5rem 0; /* Değiştirildi */
+    margin: 0 0 0.5rem 0; /* Değiştirildi */
 }
 
 .navigation-link.top-link {
@@ -422,7 +423,7 @@ td .current-value-cell {
     text-decoration: none;
     font-weight: 600;
     transition: color 0.2s;
-    font-size: 0.9rem; /* Eklendi */
+    font-size: 0.8rem; /* Değiştirildi */
 }
 
 .navigation-link a:hover {
