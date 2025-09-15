@@ -1004,6 +1004,19 @@ td .current-value-cell {
     position: relative;
     overflow: hidden;
     flex-shrink: 0;
+    font-size: 1.1rem; /* Footer font boyutunu büyüt */
+}
+
+.footer-container * {
+    font-size: 1.1rem !important; /* Tüm footer elementlerinin fontunu büyüt */
+}
+
+.footer-container h3 {
+    font-size: 1.3rem !important; /* Footer başlıkları daha büyük */
+}
+
+.footer-container .totals-row strong {
+    font-size: 1.2rem !important; /* Toplam değerleri biraz daha büyük */
 }
 
 .footer-container::before {
@@ -1015,4 +1028,63 @@ td .current-value-cell {
     bottom: 0;
     background: linear-gradient(45deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
     pointer-events: none;
+}
+
+/* Drag to Delete Animasyonları */
+.table-container tbody tr {
+    /* Hiçbir transition yok - sadece manuel olarak ekleyeceğiz */
+    user-select: none; /* Metin seçimini engelle */
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+}
+
+.table-container tbody tr.dragging {
+    z-index: 10;
+    box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);
+    border-radius: 8px;
+    /* Dragging sırasında hiçbir transition veya animasyon yok */
+}
+
+/* Dokunmatik cihazlarda scroll vs drag çakışmasını önle */
+.table-container tbody tr.touch-active {
+    touch-action: pan-y; /* Sadece dikey kaydırmaya izin ver */
+}
+
+/* Drag feedback için visual ipuçları - sadece aktif değilken */
+.table-container tbody tr:active:not(.dragging) {
+    background-color: rgba(102, 126, 234, 0.05);
+}
+
+@media (max-width: 768px) {
+    /* Mobilde drag area'yı biraz daha büyük yap */
+    .table-container tbody tr td {
+        padding: 1rem 0.8rem;
+    }
+    
+    .table-container tbody tr {
+        min-height: 60px; /* Dokunma alanını büyüt */
+    }
+    
+    /* Mobilde drag feedback'i daha belirgin yap */
+    .table-container tbody tr.dragging {
+        box-shadow: 0 6px 25px rgba(220, 53, 69, 0.5);
+    }
+    
+    /* Footer fontları mobilde daha büyük */
+    .footer-container {
+        font-size: 1.2rem !important;
+    }
+    
+    .footer-container * {
+        font-size: 1.2rem !important;
+    }
+    
+    .footer-container h3 {
+        font-size: 1.4rem !important;
+    }
+    
+    .footer-container .totals-row strong {
+        font-size: 1.3rem !important;
+    }
 }

@@ -301,6 +301,159 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // Drag to Delete İşlevselliği
+    function addDragToDeleteListeners(row) {
+        let startX = 0;
+        let startY = 0;
+        let currentX = 0;
+        let isDragging = false;
+        let deleteThreshold = 80; // Silme için minimum mesafe
+        let highlightThreshold = 40; // Highlight başlama mesafesi
+        let verticalThreshold = 30; // Dikey hareket toleransı
+        let isHighlighted = false;
+        
+        // Touch ve mouse eventlerini birlikte handle et
+        const startEvent = isMobile ? 'touchstart' : 'mousedown';
+        const moveEvent = isMobile ? 'touchmove' : 'mousemove';
+        const endEvent = isMobile ? 'touchend' : 'mouseup';
+        
+        function getEventPos(e) {
+            if (isMobile) {
+                return {
+                    x: e.touches[0].clientX,
+                    y: e.touches[0].clientY
+                };
+            }
+            return {
+                x: e.clientX,
+                y: e.clientY
+            };
+        }
+        
+        function handleStart(e) {
+            // Tek satır varsa drag'e izin verme
+            const totalRows = tableBody.querySelectorAll('tr').length;
+            if (totalRows <= 1) {
+                return;
+            }
+            
+            // Sadece boş alanlarda başlat (input, select elementlerinde değil)
+            if (e.target.tagName === 'INPUT' || 
+                e.target.tagName === 'SELECT' || 
+                e.target.closest('select')) {
+                return;
+            }
+            
+            const pos = getEventPos(e);
+            startX = pos.x;
+            startY = pos.y;
+            currentX = 0;
+            isDragging = false;
+            isHighlighted = false;
+            
+            // Drag başlarken transition'ı kaldır
+            row.style.transition = 'none';
+        }
+        
+        function handleMove(e) {
+            if (startX === 0) return;
+            
+            const pos = getEventPos(e);
+            const deltaX = pos.x - startX;
+            const deltaY = Math.abs(pos.y - startY);
+            
+            // Dikey hareket çok fazlaysa drag işlemini iptal et
+            if (deltaY > verticalThreshold && !isDragging) {
+                resetDrag();
+                return;
+            }
+            
+            // Her iki yöne de drag (sağa ve sola)
+            const absDeltaX = Math.abs(deltaX);
+            if (absDeltaX > 5) { // Minimum hareket
+                isDragging = true;
+                currentX = deltaX;
+                
+                // Transition'sız direkt güncelle
+                row.style.transform = `translateX(${deltaX}px)`;
+                
+                // Highlight threshold kontrolü - sadece ilk kez highlight olduğunda renk değişir
+                if (absDeltaX >= highlightThreshold && !isHighlighted) {
+                    isHighlighted = true;
+                    const alpha = 0.4; // Sabit alpha değeri, mesafeye göre değişmesin
+                    row.style.backgroundColor = `rgba(220, 53, 69, ${alpha})`;
+                    row.classList.add('dragging');
+                } else if (absDeltaX < highlightThreshold && isHighlighted) {
+                    // Threshold'un altına düştüğünde highlight'ı kaldır
+                    isHighlighted = false;
+                    row.style.backgroundColor = '';
+                    row.classList.remove('dragging');
+                }
+                // Mesafe artışında renk yoğunluğu değişmesin
+                
+                e.preventDefault(); // Sayfa kaydırmasını engelle
+            }
+        }
+        
+        function handleEnd(e) {
+            if (startX === 0) return;
+            
+            const deleteRow = isDragging && Math.abs(currentX) >= deleteThreshold;
+            
+            if (deleteRow) {
+                // Silme animasyonu için transition ekle
+                row.style.transition = 'all 0.3s ease-out';
+                const direction = currentX > 0 ? '100%' : '-100%';
+                row.style.transform = `translateX(${direction})`;
+                row.style.opacity = '0';
+                
+                setTimeout(() => {
+                    // Direkt sil, onay sorma
+                    if (row.parentNode) {
+                        row.remove();
+                        updateTotals();
+                    }
+                }, 300);
+            } else {
+                resetDrag();
+            }
+            
+            // State'i tamamen temizle
+            startX = 0;
+            isDragging = false;
+            isHighlighted = false;
+            currentX = 0;
+        }
+        
+        function resetDrag() {
+            // Önce mevcut stilleri temizle
+            row.style.transform = '';
+            row.style.backgroundColor = '';
+            row.classList.remove('dragging');
+            isHighlighted = false;
+            
+            // Kısa bir gecikme sonra yumuşak transition ekle
+            setTimeout(() => {
+                row.style.transition = 'all 0.3s ease-out';
+                // Bir sonraki frame'de transition'ı kaldır
+                setTimeout(() => {
+                    row.style.transition = '';
+                }, 300);
+            }, 10);
+        }
+        
+        // Event listener'ları ekle
+        row.addEventListener(startEvent, handleStart, { passive: false });
+        document.addEventListener(moveEvent, handleMove, { passive: false });
+        document.addEventListener(endEvent, handleEnd, { passive: false });
+        
+        // Temizlik için row'a cleanup fonksiyonu ekle
+        row._cleanupDragListeners = () => {
+            document.removeEventListener(moveEvent, handleMove);
+            document.removeEventListener(endEvent, handleEnd);
+        };
+    }
+
     function attachEventListeners(row) {
         row.querySelector('.year-select').addEventListener('change', () => {
             updateRow(row);
@@ -310,6 +463,9 @@ document.addEventListener('DOMContentLoaded', () => {
             updateRow(row);
             updateSubsequentRows(row);
         });
+        
+        // Drag to delete işlevselliği ekle
+        addDragToDeleteListeners(row);
         
         const amountInput = row.querySelector('.amount-input');
         
@@ -384,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Modern Modal Fonksiyonları
-    function showConfirmModal(message, onConfirm) {
+    function showConfirmModal(message, onConfirm, onCancel = null) {
         const modal = document.getElementById('confirmModal');
         const modalMessage = document.getElementById('modalMessage');
         const modalYes = document.getElementById('modalYes');
@@ -405,12 +561,14 @@ document.addEventListener('DOMContentLoaded', () => {
         
         document.getElementById('modalNo').addEventListener('click', () => {
             modal.classList.remove('show');
+            if (onCancel) onCancel();
         });
         
         // Overlay'e tıklandığında kapat
         modal.addEventListener('click', (e) => {
             if (e.target === modal) {
                 modal.classList.remove('show');
+                if (onCancel) onCancel();
             }
         });
         
@@ -418,6 +576,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const escHandler = (e) => {
             if (e.key === 'Escape') {
                 modal.classList.remove('show');
+                if (onCancel) onCancel();
                 document.removeEventListener('keydown', escHandler);
             }
         };
