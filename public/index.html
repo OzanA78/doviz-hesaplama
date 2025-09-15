@@ -52,20 +52,17 @@
         <div class="toolbar-container">
             <div class="toolbar-left">
                 <div class="plan-controls">
-                    <input type="text" id="planTitleInput" class="plan-input" placeholder="Plan adı girin..." maxlength="50">
+                    <input type="text" id="planTitleInput" class="plan-input compact" placeholder="Plan adı..." maxlength="50">
                     <select id="planSelector" class="plan-selector">
                         <option value="">Plan seçin...</option>
                     </select>
                     <button id="savePlanBtn" class="toolbar-btn save-btn" title="Planı kaydet">💾 Kaydet</button>
+                    <button id="deletePlanBtn" class="toolbar-btn delete-btn" title="Seçili planı sil">🗑️ Sil</button>
                 </div>
             </div>
             <div class="toolbar-right">
                 <div class="plan-actions">
-                    <button id="deletePlanBtn" class="toolbar-btn delete-btn" title="Seçili planı sil">🗑️ Sil</button>
                     <button id="clearCacheBtn" class="toolbar-btn clear-btn" title="Tüm verileri temizle">🧹 Temizle</button>
-                </div>
-                <div class="cache-info">
-                    <span id="cacheStatus" class="cache-status">Cache: Kontrol ediliyor...</span>
                 </div>
             </div>
         </div>

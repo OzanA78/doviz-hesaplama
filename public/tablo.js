@@ -48,13 +48,52 @@ document.addEventListener('DOMContentLoaded', () => {
             addNewRow();
         } catch (error) {
             console.error('Initialization Error:', error);
-            alert('Hata: Veri yüklenemedi. Lütfen sayfayı yenileyin.');
+            showToast('Hata: Veri yüklenemedi. Lütfen sayfayı yenileyin.', 'error');
         }
     }
     
     // Plan yönetimi sistemi
     const PLANS_KEY = 'doviz-hesaplama-plans';
     let currentPlanName = '';
+    
+    // Toast notification fonksiyonu
+    function showToast(message, type = 'success') {
+        // Mevcut toast'u kaldır
+        const existingToast = document.querySelector('.toast');
+        if (existingToast) {
+            existingToast.remove();
+        }
+        
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        
+        // Save butonunu bul ve onun üzerine yerleştir
+        const saveBtn = document.getElementById('savePlanBtn');
+        if (saveBtn) {
+            const rect = saveBtn.getBoundingClientRect();
+            toast.style.position = 'fixed';
+            toast.style.left = rect.left + 'px';
+            toast.style.top = (rect.top - 45) + 'px';
+        }
+        
+        document.body.appendChild(toast);
+        
+        // Show animation
+        setTimeout(() => {
+            toast.classList.add('show');
+        }, 10);
+        
+        // Hide after 1 second
+        setTimeout(() => {
+            toast.classList.add('hide');
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.parentNode.removeChild(toast);
+                }
+            }, 300);
+        }, 1000);
+    }
     
     function setupPlanManagement() {
         // Plan input ve selector elementleri
@@ -99,11 +138,11 @@ document.addEventListener('DOMContentLoaded', () => {
         if (deletePlanBtn) {
             deletePlanBtn.addEventListener('click', function() {
                 if (currentPlanName) {
-                    if (confirm(`"${currentPlanName}" planını silmek istediğinizden emin misiniz?`)) {
+                    showConfirmModal(`"${currentPlanName}" planını silmek istediğinizden emin misiniz?`, () => {
                         deletePlan(currentPlanName);
-                    }
+                    });
                 } else {
-                    alert('Silinecek plan seçilmemiş');
+                    showToast('Silinecek plan seçilmemiş', 'warning');
                 }
             });
         }
@@ -111,12 +150,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Cache temizleme
         if (clearCacheBtn) {
             clearCacheBtn.addEventListener('click', function() {
-                if (confirm('Tüm planları silmek istediğinizden emin misiniz?')) {
+                showConfirmModal('Tüm planları silmek istediğinizden emin misiniz?', () => {
                     localStorage.removeItem(PLANS_KEY);
                     updateCacheStatus();
                     updatePlanSelector();
-                    alert('Tüm planlar silindi');
-                }
+                    showToast('Tüm planlar silindi');
+                });
             });
         }
     }
@@ -126,14 +165,14 @@ document.addEventListener('DOMContentLoaded', () => {
         const planName = planTitleInput?.value.trim();
         
         if (!planName) {
-            alert('Lütfen plan adı girin');
+            showToast('Lütfen plan adı girin', 'warning');
             planTitleInput?.focus();
             return;
         }
         
         const tableData = getCurrentTableData();
         if (tableData.length === 0) {
-            alert('Kaydedilecek veri yok. Lütfen en az bir satır ekleyin.');
+            showToast('Kaydedilecek veri yok. Lütfen en az bir satır ekleyin.', 'warning');
             return;
         }
         
@@ -150,10 +189,10 @@ document.addEventListener('DOMContentLoaded', () => {
             updateCacheStatus();
             updatePlanSelector();
             
-            alert(`"${planName}" planı kaydedildi!`);
+            showToast(`"${planName}" kaydedildi!`);
         } catch (error) {
             console.error('Plan kaydetme hatası:', error);
-            alert('Plan kaydedilemedi!');
+            showToast('Plan kaydedilemedi!', 'error');
         }
     }
     
@@ -199,7 +238,7 @@ document.addEventListener('DOMContentLoaded', () => {
             
             updateCacheStatus();
             updatePlanSelector();
-            alert(`"${planName}" planı silindi`);
+            showToast(`"${planName}" silindi`);
         } catch (error) {
             console.error('Plan silme hatası:', error);
         }
@@ -213,7 +252,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const plans = JSON.parse(localStorage.getItem(PLANS_KEY) || '{}');
             planSelector.innerHTML = '<option value="">Plan seçin...</option>';
             
-            Object.keys(plans).sort().forEach(planName => {
+            const planNames = Object.keys(plans).sort();
+            let hasAutoLoaded = false;
+            
+            planNames.forEach(planName => {
                 const option = document.createElement('option');
                 option.value = planName;
                 option.textContent = planName;
@@ -222,35 +264,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 planSelector.appendChild(option);
             });
+            
+            // İlk plan otomatik yüklensin (sadece sayfa ilk açıldığında)
+            if (planNames.length > 0 && !currentPlanName && !hasAutoLoaded) {
+                const firstPlan = planNames[0];
+                loadPlan(firstPlan);
+                const planTitleInput = document.getElementById('planTitleInput');
+                if (planTitleInput) {
+                    planTitleInput.value = firstPlan;
+                }
+                hasAutoLoaded = true;
+            }
         } catch (error) {
             console.error('Plan selector güncelleme hatası:', error);
         }
     }
     
     function updateCacheStatus() {
-        const cacheStatusEl = document.getElementById('cacheStatus');
-        if (!cacheStatusEl) return;
-        
-        try {
-            const plans = JSON.parse(localStorage.getItem(PLANS_KEY) || '{}');
-            const planCount = Object.keys(plans).length;
-            
-            if (currentPlanName) {
-                const currentPlan = plans[currentPlanName];
-                if (currentPlan) {
-                    const rowCount = currentPlan.data ? currentPlan.data.length : 0;
-                    cacheStatusEl.textContent = `📋 "${currentPlanName}" (${rowCount} satır)`;
-                } else {
-                    cacheStatusEl.textContent = `📋 "${currentPlanName}" - Kaydedilmemiş`;
-                }
-            } else if (planCount > 0) {
-                cacheStatusEl.textContent = `💾 ${planCount} plan kaydedildi`;
-            } else {
-                cacheStatusEl.textContent = '💾 Kayıtlı plan yok';
-            }
-        } catch (error) {
-            cacheStatusEl.textContent = '💾 Cache hatası';
-        }
+        // Cache status display removed - no longer needed
+        return;
     }
     
     function getCurrentTableData() {

@@ -138,11 +138,11 @@ h1 {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: linear-gradient(135deg, #b8bcc8 0%, #8e9297 100%);
     padding: 0.8rem 1.2rem;
     border-radius: 12px;
     margin-top: 1rem; /* Footer'dan sonra geldiği için margin-top */
-    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
+    box-shadow: 0 4px 20px rgba(184, 188, 200, 0.2);
     backdrop-filter: blur(10px);
     border: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
@@ -195,6 +195,11 @@ h1 {
     border-right: none;
 }
 
+.plan-input.compact {
+    min-width: 120px;
+    max-width: 150px;
+}
+
 .plan-input:hover,
 .plan-input:focus {
     background: rgba(255, 255, 255, 1);
@@ -206,6 +211,28 @@ h1 {
 .plan-input::placeholder {
     color: #999;
     font-style: italic;
+}
+
+.plan-selector {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+    color: #333;
+    transition: all 0.2s ease;
+    min-width: 140px;
+    max-width: 180px;
+    margin-left: 8px;
+    cursor: pointer;
+}
+
+.plan-selector:hover,
+.plan-selector:focus {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    outline: none;
+    border-color: rgba(184, 188, 200, 0.6);
 }
 
 .dropdown-btn {
@@ -489,7 +516,7 @@ input[type="tel"],
 table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 0.95rem;
+    font-size: 0.9rem;
     background: #fff;
 }
 
@@ -501,7 +528,7 @@ thead {
 }
 
 th, td {
-    padding: 0.5rem 0.8rem;
+    padding: 0.3rem 0.6rem;
     text-align: left;
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
@@ -545,7 +572,7 @@ tbody tr:hover {
 
 td select, td input {
     width: 100%;
-    padding: 0.6rem 0.8rem;
+    padding: 0.4rem 0.6rem;
     font-size: 1.1rem;
     border: 2px solid transparent;
     border-radius: 8px;
@@ -1446,4 +1473,42 @@ td .current-value-cell {
     background: transparent;
     color: #999;
     transform: none;
+}
+
+/* Toast Notification */
+.toast {
+    position: absolute;
+    background: linear-gradient(135deg, #28a745, #20c997);
+    color: white;
+    padding: 8px 16px;
+    border-radius: 6px;
+    box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+    z-index: 10000;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: all 0.3s ease;
+    font-size: 13px;
+    font-weight: 500;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast.hide {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.toast.warning {
+    background: linear-gradient(135deg, #f39c12, #e67e22);
+    box-shadow: 0 4px 15px rgba(243, 156, 18, 0.3);
+}
+
+.toast.error {
+    background: linear-gradient(135deg, #e74c3c, #c0392b);
+    box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
 }
