@@ -40,10 +40,18 @@ document.addEventListener('DOMContentLoaded', () => {
             if (historicalData.length === 0) return;
 
             currentGoldPrice = historicalData[historicalData.length - 1].price;
+            updateCurrentRateInHeader();
             addNewRow();
         } catch (error) {
             console.error('Initialization Error:', error);
             alert('Hata: Veri yüklenemedi. Lütfen sayfayı yenileyin.');
+        }
+    }
+
+    function updateCurrentRateInHeader() {
+        const currentRateEl = document.getElementById('currentRateInfo');
+        if (currentRateEl && currentGoldPrice) {
+            currentRateEl.textContent = `Güncel Kur: ${formatCurrency(currentGoldPrice, 'TRY', 0)}`;
         }
     }
 
@@ -170,8 +178,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     // Sol alt: Altın miktarı (altın renginde)
                     goldAmountSubValue.textContent = `${goldAmount.toFixed(1)} gr`;
                     
-                    // Sağ alt: Güncel değer + güncel kur
-                    currentValueSubValue.textContent = `${formatCurrency(currentValue, 'TRY', 0)} (Güncel Kur: ${formatCurrency(currentGoldPrice, 'TRY', 0)})`;
+                    // Sağ alt: Güncel etiket + değer (HTML ile)
+                    currentValueSubValue.innerHTML = `<span class="guncel-label">Güncel:</span><span class="guncel-value">${formatCurrency(currentValue, 'TRY', 0)}</span>`;
                 } else {
                     goldAmountSubValue.textContent = '-';
                     currentValueSubValue.textContent = '-';

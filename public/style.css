@@ -103,6 +103,22 @@ h1 {
     opacity: 0.9;
 }
 
+.current-rate-info {
+    position: absolute;
+    bottom: 1rem;
+    right: 1.5rem;
+    color: #ffffff !important;
+    font-size: 0.8rem;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.1);
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    z-index: 2;
+}
+
 .device-indicator {
     font-size: 1rem;
     font-weight: normal;
@@ -290,16 +306,17 @@ td select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23667eea%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%2C9%2012%2C15%2018%2C9%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E');
-    background-repeat: no-repeat;
-    background-position: right 0.7rem center;
-    background-size: 1rem;
     padding-right: 2.5rem;
     cursor: pointer;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.9));
 }
 
 td select:focus {
-    background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2224%22%20height%3D%2224%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23764ba2%22%20stroke-width%3D%222%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpolyline%20points%3D%226%2C9%2012%2C15%2018%2C9%22%3E%3C%2Fpolyline%3E%3C%2Fsvg%3E');
+    outline: none;
+    border-color: #667eea;
+    background: linear-gradient(135deg, #ffffff, #f8fafc);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2), 0 0 0 3px rgba(102, 126, 234, 0.1);
+    transform: translateY(-1px);
 }
 
 td input.amount-input {
@@ -335,16 +352,29 @@ td input.amount-input::placeholder {
     color: #ffffff;
     background: linear-gradient(135deg, #f1c40f, #f39c12);
     flex: 0 0 auto;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 1), 0 1px 3px rgba(0, 0, 0, 1), 0 1px 1px rgba(0, 0, 0, 1);
 }
 
 .current-value-sub-value {
     color: #ffffff;
-    background: linear-gradient(135deg, #27ae60, #2ecc71);
-    font-weight: 600;
-    text-align: right;
+    background: linear-gradient(135deg, rgba(39, 174, 96, 0.15), rgba(46, 204, 113, 0.15));
+    font-weight: 700;
+    font-size: 0.85rem;
+    text-align: left;
     flex: 1;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 1), 0 1px 3px rgba(0, 0, 0, 1), 0 1px 1px rgba(0, 0, 0, 1);
+    border: 2px solid rgba(0, 0, 0, 0.6);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.current-value-sub-value .guncel-label {
+    flex: 0 0 auto;
+}
+
+.current-value-sub-value .guncel-value {
+    flex: 0 0 auto;
 }
 
 /* Kur bilgisi stili */
@@ -704,20 +734,59 @@ td .current-value-cell {
     margin: 0;
     border: none;
     flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
 
 .total-item {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-start;
     align-items: center;
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: bold;
     color: #ffffff;
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 2;
 }
 
 .total-item:first-child {
     margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.total-item:first-child .total-label {
+    flex: 0 0 auto;
+    min-width: 140px;
+}
+
+.total-item:first-child .total-value {
+    flex: 0 0 auto;
+    margin-right: auto;
+}
+
+.total-item:first-child .total-gold-amount {
+    flex: 0 0 auto;
+}
+
+.total-item:nth-child(2) {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.total-item:nth-child(2) .total-label {
+    flex: 0 0 auto;
+    min-width: 140px;
+}
+
+.total-item:nth-child(2) .total-value {
+    flex: 0 0 auto;
 }
 
 .total-label {
@@ -735,9 +804,15 @@ td .current-value-cell {
 
 .total-gold-amount {
     font-size: 0.8rem;
-    font-weight: normal;
-    color: #f1c40f;
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+    color: #ffffff;
+    background: linear-gradient(135deg, #f1c40f, #f39c12);
+    padding: 0.3rem 0.6rem;
+    border-radius: 6px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 1), 0 1px 3px rgba(0, 0, 0, 1), 0 1px 1px rgba(0, 0, 0, 1);
+    display: inline-block;
 }
 
 .navigation-link {
