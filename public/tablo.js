@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         try {
             const plans = JSON.parse(localStorage.getItem(PLANS_KEY) || '{}');
-            planSelector.innerHTML = '<option value="">Plan seçin...</option>';
+            planSelector.innerHTML = '';
             
             const planNames = Object.keys(plans).sort();
             
