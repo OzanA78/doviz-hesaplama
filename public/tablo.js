@@ -41,10 +41,249 @@ document.addEventListener('DOMContentLoaded', () => {
 
             currentGoldPrice = historicalData[historicalData.length - 1].price;
             updateCurrentRateInHeader();
+            
+            // Plan yönetimi sistemini başlat
+            setupPlanManagement();
+            
             addNewRow();
         } catch (error) {
             console.error('Initialization Error:', error);
             alert('Hata: Veri yüklenemedi. Lütfen sayfayı yenileyin.');
+        }
+    }
+    
+    // Plan yönetimi sistemi
+    const PLANS_KEY = 'doviz-hesaplama-plans';
+    let currentPlanName = '';
+    
+    function setupPlanManagement() {
+        // Plan input ve selector elementleri
+        const planTitleInput = document.getElementById('planTitleInput');
+        const planSelector = document.getElementById('planSelector');
+        const savePlanBtn = document.getElementById('savePlanBtn');
+        const deletePlanBtn = document.getElementById('deletePlanBtn');
+        const clearCacheBtn = document.getElementById('clearCacheBtn');
+        
+        // Cache status güncellemesi
+        updateCacheStatus();
+        updatePlanSelector();
+        
+        // Plan title input events
+        if (planTitleInput) {
+            planTitleInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    savePlan();
+                }
+            });
+        }
+        
+        // Plan selector değişimi
+        if (planSelector) {
+            planSelector.addEventListener('change', function() {
+                const selectedPlan = this.value;
+                if (selectedPlan) {
+                    loadPlan(selectedPlan);
+                    if (planTitleInput) {
+                        planTitleInput.value = selectedPlan;
+                    }
+                }
+            });
+        }
+        
+        // Kaydet butonu
+        if (savePlanBtn) {
+            savePlanBtn.addEventListener('click', savePlan);
+        }
+        
+        // Sil butonu
+        if (deletePlanBtn) {
+            deletePlanBtn.addEventListener('click', function() {
+                if (currentPlanName) {
+                    if (confirm(`"${currentPlanName}" planını silmek istediğinizden emin misiniz?`)) {
+                        deletePlan(currentPlanName);
+                    }
+                } else {
+                    alert('Silinecek plan seçilmemiş');
+                }
+            });
+        }
+        
+        // Cache temizleme
+        if (clearCacheBtn) {
+            clearCacheBtn.addEventListener('click', function() {
+                if (confirm('Tüm planları silmek istediğinizden emin misiniz?')) {
+                    localStorage.removeItem(PLANS_KEY);
+                    updateCacheStatus();
+                    updatePlanSelector();
+                    alert('Tüm planlar silindi');
+                }
+            });
+        }
+    }
+    
+    function savePlan() {
+        const planTitleInput = document.getElementById('planTitleInput');
+        const planName = planTitleInput?.value.trim();
+        
+        if (!planName) {
+            alert('Lütfen plan adı girin');
+            planTitleInput?.focus();
+            return;
+        }
+        
+        const tableData = getCurrentTableData();
+        if (tableData.length === 0) {
+            alert('Kaydedilecek veri yok. Lütfen en az bir satır ekleyin.');
+            return;
+        }
+        
+        try {
+            const plans = JSON.parse(localStorage.getItem(PLANS_KEY) || '{}');
+            plans[planName] = {
+                data: tableData,
+                timestamp: Date.now(),
+                version: '1.0'
+            };
+            localStorage.setItem(PLANS_KEY, JSON.stringify(plans));
+            
+            currentPlanName = planName;
+            updateCacheStatus();
+            updatePlanSelector();
+            
+            alert(`"${planName}" planı kaydedildi!`);
+        } catch (error) {
+            console.error('Plan kaydetme hatası:', error);
+            alert('Plan kaydedilemedi!');
+        }
+    }
+    
+    function loadPlan(planName) {
+        try {
+            const plans = JSON.parse(localStorage.getItem(PLANS_KEY) || '{}');
+            const planData = plans[planName];
+            
+            if (planData && planData.data) {
+                clearTable();
+                planData.data.forEach(rowData => {
+                    addNewRow({
+                        date: { year: rowData.year, month: rowData.month },
+                        amount: rowData.amount
+                    });
+                });
+                
+                currentPlanName = planName;
+                updateCacheStatus();
+                return planData.data;
+            }
+        } catch (error) {
+            console.error('Plan yükleme hatası:', error);
+        }
+        return null;
+    }
+    
+    function deletePlan(planName) {
+        try {
+            const plans = JSON.parse(localStorage.getItem(PLANS_KEY) || '{}');
+            delete plans[planName];
+            localStorage.setItem(PLANS_KEY, JSON.stringify(plans));
+            
+            if (currentPlanName === planName) {
+                currentPlanName = '';
+                const planTitleInput = document.getElementById('planTitleInput');
+                if (planTitleInput) {
+                    planTitleInput.value = '';
+                }
+                clearTable();
+                addNewRow();
+            }
+            
+            updateCacheStatus();
+            updatePlanSelector();
+            alert(`"${planName}" planı silindi`);
+        } catch (error) {
+            console.error('Plan silme hatası:', error);
+        }
+    }
+    
+    function updatePlanSelector() {
+        const planSelector = document.getElementById('planSelector');
+        if (!planSelector) return;
+        
+        try {
+            const plans = JSON.parse(localStorage.getItem(PLANS_KEY) || '{}');
+            planSelector.innerHTML = '<option value="">Plan seçin...</option>';
+            
+            Object.keys(plans).sort().forEach(planName => {
+                const option = document.createElement('option');
+                option.value = planName;
+                option.textContent = planName;
+                if (planName === currentPlanName) {
+                    option.selected = true;
+                }
+                planSelector.appendChild(option);
+            });
+        } catch (error) {
+            console.error('Plan selector güncelleme hatası:', error);
+        }
+    }
+    
+    function updateCacheStatus() {
+        const cacheStatusEl = document.getElementById('cacheStatus');
+        if (!cacheStatusEl) return;
+        
+        try {
+            const plans = JSON.parse(localStorage.getItem(PLANS_KEY) || '{}');
+            const planCount = Object.keys(plans).length;
+            
+            if (currentPlanName) {
+                const currentPlan = plans[currentPlanName];
+                if (currentPlan) {
+                    const rowCount = currentPlan.data ? currentPlan.data.length : 0;
+                    cacheStatusEl.textContent = `📋 "${currentPlanName}" (${rowCount} satır)`;
+                } else {
+                    cacheStatusEl.textContent = `📋 "${currentPlanName}" - Kaydedilmemiş`;
+                }
+            } else if (planCount > 0) {
+                cacheStatusEl.textContent = `💾 ${planCount} plan kaydedildi`;
+            } else {
+                cacheStatusEl.textContent = '💾 Kayıtlı plan yok';
+            }
+        } catch (error) {
+            cacheStatusEl.textContent = '💾 Cache hatası';
+        }
+    }
+    
+    function getCurrentTableData() {
+        const rows = tableBody.querySelectorAll('tr');
+        const tableData = [];
+        
+        rows.forEach(row => {
+            const yearSelect = row.querySelector('.year-select');
+            const monthSelect = row.querySelector('.month-select');
+            const amountInput = row.querySelector('.amount-input');
+            
+            if (yearSelect && monthSelect && amountInput) {
+                const year = yearSelect.value;
+                const month = monthSelect.value;
+                const rawAmount = amountInput.value.replace(/[^\d]/g, '');
+                const amount = parseFloat(rawAmount) || 0;
+                
+                if (year && month && amount > 0) {
+                    tableData.push({
+                        year: year,
+                        month: month,
+                        amount: amount
+                    });
+                }
+            }
+        });
+        
+        return tableData;
+    }
+    
+    function clearTable() {
+        if (tableBody) {
+            tableBody.innerHTML = '';
         }
     }
 

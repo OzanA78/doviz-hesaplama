@@ -31,6 +31,7 @@ body {
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 500px;
+    overflow: visible; /* Dropdown'un taşmasına izin ver */
 }
 
 .container.table-view {
@@ -117,6 +118,267 @@ h1 {
     border: 1px solid rgba(255, 255, 255, 0.2);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     z-index: 2;
+}
+
+/* Cache Info Stilleri */
+.cache-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.8rem;
+    margin-top: 0.5rem;
+    padding: 0.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    backdrop-filter: blur(5px);
+}
+
+/* Toolbar Stilleri */
+.toolbar-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 0.8rem 1.2rem;
+    border-radius: 12px;
+    margin-top: 1rem; /* Footer'dan sonra geldiği için margin-top */
+    box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: visible; /* Dropdown'un taşmasına izin ver */
+}
+
+.toolbar-container::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(45deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.03) 100%);
+    pointer-events: none;
+}
+
+.toolbar-left,
+.toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+.plan-section {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* Editable Select/Combobox Stilleri */
+.editable-select-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    overflow: visible; /* Dropdown'un taşmasına izin ver */
+}
+
+.plan-input {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px 0 0 8px;
+    padding: 0.5rem 0.8rem;
+    font-size: 0.85rem;
+    color: #333;
+    transition: all 0.2s ease;
+    min-width: 200px;
+    border-right: none;
+}
+
+.plan-input:hover,
+.plan-input:focus {
+    background: rgba(255, 255, 255, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    outline: none;
+    border-color: rgba(102, 126, 234, 0.6);
+}
+
+.plan-input::placeholder {
+    color: #999;
+    font-style: italic;
+}
+
+.dropdown-btn {
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0 8px 8px 0;
+    border-left: none;
+    padding: 0.5rem 0.6rem;
+    font-size: 0.7rem;
+    color: #666;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.dropdown-btn:hover {
+    background: rgba(255, 255, 255, 1);
+    color: #333;
+}
+
+.dropdown-btn.active {
+    background: rgba(102, 126, 234, 0.8);
+    color: white;
+    transform: rotate(180deg);
+}
+
+.plan-dropdown {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 9999; /* Yüksek z-index */
+    max-height: 200px;
+    overflow-y: auto;
+    margin-top: 2px;
+}
+
+.plan-dropdown.hidden {
+    display: none;
+}
+
+.plan-option {
+    padding: 0.6rem 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    font-size: 0.85rem;
+}
+
+.plan-option:hover {
+    background: rgba(102, 126, 234, 0.1);
+}
+
+.plan-option:last-child {
+    border-bottom: none;
+}
+
+.plan-option.empty {
+    color: #999;
+    font-style: italic;
+    cursor: default;
+}
+
+.plan-option.empty:hover {
+    background: transparent;
+}
+
+.plan-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.toolbar-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    padding: 0.5rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(5px);
+    font-weight: 500;
+}
+
+.toolbar-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.toolbar-btn:active {
+    transform: translateY(0);
+}
+
+.save-btn:hover {
+    background: rgba(46, 204, 113, 0.8);
+    border-color: rgba(46, 204, 113, 0.6);
+}
+
+.delete-btn:hover {
+    background: rgba(231, 76, 60, 0.8);
+    border-color: rgba(231, 76, 60, 0.6);
+}
+
+.clear-btn:hover {
+    background: rgba(241, 196, 15, 0.8);
+    border-color: rgba(241, 196, 15, 0.6);
+}
+
+/* Cache Info Yeniden Düzenleme */
+.cache-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.cache-status {
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.cache-status.cache-active {
+    color: rgba(46, 204, 113, 0.9);
+    font-weight: 500;
+}
+
+.clear-cache-btn {
+    background: rgba(231, 76, 60, 0.8);
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    backdrop-filter: blur(5px);
+}
+
+.clear-cache-btn:hover {
+    background: rgba(231, 76, 60, 1);
+    transform: translateY(-1px);
+}
+
+.clear-cache-btn:active {
+    transform: translateY(0);
+}
+
+/* Plan Name Input Stili */
+.plan-name-input {
+    width: 100%;
+    padding: 0.8rem;
+    border: 2px solid rgba(102, 126, 234, 0.3);
+    border-radius: 8px;
+    font-size: 1rem;
+    margin: 1rem 0;
+    transition: all 0.2s ease;
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.plan-name-input:focus {
+    outline: none;
+    border-color: rgba(102, 126, 234, 0.8);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
 }
 
 .device-indicator {
@@ -500,6 +762,71 @@ td input.amount-input::placeholder {
         height: 100%;
         max-width: 100%;
         border-radius: 0;
+    }
+    
+    /* Mobilde cache info küçült */
+    .cache-info {
+        flex-direction: column;
+        gap: 0.4rem;
+        padding: 0.4rem;
+        margin-top: 0.3rem;
+    }
+    
+    /* Mobilde toolbar düzenle */
+    .toolbar-container {
+        flex-direction: column;
+        gap: 0.8rem;
+        padding: 0.6rem;
+    }
+    
+    .toolbar-left,
+    .toolbar-right {
+        width: 100%;
+        justify-content: center;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+    
+    .plan-section {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.4rem;
+    }
+    
+    .editable-select-container {
+        width: 100%;
+    }
+    
+    .plan-input {
+        width: 100%;
+        min-width: auto;
+        font-size: 0.8rem;
+        border-radius: 8px 0 0 8px;
+    }
+    
+    .dropdown-btn {
+        font-size: 0.7rem;
+    }
+    
+    .plan-actions {
+        flex-direction: column;
+        width: 100%;
+        gap: 0.4rem;
+    }
+    
+    .toolbar-btn {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.75rem;
+        width: 100%;
+    }
+    
+    .cache-info {
+        gap: 0.2rem;
+    }
+    
+    .cache-status {
+        font-size: 0.7rem;
+        text-align: center;
     }
 
     .table-container {
@@ -1087,4 +1414,36 @@ td .current-value-cell {
     .footer-container .totals-row strong {
         font-size: 1.3rem !important;
     }
+}
+
+/* Dropdown seçenekleri stilleri */
+.plan-dropdown .dropdown-option {
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #333;
+    font-size: 14px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.plan-dropdown .dropdown-option:last-child {
+    border-bottom: none;
+}
+
+.plan-dropdown .dropdown-option:hover {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    transform: translateX(3px);
+}
+
+.plan-dropdown .dropdown-option.empty {
+    color: #999;
+    font-style: italic;
+    cursor: default;
+}
+
+.plan-dropdown .dropdown-option.empty:hover {
+    background: transparent;
+    color: #999;
+    transform: none;
 }
