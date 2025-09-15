@@ -233,12 +233,18 @@ h1 {
     border-radius: 6px;
     padding: 0.5rem 0.8rem;
     font-size: 0.85rem;
-    color: #333;
+    color: transparent;
     transition: all 0.2s ease;
-    min-width: 140px;
-    max-width: 180px;
+    min-width: 40px;
+    max-width: 40px;
+    width: 40px;
     margin-left: 8px;
     cursor: pointer;
+    text-indent: -9999px;
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23333'%3E%3Cpath d='M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 16px 16px;
 }
 
 .plan-selector:hover,
@@ -247,6 +253,10 @@ h1 {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     outline: none;
     border-color: rgba(184, 188, 200, 0.6);
+    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23333'%3E%3Cpath d='M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: 16px 16px;
 }
 
 .dropdown-btn {
@@ -541,7 +551,7 @@ thead {
 }
 
 th, td {
-    padding: 0.8rem 0.1rem; /* Yatay padding azaltıldı */
+    padding: 0.05rem 0.1rem; /* Dikey padding daha da azaltıldı */
     text-align: left;
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
@@ -564,7 +574,7 @@ th:nth-child(1), td:nth-child(1) { min-width: 120px; } /* Yıl Kolonu - %20 kü�
 th:nth-child(2), td:nth-child(2) { min-width: 120px; } /* Ay Kolonu - %20 küçültüldü */
 
 td {
-    vertical-align: top;
+    vertical-align: middle;
     transition: background-color 0.2s ease;
 }
 
@@ -742,13 +752,13 @@ td input.amount-input::placeholder {
 
 .current-value-sub-value {
     color: #ffffff;
-    background: linear-gradient(135deg, rgba(39, 174, 96, 0.15), rgba(46, 204, 113, 0.15));
+    background: none;
     font-weight: 700;
     font-size: 0.85rem;
     text-align: left;
     flex: 1;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 1), 0 1px 3px rgba(0, 0, 0, 1), 0 1px 1px rgba(0, 0, 0, 1);
-    border: 2px solid rgba(0, 0, 0, 0.6);
+    text-shadow: 0 3px 8px rgba(0, 0, 0, 1), 0 2px 5px rgba(0, 0, 0, 1), 0 1px 2px rgba(0, 0, 0, 1);
+    border: none;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -790,7 +800,7 @@ td input.amount-input::placeholder {
 .month-cell .month-select, td:nth-child(2) .month-select {
     display: inline-block;
     width: auto;
-    min-width: 120px;
+    min-width: 96px; /* %20 azaltıldı (120px -> 96px) */
 }
 
 /* Mobil Cihazlar İçin Özel Stiller */
