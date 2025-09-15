@@ -259,6 +259,15 @@ h1 {
     background-size: 16px 16px;
 }
 
+.plan-selector option {
+    color: #2d3748 !important;
+    background: #ffffff !important;
+    font-size: 0.85rem !important;
+    font-weight: 500 !important;
+    padding: 0.5rem !important;
+    text-shadow: none !important;
+}
+
 .dropdown-btn {
     background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(255, 255, 255, 0.3);
