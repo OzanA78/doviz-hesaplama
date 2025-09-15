@@ -390,13 +390,11 @@ document.addEventListener('DOMContentLoaded', () => {
             newRow.innerHTML = `
                 <td class="year-cell">
                     <select class="year-select">
-                        <option value="">Yıl</option>
                         ${years.map(y => `<option value="${y}" ${y === selectedYear ? 'selected' : ''}>${y}</option>`).join('')}
                     </select>
                 </td>
                 <td class="month-cell">
                     <select class="month-select">
-                        <option value="">Ay</option>
                         ${months.map(m => `<option value="${m.value}" ${m.value === selectedMonth ? 'selected' : ''}>${m.name}</option>`).join('')}
                     </select>
                 </td>
@@ -417,13 +415,11 @@ document.addEventListener('DOMContentLoaded', () => {
             newRow.innerHTML = `
                 <td>
                     <select class="year-select">
-                        <option value="">Yıl</option>
                         ${years.map(y => `<option value="${y}" ${y === selectedYear ? 'selected' : ''}>${y}</option>`).join('')}
                     </select>
                 </td>
                 <td>
                     <select class="month-select">
-                        <option value="">Ay</option>
                         ${months.map(m => `<option value="${m.value}" ${m.value === selectedMonth ? 'selected' : ''}>${m.name}</option>`).join('')}
                     </select>
                 </td>
