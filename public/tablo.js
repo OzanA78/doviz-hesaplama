@@ -298,8 +298,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 planSelector.appendChild(option);
             });
             
-            // İlk plan otomatik yüklensin (sadece sayfa ilk açıldığında)
-            if (planNames.length > 0 && !currentPlanName && !hasAutoLoaded) {
+            // Tek plan varsa otomatik seç, veya ilk plan otomatik yüklensin (sadece sayfa ilk açıldığında)
+            if (planNames.length === 1 || (planNames.length > 0 && !currentPlanName && !hasAutoLoaded)) {
                 const firstPlan = planNames[0];
                 loadPlan(firstPlan);
                 const planTitleInput = document.getElementById('planTitleInput');
