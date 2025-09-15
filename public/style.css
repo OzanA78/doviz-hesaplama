@@ -18,7 +18,7 @@ body {
     align-items: center;
     height: 100vh;
     height: var(--app-height); /* Eklendi */
-    padding: 1rem;
+    padding: 0; /* Kaldırıldı */
     margin: 0;
     overflow: hidden;
 }
@@ -38,10 +38,10 @@ body {
     max-width: 800px;
     display: flex;
     flex-direction: column;
-    height: 100%; /* Değiştirildi */
+    height: 100%;
     overflow: hidden;
-    width: 100%; /* Eklendi */
-    margin-bottom: -33vh; /* Scale nedeniyle oluşan boşluğu telafi et */
+    width: 100%;
+    padding: 1rem; /* Eklendi */
 }
 
 h1 {
@@ -518,17 +518,12 @@ input[type="tel"],
 
 /* --- Tablo Sayfası Stilleri --- */
 .table-container {
-    flex-grow: 1; /* Değiştirildi */
-    overflow-y: auto; /* Değiştirildi */
-    min-height: 0; /* Eklendi */
-    margin-bottom: -50vh;
-    position: relative;
+    flex: 1;
+    overflow-y: auto;
+    min-height: 0;
     background: #fff;
     border-radius: 8px;
-    transform: scale(0.67);
-    transform-origin: top left;
-    width: 149%;
-    height: 250%;
+    border: 1px solid #ddd; /* Kenarlık eklendi */
 }
 
 table {
@@ -546,7 +541,7 @@ thead {
 }
 
 th, td {
-    padding: 0.3rem 0.6rem;
+    padding: 0.8rem 0.1rem; /* Yatay padding azaltıldı */
     text-align: left;
     border-bottom: 1px solid rgba(0, 0, 0, 0.08);
 }
@@ -557,7 +552,7 @@ th {
     color: #ffffff;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    font-size: 0.85rem;
+    font-size: 0.8rem; /* Font boyutu küçültüldü */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border: none;
     position: sticky;
@@ -565,8 +560,8 @@ th {
     text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
-th:nth-child(1), td:nth-child(1) { min-width: 150px; } /* Yıl Kolonu */
-th:nth-child(2), td:nth-child(2) { min-width: 150px; } /* Ay Kolonu */
+th:nth-child(1), td:nth-child(1) { min-width: 120px; } /* Yıl Kolonu - %20 küçültüldü */
+th:nth-child(2), td:nth-child(2) { min-width: 120px; } /* Ay Kolonu - %20 küçültüldü */
 
 td {
     vertical-align: top;
@@ -590,25 +585,21 @@ tbody tr:hover {
 
 td select, td input {
     width: 100%;
-    padding: 0.4rem 0.6rem;
-    font-size: 1.1rem;
-    border: 2px solid transparent;
-    border-radius: 8px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(248, 250, 252, 0.9));
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15), 0 2px 6px rgba(0, 0, 0, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.6);
-    transition: all 0.3s ease;
+    padding: 0.5rem 0.7rem; /* Padding ayarlandı */
+    font-size: 0.9rem; /* Font boyutu küçültüldü */
+    border: 1px solid #ccc; /* Kenarlık sadeleştirildi */
+    border-radius: 6px;
+    background-color: #f8f9fa;
+    transition: all 0.2s ease;
     font-weight: 500;
     color: #2d3748;
-    text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
 td select:focus, td input:focus {
     outline: none;
     border-color: #667eea;
-    background: linear-gradient(135deg, #ffffff, #f8fafc);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3), 0 4px 12px rgba(0, 0, 0, 0.15), 0 0 0 3px rgba(102, 126, 234, 0.1), inset 0 1px 0 rgba(255, 255, 255, 0.8);
-    transform: translateY(-2px);
-    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+    background-color: #fff;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
 }
 
 td select:hover, td input:hover {
@@ -689,12 +680,40 @@ td input.amount-input {
     font-weight: 600;
     letter-spacing: 0.5px;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+    padding: 0.5rem 0.7rem; /* Ay select ile aynı padding */
+    font-size: 0.9rem; /* Ay select ile aynı font boyutu */
+    height: auto; /* Otomatik yükseklik */
+    box-sizing: border-box; /* Padding dahil yükseklik hesaplama */
 }
 
 td input.amount-input::placeholder {
     color: #a0aec0;
     font-weight: 400;
     font-style: italic;
+}
+
+/* Miktar hücresi özel stilleri */
+.amount-cell {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.amount-input-wrapper {
+    width: 32%; /* Genişliği %20 küçültüldü (40% -> 32%) */
+    flex: none; /* Flex büyümesini devre dışı bırak */
+}
+
+.sub-values-container {
+    margin-top: 0; /* Üstteki boşluğu kaldır */
+    display: flex;
+    flex-direction: row; /* Yan yana sırala */
+    gap: 0.5rem; /* Aradaki boşluk */
+    align-items: center; /* Dikeyde ortala */
+}
+
+.sub-value {
+    white-space: nowrap; /* Değerlerin tek satırda kalmasını sağla */
 }
 
 /* Alt değerler için stil */
@@ -744,20 +763,27 @@ td input.amount-input::placeholder {
 }
 
 /* Kur bilgisi stili */
-.rate-info-container {
-    display: inline-block;
-    margin-left: 1rem;
+.rate-cell {
+    text-align: left;
     vertical-align: middle;
+    min-width: 80px;
 }
 
 .rate-info {
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     color: #666;
     font-weight: 500;
-    background: rgba(240, 240, 240, 0.8);
-    padding: 0.3rem 0.6rem;
-    border-radius: 6px;
-    border: 1px solid rgba(0, 0, 0, 0.1);
+    background: none;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    line-height: 2.5rem; /* Ay select'i ile aynı yükseklik */
+    vertical-align: middle;
+}
+
+/* Artık kullanılmayan container */
+.rate-info-container {
+    display: none;
 }
 
 /* Ay kolonu özel stilleri */
@@ -1166,8 +1192,8 @@ td .current-value-cell {
     border: none;
     flex-shrink: 0;
     display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-direction: row;
+    justify-content: space-between;
     align-items: center;
     height: 100%;
 }
@@ -1176,10 +1202,12 @@ td .current-value-cell {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #ffffff;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background: none !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
     position: relative;
     z-index: 2;
 }
@@ -1209,11 +1237,11 @@ td .current-value-cell {
     display: flex;
     align-items: center;
     gap: 1rem;
+    justify-content: flex-end;
 }
 
 .total-item:nth-child(2) .total-label {
     flex: 0 0 auto;
-    min-width: 140px;
 }
 
 .total-item:nth-child(2) .total-value {
@@ -1221,8 +1249,21 @@ td .current-value-cell {
 }
 
 .total-label {
-    color: #ffffff;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background: none !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    font-weight: 600;
+    font-size: 1.1rem;
+}
+
+.total-value {
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
+    background: none !important;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
+    font-weight: 500;
+    font-size: 1rem;
 }
 
 /* YENİ: Toplam altın miktarı parantez stili */
@@ -1368,7 +1409,7 @@ td .current-value-cell {
 .footer-container {
     margin-top: 1rem;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    padding: 1rem 1.5rem;
+    padding: 0.5rem 0.75rem;
     border-radius: 12px;
     box-shadow: 0 4px 20px rgba(102, 126, 234, 0.2);
     backdrop-filter: blur(10px);
@@ -1376,19 +1417,19 @@ td .current-value-cell {
     position: relative;
     overflow: hidden;
     flex-shrink: 0;
-    font-size: 1.1rem; /* Footer font boyutunu büyüt */
+    font-size: 1rem; /* Footer font boyutunu normal yap */
 }
 
 .footer-container * {
-    font-size: 1.1rem !important; /* Tüm footer elementlerinin fontunu büyüt */
+    font-size: 1rem !important; /* Tüm footer elementlerinin fontunu normal yap */
 }
 
 .footer-container h3 {
-    font-size: 1.3rem !important; /* Footer başlıkları daha büyük */
+    font-size: 1.2rem !important; /* Footer başlıkları büyük */
 }
 
 .footer-container .totals-row strong {
-    font-size: 1.2rem !important; /* Toplam değerleri biraz daha büyük */
+    font-size: 1.1rem !important; /* Toplam değerleri biraz büyük */
 }
 
 .footer-container::before {
@@ -1443,21 +1484,21 @@ td .current-value-cell {
         box-shadow: 0 6px 25px rgba(220, 53, 69, 0.5);
     }
     
-    /* Footer fontları mobilde daha büyük */
+    /* Footer fontları mobilde %50 küçük */
     .footer-container {
-        font-size: 1.2rem !important;
+        font-size: 0.6rem !important;
     }
     
     .footer-container * {
-        font-size: 1.2rem !important;
+        font-size: 0.6rem !important;
     }
     
     .footer-container h3 {
-        font-size: 1.4rem !important;
+        font-size: 0.7rem !important;
     }
     
     .footer-container .totals-row strong {
-        font-size: 1.3rem !important;
+        font-size: 0.65rem !important;
     }
 }
 

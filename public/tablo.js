@@ -175,12 +175,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 showConfirmModal('Mevcut tablo satırlarını temizlemek istediğinizden emin misiniz?', () => {
                     clearTable();
                     addNewRow();
-                    currentPlanName = '';
-                    const planTitleInput = document.getElementById('planTitleInput');
-                    const planSelector = document.getElementById('planSelector');
-                    if (planTitleInput) planTitleInput.value = '';
-                    if (planSelector) planSelector.value = '';
-                    updateCacheStatus();
                     showToast('Tablo temizlendi');
                 });
             });
@@ -237,11 +231,21 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 });
                 
-                // Plan yükledikten sonra yeni boş satır ekle
-                addNewRow();
+                // Plan yükledikten sonra yeni boş satır ekleme
                 
                 currentPlanName = planName;
                 updateCacheStatus();
+                
+                // Son satırın inputuna odaklan
+                const lastRow = tableBody.querySelector('tr:last-child');
+                if (lastRow) {
+                    const amountInput = lastRow.querySelector('.amount-input');
+                    if (amountInput) {
+                        amountInput.focus();
+                        amountInput.select();
+                    }
+                }
+
                 return planData.data;
             }
         } catch (error) {
@@ -395,12 +399,12 @@ document.addEventListener('DOMContentLoaded', () => {
                         <option value="">Ay</option>
                         ${months.map(m => `<option value="${m.value}" ${m.value === selectedMonth ? 'selected' : ''}>${m.name}</option>`).join('')}
                     </select>
-                    <div class="rate-info-container">
-                        <span class="rate-info">-</span>
-                    </div>
+                </td>
+                <td class="rate-cell">
+                    <span class="rate-info">-</span>
                 </td>
                 <td class="amount-cell">
-                    <div class="mobile-amount-wrapper">
+                    <div class="amount-input-wrapper">
                         <input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10">
                     </div>
                     <div class="sub-values-container">
@@ -422,12 +426,14 @@ document.addEventListener('DOMContentLoaded', () => {
                         <option value="">Ay</option>
                         ${months.map(m => `<option value="${m.value}" ${m.value === selectedMonth ? 'selected' : ''}>${m.name}</option>`).join('')}
                     </select>
-                    <div class="rate-info-container">
-                        <span class="rate-info">-</span>
-                    </div>
+                </td>
+                <td class="rate-cell">
+                    <span class="rate-info">-</span>
                 </td>
                 <td class="amount-cell">
-                    <input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10">
+                    <div class="amount-input-wrapper">
+                        <input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10">
+                    </div>
                     <div class="sub-values-container">
                         <span class="sub-value gold-amount-sub-value">-</span>
                         <span class="sub-value current-value-sub-value">-</span>
