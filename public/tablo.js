@@ -228,12 +228,20 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             
             if (currentValueSubValue && currentValueSubValue.textContent !== '-' && currentValueSubValue.textContent !== 'Veri Yok') {
-                // "296,073 ₺ (Güncel Kur: 4,441 ₺)" formatından değeri çıkar
-                const currentText = currentValueSubValue.textContent;
-                const valueMatch = currentText.match(/^([₺\d,.]+)/);
-                if (valueMatch) {
-                    const rawCurrentValue = valueMatch[1].replace(/[^\d,]/g, '').replace(',', '.');
+                // Yeni yapıda güncel değeri span'dan al
+                const guncelValueSpan = currentValueSubValue.querySelector('.guncel-value');
+                if (guncelValueSpan) {
+                    const currentText = guncelValueSpan.textContent;
+                    const rawCurrentValue = currentText.replace(/[^\d,.]/g, '').replace(/\./g, '').replace(',', '.');
                     totalCurrentValue += parseFloat(rawCurrentValue) || 0;
+                } else {
+                    // Fallback: "Güncel: 296.073 ₺" formatından değeri çıkar
+                    const currentText = currentValueSubValue.textContent;
+                    const valueMatch = currentText.match(/Güncel:\s*([₺\d,.]+)/);
+                    if (valueMatch) {
+                        const rawCurrentValue = valueMatch[1].replace(/[^\d,.]/g, '').replace(/\./g, '').replace(',', '.');
+                        totalCurrentValue += parseFloat(rawCurrentValue) || 0;
+                    }
                 }
             }
         });
