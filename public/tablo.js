@@ -32,29 +32,51 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     async function initializeApp() {
+        console.log('İnitializeApp başlatılıyor...');
         try {
+            console.log('API çağrısı yapılıyor...');
             const response = await fetch('/api/data');
-            if (!response.ok) throw new Error('Veri sunucudan alınamadı.');
+            console.log('Response alındı:', response.status, response.statusText);
+            
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error('API Error Response:', errorText);
+                throw new Error(`Veri sunucudan alınamadı. Status: ${response.status}`);
+            }
             
             historicalData = await response.json();
-            if (historicalData.length === 0) return;
+            console.log('Data parsed, length:', historicalData.length);
+            
+            if (historicalData.length === 0) {
+                console.warn('Hiç veri bulunamadı');
+                showToast('Uyarı: Hiç veri bulunamadı.', 'warning');
+                return;
+            }
 
             currentGoldPrice = historicalData[historicalData.length - 1].price;
+            console.log('Current gold price set:', currentGoldPrice);
             updateCurrentRateInHeader();
             
             // Plan yönetimi sistemini başlat
             setupPlanManagement();
+
+            // Eğer plan yükleme sonrası hiç satır eklenmemişse, başlangıç için bir tane ekle
+            const tableBody = document.getElementById('calculation-table-body');
+            if (tableBody && tableBody.rows.length === 0) {
+                addNewRow();
+            }
             
-            addNewRow();
+            console.log('İnitializeApp başarıyla tamamlandı');
         } catch (error) {
             console.error('Initialization Error:', error);
-            showToast('Hata: Veri yüklenemedi. Lütfen sayfayı yenileyin.', 'error');
+            showToast(`Hata: ${error.message}. Sunucu çalışıyor mu kontrol edin.`, 'error');
         }
     }
     
     // Plan yönetimi sistemi
     const PLANS_KEY = 'doviz-hesaplama-plans';
     let currentPlanName = '';
+    let hasAutoLoaded = false;
     
     // Toast notification fonksiyonu
     function showToast(message, type = 'success') {
@@ -150,11 +172,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // Cache temizleme
         if (clearCacheBtn) {
             clearCacheBtn.addEventListener('click', function() {
-                showConfirmModal('Tüm planları silmek istediğinizden emin misiniz?', () => {
-                    localStorage.removeItem(PLANS_KEY);
+                showConfirmModal('Mevcut tablo satırlarını temizlemek istediğinizden emin misiniz?', () => {
+                    clearTable();
+                    addNewRow();
+                    currentPlanName = '';
+                    const planTitleInput = document.getElementById('planTitleInput');
+                    const planSelector = document.getElementById('planSelector');
+                    if (planTitleInput) planTitleInput.value = '';
+                    if (planSelector) planSelector.value = '';
                     updateCacheStatus();
-                    updatePlanSelector();
-                    showToast('Tüm planlar silindi');
+                    showToast('Tablo temizlendi');
                 });
             });
         }
@@ -210,6 +237,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
                 });
                 
+                // Plan yükledikten sonra yeni boş satır ekle
+                addNewRow();
+                
                 currentPlanName = planName;
                 updateCacheStatus();
                 return planData.data;
@@ -253,7 +283,6 @@ document.addEventListener('DOMContentLoaded', () => {
             planSelector.innerHTML = '<option value="">Plan seçin...</option>';
             
             const planNames = Object.keys(plans).sort();
-            let hasAutoLoaded = false;
             
             planNames.forEach(planName => {
                 const option = document.createElement('option');
@@ -273,6 +302,16 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (planTitleInput) {
                     planTitleInput.value = firstPlan;
                 }
+                
+                // Plan selector'ı güncelle ki seçili görünsün
+                setTimeout(() => {
+                    const option = planSelector.querySelector(`option[value="${firstPlan}"]`);
+                    if (option) {
+                        option.selected = true;
+                        planSelector.value = firstPlan;
+                    }
+                }, 100);
+                
                 hasAutoLoaded = true;
             }
         } catch (error) {
