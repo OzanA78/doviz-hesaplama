@@ -700,7 +700,7 @@ document.addEventListener('DOMContentLoaded', () => {
         totalGoldAmountEl.textContent = `${totalGoldAmount.toFixed(1)} gr`;
         totalAmountEl.textContent = formatCurrency(totalAmount, 'TRY', 0);
         
-        totalCurrentValueLabelEl.innerHTML = `Bugünün Parası ile:`;
+        totalCurrentValueLabelEl.innerHTML = `Bugünün Parası ile`;
         totalCurrentValueEl.textContent = formatCurrency(totalCurrentValue, 'TRY', 0);
     }
 

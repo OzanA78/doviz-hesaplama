@@ -1333,18 +1333,21 @@ td .current-value-cell {
 }
 
 .total-item:nth-child(2) {
+    margin-bottom: 0.75rem;
     display: flex;
     align-items: center;
     gap: 1rem;
-    justify-content: flex-end;
+    justify-content: flex-start; /* Sol hizaya getirildi */
 }
 
 .total-item:nth-child(2) .total-label {
     flex: 0 0 auto;
+    min-width: 140px; /* İlk item ile aynı genişlik */
 }
 
 .total-item:nth-child(2) .total-value {
     flex: 0 0 auto;
+    margin-right: auto; /* İlk item ile aynı margin */
 }
 
 .total-label {
