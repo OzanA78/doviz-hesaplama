@@ -22,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Global Durum Değişkenleri
     let historicalData = [];
-    let currentGoldPrice = 0;
+    let currentGoldPrice = null;
     const months = [
         { name: 'Ocak', value: '01' }, { name: 'Şubat', value: '02' },
         { name: 'Mart', value: '03' }, { name: 'Nisan', value: '04' },
@@ -54,9 +54,18 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            currentGoldPrice = historicalData[historicalData.length - 1].price;
+            // Güncel fiyatı yeni endpointten al
+            const currentRes = await fetch('/api/current');
+            if (!currentRes.ok) {
+                const errorData = await currentRes.json();
+                throw new Error(errorData.error || 'Güncel kur alınamadı.');
+            }
+            // ...
+            const currentData = await currentRes.json();
+            currentGoldPrice = currentData.price;
             console.log('Current gold price set:', currentGoldPrice);
-            updateCurrentRateInHeader();
+            updateCurrentRateInHeader(currentData.error); // Hata mesajını da gönder
+            // ...
             
             // Plan yönetimi sistemini başlat
             setupPlanManagement();
@@ -491,12 +500,17 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function updateCurrentRateInHeader() {
-        const currentRateEl = document.getElementById('currentRateInfo');
-        if (currentRateEl && currentGoldPrice) {
-            currentRateEl.textContent = `Güncel Kur: ${formatCurrency(currentGoldPrice, 'TRY', 0)}`;
+    function updateCurrentRateInHeader(errorMessage = null) {
+    const currentRateEl = document.getElementById('currentRateInfo');
+    if (currentRateEl && currentGoldPrice) {
+        let errorIndicator = '';
+        if (errorMessage) {
+            // Hata varsa, başlığı hata mesajı olan bir uyarı işareti ekle
+            errorIndicator = `<span class="rate-error-indicator" title="${errorMessage}">( ! )</span>`;
         }
+        currentRateEl.innerHTML = `Güncel Kur: ${formatCurrency(currentGoldPrice, 'TRY', 0)} ${errorIndicator}`;
     }
+}
 
     function addNewRow(previousData = null, existingData = null) {
         const newRow = document.createElement('tr');

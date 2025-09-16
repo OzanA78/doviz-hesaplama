@@ -58,6 +58,7 @@ amountInput.addEventListener('input', (e) => {
 });
 
     let historicalData = [];
+    let currentPrice = null;
 
     const months = [
         { name: 'Ocak', value: '01' }, { name: 'Şubat', value: '02' },
@@ -77,6 +78,15 @@ amountInput.addEventListener('input', (e) => {
                 throw new Error(errorData.error || 'Veri sunucudan alınamadı.');
             }
             historicalData = await response.json();
+
+            // Güncel fiyatı ayrı endpointten al
+            const currentRes = await fetch('/api/current');
+            if (!currentRes.ok) {
+                const errorData = await currentRes.json();
+                throw new Error(errorData.error || 'Güncel kur alınamadı.');
+            }
+            const currentObj = await currentRes.json();
+            currentPrice = currentObj.price;
 
             if (historicalData.length === 0) {
                 resultDiv.textContent = 'Hesaplama için veri bulunamadı.';
@@ -180,22 +190,18 @@ amountInput.addEventListener('input', (e) => {
         const targetDate = `${year}-${month}`;
         const historicalEntry = historicalData.find(d => d.date === targetDate);
         
-        // Sunucu veriyi sıraladığı için son eleman her zaman en günceldir.
-        const currentEntry = historicalData[historicalData.length - 1];
+        // Güncel fiyatı yeni endpointten alıyoruz
+        if (currentPrice === null) {
+            resultDiv.textContent = 'En güncel kur verisi alınamadı. Lütfen tekrar deneyin.';
+            return;
+        }
 
         if (!historicalEntry) {
             resultDiv.textContent = 'Seçtiğiniz tarih için veri bulunamadı.';
             return;
         }
         
-        // En güncel verinin de varlığını kontrol et
-        if (!currentEntry) {
-            resultDiv.textContent = 'En güncel kur verisi alınamadı. Lütfen tekrar deneyin.';
-            return;
-        }
-
         const historicalPrice = historicalEntry.price;
-        const currentPrice = currentEntry.price;
         const goldAmount = amount / historicalPrice;
         const currentValue = goldAmount * currentPrice;
 
@@ -213,10 +219,10 @@ amountInput.addEventListener('input', (e) => {
             currency: 'TRY'
         });
         
-        const currentGoldPriceFormatted = currentPrice.toLocaleString('tr-TR', {
-             style: 'currency',
-             currency: 'TRY'
-        });
+       const currentGoldPriceFormatted = currentPrice.toLocaleString('tr-TR', {
+           style: 'currency',
+           currency: 'TRY'
+       });
 
         // Yüzde artış hesaplama
         const increasePercentage = ((currentValue - amount) / amount * 100);

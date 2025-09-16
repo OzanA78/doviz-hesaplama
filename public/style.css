@@ -1720,3 +1720,12 @@ td .current-value-cell {
     background: linear-gradient(135deg, #e74c3c, #c0392b);
     box-shadow: 0 4px 15px rgba(231, 76, 60, 0.3);
 }
+
+.rate-error-indicator {
+    color: #ff4d4d; /* Canlı kırmızı */
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-left: 0.3rem;
+    cursor: help; /* Üzerine gelince yardım imleci */
+    text-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+}
