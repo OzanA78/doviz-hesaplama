@@ -1,0 +1,36 @@
+CSS Stilleri (style.css)
+1. Sol Taraf - Harcanan Miktar Bilgileri:
+"Harcanan Miktar :" (label)
+Satır 1353-1359: .total-label - Ana label stili (1.9rem !important)
+Satır 1539-1541: .footer-container .total-label - Footer özel override (1.3rem !important)
+Toplam harcanan para değeri
+Satır 1362-1370: .total-value - Ana değer stili (1.4rem !important)
+Satır 1543-1545: .footer-container .total-value - Footer özel override (1.2rem !important)
+Toplam altın miktarı (altın renkli badge)
+Satır 1380-1391: .total-gold-amount - Altın badge stili:
+background: linear-gradient(135deg, #f1c40f, #f39c12) (altın renk)
+text-shadow: 0 2px 6px rgba(0, 0, 0, 1) (kalın gölge)
+border-radius: 6px (yuvarlak köşeler)
+padding: 0.3rem 0.6rem (iç boşluk)
+2. Sağ Taraf - Güncel Değer Bilgileri:
+"Bugünün Parası ile" (label)
+Satır 1547-1550: #total-current-value-label - Özel ID için büyük font (1.5rem !important)
+Güncel toplam değer
+Satır 1552-1555: #total-current-value - Özel ID için büyük font (1.5rem !important)
+Yüzde artış/azalış bilgisi
+Satır 1392-1399: .value-increase-info - Küçük italik yazı stili:
+font-size: 0.7rem (küçük font)
+font-style: italic (italik)
+opacity: 0.8 (hafif şeffaf)
+margin-top: 0.2rem (üst boşluk)
+3. Genel Footer Container:
+Footer Container Ana Stili
+Satır 1521-1534: .footer-container - Ana footer stili
+Satır 1535-1537: .footer-container * - Tüm çocuk elementler için font override
+Satır 1286-1295: .totals-container - İçerik konteyneri flex düzeni
+Layout Düzeni
+Satır 1296-1313: .total-item - Her bir footer öğesi stili
+Satır 1315-1325: .total-item:first-child - Sol taraf (harcanan miktar) özel stili
+Satır 1327-1338: .total-item:nth-child(2) - Sağ taraf (güncel değer) özel stili
+4. Mobil Responsive:
+Satır 1607-1628: Mobil cihazlarda footer fontları %50 küçültme

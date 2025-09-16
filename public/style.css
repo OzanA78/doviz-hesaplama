@@ -1291,15 +1291,17 @@ td .current-value-cell {
     border: none;
     flex-shrink: 0;
     display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    flex-direction: column; /* Dikey sıralama - 2 satır */
+    justify-content: center;
     align-items: center;
     height: 100%;
+    gap: 0.8rem; /* Satırlar arası boşluk */
 }
 
 .total-item {
     display: flex;
-    justify-content: flex-start;
+    flex-direction: row; /* Yatay sıralama - her satır içinde elemanlar yan yana */
+    justify-content: center;
     align-items: center;
     font-size: 1.1rem;
     font-weight: 600;
@@ -1309,45 +1311,36 @@ td .current-value-cell {
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
     position: relative;
     z-index: 2;
+    width: 100%; /* Tam genişlik */
+    text-align: center;
+    gap: 1rem; /* Elemanlar arası boşluk */
 }
 
 .total-item:first-child {
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.total-item:first-child .total-label {
-    flex: 0 0 auto;
-    min-width: 140px;
-}
-
-.total-item:first-child .total-value {
-    flex: 0 0 auto;
-    margin-right: auto;
-}
-
-.total-item:first-child .total-gold-amount {
-    flex: 0 0 auto;
+    /* Üst satır - Harcanan Miktar */
+    justify-content: center;
 }
 
 .total-item:nth-child(2) {
-    margin-bottom: 0.75rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    justify-content: flex-start; /* Sol hizaya getirildi */
+    /* Alt satır - Güncel Değer */
+    justify-content: center;
 }
 
-.total-item:nth-child(2) .total-label {
-    flex: 0 0 auto;
-    min-width: 140px; /* İlk item ile aynı genişlik */
+/* Elemanlar arası boşluklar */
+.total-item .total-label {
+    margin-right: 0.5rem;
 }
 
-.total-item:nth-child(2) .total-value {
-    flex: 0 0 auto;
-    margin-right: auto; /* İlk item ile aynı margin */
+.total-item .total-value {
+    margin-right: 0.5rem;
+}
+
+.total-item .total-gold-amount {
+    margin-right: 0.5rem;
+}
+
+.total-item .value-increase-info {
+    margin-left: 0.5rem;
 }
 
 .total-label {
@@ -1356,7 +1349,7 @@ td .current-value-cell {
     background: none !important;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
     font-weight: 600;
-    font-size: 1.1rem;
+    font-size: 1.1rem !important;
 }
 
 .total-value {
@@ -1365,7 +1358,7 @@ td .current-value-cell {
     background: none !important;
     text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
     font-weight: 500;
-    font-size: 1rem;
+    font-size: 1.4rem !important;
 }
 
 /* YENİ: Toplam altın miktarı parantez stili */
@@ -1387,6 +1380,17 @@ td .current-value-cell {
     border: 1px solid rgba(255, 255, 255, 0.2);
     text-shadow: 0 2px 6px rgba(0, 0, 0, 1), 0 1px 3px rgba(0, 0, 0, 1), 0 1px 1px rgba(0, 0, 0, 1);
     display: inline-block;
+}
+
+.value-increase-info {
+    font-size: 1.2rem; /* Büyütüldü */
+    font-weight: 600; /* Daha kalın */
+    color: #ffffff;
+    opacity: 1; /* Tam opak */
+    text-align: right;
+    margin: 0;
+    font-style: normal; /* İtalik kaldırıldı */
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
 }
 
 .navigation-link {
@@ -1526,12 +1530,20 @@ td .current-value-cell {
     font-size: 1rem !important; /* Tüm footer elementlerinin fontunu normal yap */
 }
 
+.footer-container .total-label {
+    font-size: 1.1rem !important; /* Harcanan Miktar ve Bugünün Parası ile için özel boyut */
+}
+
+.footer-container .total-value {
+    font-size: 1.0rem !important; /* Toplam değerler için özel boyut */
+}
+
 #total-current-value-label {
-    font-size: 1.5rem !important; /* %50 büyütüldü */
+    font-size: 1.2rem !important; /* %50 büyütüldü */
 }
 
 #total-current-value {
-    font-size: 1.5rem !important; /* %50 büyütüldü */
+    font-size: 1.3rem !important; /* %50 büyütüldü */
 }
 
 .footer-container h3 {

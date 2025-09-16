@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const totalAmountEl = document.getElementById('total-amount');
     const totalCurrentValueEl = document.getElementById('total-current-value');
     const totalCurrentValueLabelEl = document.getElementById('total-current-value-label');
+    const valueIncreaseInfoEl = document.getElementById('value-increase-info');
     const totalsContainer = document.getElementById('totals-container');
     const deviceIndicatorEl = document.querySelector('.device-indicator');
     const mainContainer = document.querySelector('.container.table-view');
@@ -700,8 +701,19 @@ document.addEventListener('DOMContentLoaded', () => {
         totalGoldAmountEl.textContent = `${totalGoldAmount.toFixed(1)} gr`;
         totalAmountEl.textContent = formatCurrency(totalAmount, 'TRY', 0);
         
-        totalCurrentValueLabelEl.innerHTML = `Bugünün Parası ile`;
+        totalCurrentValueLabelEl.innerHTML = `Güncel değer: `;
         totalCurrentValueEl.textContent = formatCurrency(totalCurrentValue, 'TRY', 0);
+        
+        // Yüzde artış hesaplama
+        if (totalAmount > 0 && valueIncreaseInfoEl) {
+            const increasePercentage = ((totalCurrentValue - totalAmount) / totalAmount * 100);
+            const increaseText = increasePercentage >= 0 ? 
+                `%${increasePercentage.toFixed(1)} artış` : 
+                `%${Math.abs(increasePercentage).toFixed(1)} azalış`;
+            valueIncreaseInfoEl.textContent = increaseText;
+        } else if (valueIncreaseInfoEl) {
+            valueIncreaseInfoEl.textContent = '%0 artış';
+        }
     }
 
     function updateSubsequentRows(changedRow) {

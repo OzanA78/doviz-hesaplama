@@ -218,6 +218,21 @@ amountInput.addEventListener('input', (e) => {
              currency: 'TRY'
         });
 
+        // Yüzde artış hesaplama
+        const increasePercentage = ((currentValue - amount) / amount * 100);
+        const increaseText = increasePercentage >= 0 ? 
+            `%${increasePercentage.toFixed(1)} artış` : 
+            `%${Math.abs(increasePercentage).toFixed(1)} azalış`;
+
+        // Footer elementlerini güncelle
+        const totalAmountEl = document.getElementById('total-amount');
+        const totalCurrentValueEl = document.getElementById('total-current-value');
+        const valueIncreaseInfoEl = document.getElementById('value-increase-info');
+        
+        if (totalAmountEl) totalAmountEl.textContent = formattedAmount + ' ₺';
+        if (totalCurrentValueEl) totalCurrentValueEl.textContent = formattedCurrentValue.replace('₺', '₺');
+        if (valueIncreaseInfoEl) valueIncreaseInfoEl.textContent = increaseText;
+
         resultDiv.innerHTML = `
             <strong>${year}</strong> yılı <strong>${selectedMonthName}</strong> ayındaki <strong>${formattedAmount} ₺</strong>,
             <br>
