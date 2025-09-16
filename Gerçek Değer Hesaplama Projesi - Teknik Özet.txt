@@ -43,62 +43,8 @@ Platform: GitHub
 
 3. Otomasyon Altyapısı: Veri Güncelleme
 
-Projenin veri setinin manuel müdahale olmadan güncel kalması için sunucusuz bir otomasyon mekanizması kurulmuştur.
+Bkz: Kur Bilgisi Alım Süreci Teknik Analizi.txt
 
-3.1 Aylık veri güncelleme (tetikleyici günlük çalışıyor).
-
-Platform: Google Apps Script.
-
-Veri Kaynağı: Türkiye Cumhuriyet Merkez Bankası (TCMB) EVDS API.
-
-Mekanizma:
-
-Apps Script, UrlFetchApp servisini kullanarak TCMB'nin API'sine kimlik doğrulamalı (API Key) bir GET isteği gönderir.
-
-Gelen JSON yanıtını ayrıştırarak (parse) en güncel gram altın fiyatını ve tarihini alır.
-
-SpreadsheetApp servisi ile projenin Google E-Tablosu'na bağlanır.
-
-E-Tablo'daki son satırın tarihini, API'den gelen son tarihle karşılaştırarak mükerrer kaydı engeller.
-
-Tarihler farklıysa, yeni veriyi appendRow() metodu ile tablonun son satırına ekler.
-
-Tetikleyici (Trigger): Apps Script, zamana dayalı (time-driven) bir tetikleyici ile her gün 22:00-23:00 saatleri arasında otomatik olarak çalışacak şekilde yapılandırılmıştır.
-
-3.2 Güncel döviz kuru alanı güncelleme (Saatlik çalışıyor)
-
-Teknik Doküman: Saatlik Güncel Kur Otomasyonu
-Genel Bakış
-Bu doküman, projenin Google E-Tablosu'ndaki "güncel kur" verisinin, Türkiye Cumhuriyet Merkez Bankası (TCMB) tarafından yayınlanan anlık döviz kurları ile saatlik olarak otomatik güncellenmesini sağlayan altyapıyı açıklamaktadır. Bu sistem, web uygulamasının her zaman en taze veriyi göstermesini sağlar ve manuel müdahaleyi ortadan kaldırır.
-
-Otomasyon Mimarisi
-Platform: Google Apps Script
-Veri Kaynağı: TCMB Günlük Kurlar (today.xml)
-Hedef: Projeye ait Google E-Tablosu'ndaki Guncel Kur!A1 hücresi.
-Tetikleyici: Zamana dayalı (Time-driven), saatlik.
-Çalışma Mekanizması
-Tetikleme: Google Apps Script üzerinde kurulan zamana dayalı tetikleyici, her saat başı updateHourlyGoldRate adlı fonksiyonu otomatik olarak çalıştırır.
-
-Veri Çekme:
-
-Apps Script'in UrlFetchApp servisi, TCMB'nin https://www.tcmb.gov.tr/kurlar/today.xml adresine bir HTTP GET isteği gönderir.
-Bu istek sonucunda, o an geçerli olan tüm döviz kurlarını içeren XML formatında bir yanıt alınır.
-Veri Ayrıştırma (Parsing):
-
-Gelen XML metni, Apps Script'in dahili XmlService'i kullanılarak ayrıştırılır.
-Tüm para birimleri (<Currency>) arasından, Kod="USD" özniteliğine sahip olan bulunur. Gram altın fiyatı uluslararası piyasada Dolar'a endeksli olduğu için, en doğru ve anlık gösterge olarak Amerikan Doları (USD) kuru referans alınmıştır.
-Bulunan USD elementinin içindeki Döviz Alış (ForexBuying) değeri, güncel kur olarak alınır.
-Google E-Tablosu'na Yazma:
-
-SpreadsheetApp servisi, projenin ana E-Tablosu'na ID üzerinden bağlanır.
-Guncel Kur isimli sayfayı hedef alarak A1 hücresinin değerini, TCMB'den alınan yeni kur değeri ile günceller (setValue).
-Loglama ve Hata Yönetimi:
-
-İşlemin başarıyla tamamlanması veya olası bir hata (örn: TCMB verisine ulaşılamaması, USD kurunun bulunamaması) durumunda, Apps Script'in Logger servisi aracılığıyla detaylı loglar tutulur. Bu, sistemin sağlığını izlemeyi kolaylaştırır.
-Özet
-Bu otomasyon sayesinde, Guncel Kur!A1 hücresi her saat başı TCMB'nin en güncel USD alış kuru ile otomatik olarak yenilenir. Web sunucusu (server.js) ve kullanıcı arayüzü (tablo.js, app.js), /api/current endpointi üzerinden bu hücredeki veriyi okuyarak kullanıcıya her zaman en güncel ve doğru bilgiyi sunar. 
-Bu yapı, mevcut günlük veri ekleme otomasyonu ile uyum içinde çalışarak projenin veri altyapısını tamamlar.
------
 
 
 4. Güvenlik ve Konfigürasyon Yönetimi

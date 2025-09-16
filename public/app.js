@@ -8,49 +8,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Miktar alanına yazıldıkça sayıyı formatla
     // app.js
-
 amountInput.addEventListener('input', (e) => {
-    // --- HATA AYIKLAMA İÇİN EKLENDİ ---
-    console.log("--- Input Event Başladı ---");
-    console.log("1. Tarayıcıdaki ham girdi:", e.target.value);
-    // --- HATA AYIKLAMA SONU ---
-
     // 1. Girdideki sayı olmayan her şeyi temizle
     let rawValue = e.target.value.replace(/[^\d]/g, '');
-    
-    // --- HATA AYIKLAMA İÇİN EKLENDİ ---
-    console.log("2. Sadece rakamlardan oluşan ham değer:", rawValue);
-    // --- HATA AYIKLAMA SONU ---
 
     // 2. Eğer girdi boşsa, input'u temizleyip işlemi bitir
     if (!rawValue) {
         e.target.value = '';
         return;
     }
-
+    
     // 3. Değeri sayıya çevir ve sınırı uygula
     let numberValue = parseInt(rawValue, 10);
-
-    // --- HATA AYIKLAMA İÇİN EKLENDİ ---
-    console.log("3. Sayıya çevrilmiş değer (parseInt sonrası):", numberValue);
-    // --- HATA AYIKLAMA SONU ---
     
     const limit = 1000000000; // 1 Milyar sınırı
 
     // Girilen sayı limiti aşıyorsa, sayıya limit değerini ata
     if (numberValue > limit) {
         numberValue = limit;
-        // --- HATA AYIKLAMA İÇİN EKLENDİ ---
-        console.log("4. Limit uygulandı! Sayının yeni değeri:", numberValue);
-        // --- HATA AYIKLAMA SONU ---
     }
 
     // 4. Sınır kontrolünden geçmiş sayıyı Türkçe formatına göre binlik ayraçlarla formatla
-    const formattedValue = numberValue.toLocaleString('tr-TR');
-    
-    // --- HATA AYIKLAMA İÇİN EKLENDİ ---
-    console.log("5. Ekrana yazılacak son formatlanmış değer:", formattedValue);
-    // --- HATA AYIKLAMA SONU ---
+    const formattedValue = numberValue.toLocaleString('en-US');
     
     if (e.target.value !== formattedValue) {
        e.target.value = formattedValue;
@@ -170,10 +149,19 @@ amountInput.addEventListener('input', (e) => {
         monthSelect.disabled = true;
     }
 
+    function formatCurrency(value, currency, maximumFractionDigits = 2) {
+        // Basamak ayracı virgül, ondalık ayracı nokta (en-US formatı)
+        const formatted = value.toLocaleString('en-US', {
+            minimumFractionDigits: maximumFractionDigits,
+            maximumFractionDigits: maximumFractionDigits
+        });
+        return `${formatted} ${currency === 'TRY' ? '₺' : currency}`;
+    }
+
     function performCalculation() {
-        // Girdideki binlik ayraçlarını (noktaları) temizle
-        const rawAmount = amountInput.value.replace(/\./g, ''); 
-        const amount = parseFloat(rawAmount); // Temizlenmiş değeri sayıya çevir
+        // Girdideki sayı olmayan tüm karakterleri temizle (daha güvenli)
+        const rawAmount = amountInput.value.replace(/[^\d]/g, '');
+        const amount = parseFloat(rawAmount) || 0; // Temizlenmiş değeri sayıya çevir, boşsa 0 ata
         
         const year = yearSelect.value;
         const month = monthSelect.value;
@@ -205,24 +193,12 @@ amountInput.addEventListener('input', (e) => {
         const goldAmount = amount / historicalPrice;
         const currentValue = goldAmount * currentPrice;
 
-        const formattedAmount = amount.toLocaleString('tr-TR');
+        const formattedAmount = amount.toLocaleString('en-US');
         const selectedMonthName = months.find(m => m.value === month).name;
 
-        const formattedCurrentValue = currentValue.toLocaleString('tr-TR', {
-            style: 'currency',
-            currency: 'TRY',
-            maximumFractionDigits: 0
-        });
-
-        const formattedHistoricalPrice = historicalPrice.toLocaleString('tr-TR', {
-            style: 'currency',
-            currency: 'TRY'
-        });
-        
-       const currentGoldPriceFormatted = currentPrice.toLocaleString('tr-TR', {
-           style: 'currency',
-           currency: 'TRY'
-       });
+        const formattedCurrentValue = formatCurrency(currentValue, 'TRY', 0);
+        const formattedHistoricalPrice = formatCurrency(historicalPrice, 'TRY', 2);
+        const currentGoldPriceFormatted = formatCurrency(currentPrice, 'TRY', 2);
 
         // Yüzde artış hesaplama
         const increasePercentage = ((currentValue - amount) / amount * 100);
@@ -236,7 +212,7 @@ amountInput.addEventListener('input', (e) => {
         const valueIncreaseInfoEl = document.getElementById('value-increase-info');
         
         if (totalAmountEl) totalAmountEl.textContent = formattedAmount + ' ₺';
-        if (totalCurrentValueEl) totalCurrentValueEl.textContent = formattedCurrentValue.replace('₺', '₺');
+        if (totalCurrentValueEl) totalCurrentValueEl.textContent = formattedCurrentValue;
         if (valueIncreaseInfoEl) valueIncreaseInfoEl.textContent = increaseText;
 
         resultDiv.innerHTML = `

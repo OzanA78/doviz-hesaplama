@@ -496,7 +496,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function clearTable() {
         if (tableBody) {
-            tableBody.innerHTML = '';
+            // Hafıza sızıntılarını önlemek için satırları tek tek temizleyerek kaldır
+            while (tableBody.firstChild) {
+                const row = tableBody.firstChild;
+                // Satıra bağlı "drag" olay dinleyicilerini temizle
+                if (row._cleanupDragListeners) {
+                    row._cleanupDragListeners();
+                }
+                tableBody.removeChild(row);
+            }
         }
     }
 
@@ -639,22 +647,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (amount > 0) {
                     const goldAmount = amount / historicalPrice;
                     const currentValue = goldAmount * currentGoldPrice;
-                    
+
+                    // Ham değerleri data attribute'larında sakla
+                    row.dataset.goldAmount = goldAmount;
+                    row.dataset.currentValue = currentValue;
+
                     // Gram kolonuna altın miktarı
                     goldAmountSubValue.textContent = `${goldAmount.toFixed(1)} gr`;
                     
                     // Güncel TL kolonuna güncel değer
                     currentValueSubValue.innerHTML = `<span class="guncel-value">${formatCurrency(currentValue, 'TRY', 0)}</span>`;
                 } else {
+                    // Data attribute'larını temizle
+                    delete row.dataset.goldAmount;
+                    delete row.dataset.currentValue;
                     goldAmountSubValue.textContent = '-';
                     currentValueSubValue.textContent = '-';
                 }
             } else {
+                // Data attribute'larını temizle
+                delete row.dataset.goldAmount;
+                delete row.dataset.currentValue;
                 rateInfo.textContent = 'Veri Yok';
                 goldAmountSubValue.textContent = 'Veri Yok';
                 currentValueSubValue.textContent = '-';
             }
         } else {
+            // Data attribute'larını temizle
+            delete row.dataset.goldAmount;
+            delete row.dataset.currentValue;
             rateInfo.textContent = '-';
             goldAmountSubValue.textContent = '-';
             currentValueSubValue.textContent = '-';
@@ -678,37 +699,10 @@ document.addEventListener('DOMContentLoaded', () => {
             const amount = parseFloat(rawAmount) || 0;
             totalAmount += amount;
 
-            // Yeni yapıda alt değerlerden bilgileri al
-            const goldAmountSubValue = row.querySelector('.gold-amount-sub-value');
-            const currentValueSubValue = row.querySelector('.current-value-sub-value');
-            
-            if (goldAmountSubValue && goldAmountSubValue.textContent !== '-' && goldAmountSubValue.textContent !== 'Veri Yok') {
-                // "66.7 gr" formatından altın miktarını çıkar
-                const goldText = goldAmountSubValue.textContent;
-                const goldMatch = goldText.match(/([0-9,.]+)\s*gr/);
-                if (goldMatch) {
-                    const goldAmount = parseFloat(goldMatch[1].replace(',', '.')) || 0;
-                    totalGoldAmount += goldAmount;
-                }
-            }
-            
-            if (currentValueSubValue && currentValueSubValue.textContent !== '-' && currentValueSubValue.textContent !== 'Veri Yok') {
-                // Yeni yapıda güncel değeri span'dan al
-                const guncelValueSpan = currentValueSubValue.querySelector('.guncel-value');
-                if (guncelValueSpan) {
-                    const currentText = guncelValueSpan.textContent;
-                    const rawCurrentValue = currentText.replace(/[^\d,.]/g, '').replace(/\./g, '').replace(',', '.');
-                    totalCurrentValue += parseFloat(rawCurrentValue) || 0;
-                } else {
-                    // Fallback: "296.073 ₺" formatından değeri çıkar
-                    const currentText = currentValueSubValue.textContent;
-                    const valueMatch = currentText.match(/([₺\d,.]+)/);
-                    if (valueMatch) {
-                        const rawCurrentValue = valueMatch[1].replace(/[^\d,.]/g, '').replace(/\./g, '').replace(',', '.');
-                        totalCurrentValue += parseFloat(rawCurrentValue) || 0;
-                    }
-                }
-            }
+            // Hesaplamalar için DOM'dan metin okumak yerine data attribute'larını kullan
+            // Bu yöntem daha güvenilir ve performanslıdır.
+            totalGoldAmount += parseFloat(row.dataset.goldAmount) || 0;
+            totalCurrentValue += parseFloat(row.dataset.currentValue) || 0;
         });
 
         const totalGoldAmountEl = document.getElementById('total-gold-amount');
@@ -886,6 +880,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 setTimeout(() => {
                     // Direkt sil, onay sorma
                     if (row.parentNode) {
+                        row._cleanupDragListeners(); // Hafıza sızıntısını önle
                         row.remove();
                         updateTotals();
                     }
@@ -958,6 +953,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 
                 // Satırı sil
+                // Satıra bağlı "drag" olay dinleyicilerini temizle
+                if (row._cleanupDragListeners) {
+                    row._cleanupDragListeners();
+                }
                 row.remove();
                 updateTotals();
                 showToast('Satır silindi');
@@ -1005,14 +1004,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 
+                // Normal akışa devam et: bir sonraki satıra geç veya yeni satır ekle
                 if (nextRow) {
                     nextRow.querySelector('.amount-input').focus();
                 } 
                 else if (isLastRow) {
-                    const year = row.querySelector('.year-select').value;
-                    const month = row.querySelector('.month-select').value;
-                    const rawAmount = amountInput.value.replace(/[^\d]/g, '');
-                    const amount = parseFloat(rawAmount) || 0;
+                    const { year, month, amount } = getRowData(row);
                     if (year && month && amount > 0) {
                         addNewRow({ date: { year, month }, amount: amount });
                     }
@@ -1033,9 +1030,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    function getRowData(row) {
+        const year = row.querySelector('.year-select').value;
+        const month = row.querySelector('.month-select').value;
+        const rawAmount = row.querySelector('.amount-input').value.replace(/[^\d]/g, '');
+        const amount = parseFloat(rawAmount) || 0;
+        return { year, month, amount };
+    }
+
     function formatCurrency(value, currency, maximumFractionDigits = 2) {
-        // ###,###.## formatı için
-        const formatted = value.toLocaleString('tr-TR', {
+        // Basamak ayracı virgül, ondalık ayracı nokta (en-US formatı)
+        const formatted = value.toLocaleString('en-US', {
             minimumFractionDigits: maximumFractionDigits,
             maximumFractionDigits: maximumFractionDigits
         });
@@ -1057,7 +1062,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showAmountUpdateConfirmModal(amount, currentRow) {
-        const formattedAmount = parseInt(amount, 10).toLocaleString('tr-TR');
+        const formattedAmount = parseInt(amount, 10).toLocaleString('en-US');
         const allRows = Array.from(tableBody.querySelectorAll('tr'));
         const currentIndex = allRows.indexOf(currentRow);
         const subsequentRows = allRows.slice(currentIndex + 1);

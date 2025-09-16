@@ -1,0 +1,44 @@
+Kur Bilgisi Alım Süreci Teknik Analizi
+1. Özet
+
+Bu doküman, "Döviz Hesaplama" web uygulamasının, 1 Gram Altın'ın anlık Türk Lirası (TRY) karşılığını nasıl elde ettiğini, güncel tuttuğunu ve kullanıcıya sunduğunu detaylandırmaktadır. Sistem, zamanlanmış görevler ile harici API'lerden veri toplayan bir backend script'i, bu veriyi depolayan bir bulut tablosu ve veriyi son kullanıcıya sunan bir web sunucusu olmak üzere üç ana katmandan oluşan ayrık bir mimari kullanır. Bu yapı, sistemin hem verimli hem de dayanıklı olmasını sağlar.
+
+2. Sistem Mimarisi
+
+Sistem, birbiriyle entegre çalışan dört ana bileşenden oluşur:
+
+Google Apps Script (Veri Toplayıcı): Belirlenen aralıklarla (saatlik) otomatik olarak çalışan ve harici servislerden kur verilerini toplayan JavaScript tabanlı bulut script'idir. Sistemin "veri toplama motoru" olarak görev yapar.
+Harici API'ler (Veri Kaynakları):
+goldapi.io: 1 Ons Altın'ın Dolar (XAU/USD) karşılığını sağlayan birincil veri kaynağıdır.
+frankfurter.app: Dolar'ın Türk Lirası (USD/TRY) kurunu sağlayan ikincil veri kaynağıdır.
+Google Sheets (Veri Deposu / Önbellek): Apps Script tarafından toplanan verilerin yazıldığı merkezi bir depodur. Anlık kur ve olası hata mesajları için basit bir veritabanı ve önbellek görevi görür.
+Guncel Kur!A1: Hesaplanan en son gram altın fiyatını içerir.
+Guncel Kur!C1: Veri alımı sırasında bir hata oluşursa, hata mesajını içerir. Başarılı işlemlerde bu hücre boştur.
+Node.js / Express.js Sunucusu (Veri Sunucu): Kullanıcının web tarayıcısı ile Google Sheets arasında bir köprü görevi görür. Google Sheets'ten veriyi okur ve web sayfasına JSON formatında sunar.
+3. Veri Akış Şeması
+
+Süreç iki ana aşamada gerçekleşir:
+
+Aşama 1: Otomatik Veri Güncelleme (Arka Plan)
+
+Bu aşama, kullanıcıdan tamamen bağımsız olarak, Google sunucularında otomatik olarak çalışır.
+
+Tetikleme: Google Apps Script'teki "Saatlik Zamanlayıcı", updateCurrentGoldPrice fonksiyonunu tetikler.
+Veri Çekme: getLatestGoldPrice fonksiyonu çalışır: a. goldapi.io API'sine istek göndererek 1 Ons Altın'ın Dolar fiyatını alır. b. frankfurter.app API'sine istek göndererek 1 Dolar'ın TL kurunu alır.
+Hesaplama: Elde edilen iki değer (Ons/USD ve USD/TRY) kullanılarak 1 Gram Altın'ın TL karşılığı matematiksel olarak hesaplanır ((OnsFiyatı * DolarKuru) / 31.1035).
+Veri Yazma:
+Başarılıysa: Hesaplanan nihai fiyat, Guncel Kur!A1 hücresine yazılır. Guncel Kur!C1 hücresinin içeriği temizlenir.
+Başarısızsa: Herhangi bir API'den veri alınamazsa veya bir hata oluşursa, Guncel Kur!A1 hücresine dokunulmaz. Oluşan hata mesajı metin olarak Guncel Kur!C1 hücresine yazılır.
+Aşama 2: Kullanıcı Arayüzü Veri Gösterimi (Ön Plan)
+
+Bu aşama, kullanıcı web sayfasını ziyaret ettiğinde veya hesaplama yaptığında çalışır.
+
+Sayfa Yükleme: Kullanıcı index.html sayfasını açar. Tarayıcı, app.js dosyasını yükler ve çalıştırır.
+API İsteği: app.js içerisindeki initializeApp fonksiyonu, bizim Node.js sunucumuzda çalışan /api/current adresine bir fetch isteği gönderir.
+Sunucu Yanıtı: server.js, bu isteği alır. Google Sheets API'sini kullanarak Guncel Kur sayfasındaki A1 (fiyat) ve C1 (hata) hücrelerini okur. Bu iki bilgiyi içeren bir JSON nesnesi oluşturur ve tarayıcıya geri gönderir.
+Örnek Yanıt (Başarılı): { "price": 4898.07, "error": null }
+Örnek Yanıt (Hatalı): { "price": 4898.07, "error": "Error: goldapi.io Hatası!" }
+Arayüz Güncelleme: app.js, sunucudan gelen JSON yanıtını alır. a. price değerini, hesaplamalarda kullanılmak üzere bir değişkene atar. b. error değerini kontrol eder. Eğer bu değer null değilse (yani bir hata mesajı varsa), hesaplama sonucunda gösterilen güncel kurun yanına, üzerine gelindiğinde hata mesajını gösteren kırmızı bir (!) işareti ekler.
+4. Sonuç
+
+Bu mimari, kullanıcı isteklerini yavaşlatabilecek harici API çağrılarından soyutlar. Kullanıcı, her zaman Google Sheets'teki en güncel "önbelleklenmiş" veriye anında erişir. Arka planda çalışan Apps Script ise bu önbelleği düzenli olarak güncelleyerek verinin taze kalmasını sağlar. Hata yönetimi mekanizması sayesinde, veri kaynağında bir sorun yaşansa bile sistemin durumu kullanıcıya şeffaf bir şekilde bildirilir.

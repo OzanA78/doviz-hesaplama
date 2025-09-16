@@ -1,9 +1,15 @@
 const express = require('express');
 const path = require('path');
 const { google } = require('googleapis');
+const NodeCache = require('node-cache');
 
 const app = express();
 const port = 3000;
+
+// --- ÖNBELLEK AYARLARI ---
+// Tarihsel veri için 10 dakika, güncel kur için 2 dakika önbellek süresi
+const historicalDataCache = new NodeCache({ stdTTL: 600 });
+const currentPriceCache = new NodeCache({ stdTTL: 120 });
 
 // --- GOOGLE SHEETS API AYARLARI ---
 let auth;
@@ -27,6 +33,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // --- API ENDPOINT (TÜM VERİYİ GÖNDER) ---
 app.get('/api/data', async (req, res) => {
+    const cacheKey = 'allHistoricalData';
+    // 1. Önce önbelleği kontrol et
+    if (historicalDataCache.has(cacheKey)) {
+        console.log('Tarihsel veri önbellekten sunuldu.');
+        return res.json(historicalDataCache.get(cacheKey));
+    }
+
     try {
         const client = await auth.getClient();
         const googleSheets = google.sheets({ version: 'v4', auth: client });
@@ -50,6 +63,10 @@ app.get('/api/data', async (req, res) => {
         }).filter(item => item !== null);
 
         data.sort((a, b) => a.date.localeCompare(b.date));
+
+        // 2. Veriyi önbelleğe kaydet
+        historicalDataCache.set(cacheKey, data);
+        console.log('Tarihsel veri Google Sheets\'ten çekildi ve önbelleğe alındı.');
         res.json(data);
     } catch (error) {
         console.error('Google Sheets API Hatası (/api/data):', error);
@@ -59,6 +76,13 @@ app.get('/api/data', async (req, res) => {
 
 // --- YENİ API ENDPOINT: GÜNCEL KUR VE HATA DURUMU ---
 app.get('/api/current', async (req, res) => {
+    const cacheKey = 'currentGoldPrice';
+    // 1. Önce önbelleği kontrol et
+    if (currentPriceCache.has(cacheKey)) {
+        console.log('Güncel kur önbellekten sunuldu.');
+        return res.json(currentPriceCache.get(cacheKey));
+    }
+
     try {
         const client = await auth.getClient();
         const googleSheets = google.sheets({ version: 'v4', auth: client });
@@ -80,11 +104,15 @@ app.get('/api/current', async (req, res) => {
         const priceString = priceValue.replace(/\./g, '').replace(',', '.');
         const formattedPrice = parseFloat(priceString);
 
-        res.json({ 
+        const result = { 
             price: formattedPrice,
             error: errorValue // Hata mesajını da yanıta ekle
-        });
+        };
 
+        // 2. Sonucu önbelleğe kaydet
+        currentPriceCache.set(cacheKey, result);
+        console.log('Güncel kur Google Sheets\'ten çekildi ve önbelleğe alındı.');
+        res.json(result);
     } catch (error) {
         console.error('Google Sheets API Hatası (/api/current):', error);
         res.status(500).json({ error: 'Güncel kur verisi alınırken sunucu hatası oluştu.' });
