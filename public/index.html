@@ -16,8 +16,39 @@
             <p class="subtitle">Farklı tarihlerdeki miktarların güncel toplu değerini hesaplayın.</p>
         </div>
         
+        <!-- Toolbar -->
+        <div class="toolbar-container">
+            <div class="toolbar-left">
+                <div class="plan-controls">
+                    <div class="plan-selector-container">
+                        <input type="text" id="planSelector" class="plan-selector" placeholder="Plan seçin...">
+                        <div class="plan-dropdown hidden" id="planDropdown">
+                        </div>
+                    </div>
+                    <button id="savePlanBtn" class="toolbar-btn save-btn" title="Planı kaydet">💾 Kaydet</button>
+                    <button id="deletePlanBtn" class="toolbar-btn delete-btn" title="Seçili planı sil">🗑️ Sil</button>
+                </div>
+            </div>
+            <div class="toolbar-right">
+                <div class="plan-actions">
+                    <button id="clearCacheBtn" class="toolbar-btn clear-btn" title="Tüm verileri temizle">🧹 Temizle</button>
+                </div>
+            </div>
+        </div>
+        
         <div class="table-container">
             <table>
+                <thead>
+                    <tr>
+                        <th>Yıl</th>
+                        <th>Ay</th>
+                        <th>Kur</th>
+                        <th>Miktar</th>
+                        <th>Gram</th>
+                        <th>Güncel TL</th>
+                        <th>İşlem</th>
+                    </tr>
+                </thead>
                 <tbody id="calculation-table-body">
                     </tbody>
             </table>
@@ -34,27 +65,6 @@
                 <div class="total-item">
                     <span class="total-label" id="total-current-value-label">Bugünün Parası ile:</span>
                     <span id="total-current-value" class="total-value">0 ₺</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Toolbar -->
-        <div class="toolbar-container">
-            <div class="toolbar-left">
-                <div class="plan-controls">
-                    <input type="text" id="planTitleInput" class="plan-input compact" placeholder="Plan adı..." maxlength="50">
-                    <div class="plan-selector-container">
-                        <input type="text" id="planSelector" class="plan-selector" placeholder="Plan seçin...">
-                        <div class="plan-dropdown hidden" id="planDropdown">
-                        </div>
-                    </div>
-                    <button id="savePlanBtn" class="toolbar-btn save-btn" title="Planı kaydet">💾 Kaydet</button>
-                    <button id="deletePlanBtn" class="toolbar-btn delete-btn" title="Seçili planı sil">🗑️ Sil</button>
-                </div>
-            </div>
-            <div class="toolbar-right">
-                <div class="plan-actions">
-                    <button id="clearCacheBtn" class="toolbar-btn clear-btn" title="Tüm verileri temizle">🧹 Temizle</button>
                 </div>
             </div>
         </div>

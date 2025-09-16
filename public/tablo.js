@@ -119,7 +119,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function setupPlanManagement() {
         // Plan input ve selector elementleri
-        const planTitleInput = document.getElementById('planTitleInput');
         const planSelector = document.getElementById('planSelector');
         const savePlanBtn = document.getElementById('savePlanBtn');
         const deletePlanBtn = document.getElementById('deletePlanBtn');
@@ -129,28 +128,23 @@ document.addEventListener('DOMContentLoaded', () => {
         updateCacheStatus();
         updatePlanSelector();
         
-        // Plan title input events
-        if (planTitleInput) {
-            planTitleInput.addEventListener('keypress', function(e) {
+        // Plan selector değişimi
+        if (planSelector) {
+            const planDropdown = document.getElementById('planDropdown');
+            
+            // Enter tuşu ile kaydetme
+            planSelector.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     savePlan();
                 }
             });
             
-            // planTitleInput değiştiğinde planSelector'ı da güncelle
-            planTitleInput.addEventListener('input', function() {
-                if (planSelector) {
-                    planSelector.value = this.value;
-                }
-            });
-        }
-        
-        // Plan selector değişimi
-        if (planSelector) {
-            const planDropdown = document.getElementById('planDropdown');
-            
             // Dropdown açma/kapama
             planSelector.addEventListener('focus', function() {
+                showPlanDropdown();
+            });
+            
+            planSelector.addEventListener('click', function() {
                 showPlanDropdown();
             });
             
@@ -163,10 +157,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             planSelector.addEventListener('input', function() {
                 const selectedPlan = this.value;
-                // planTitleInput'u da güncelle
-                if (planTitleInput) {
-                    planTitleInput.value = selectedPlan;
-                }
                 
                 // Dropdown'u filtrele
                 filterPlanDropdown(selectedPlan);
@@ -199,6 +189,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Plan dropdown helper fonksiyonları
         function showPlanDropdown() {
             const planDropdown = document.getElementById('planDropdown');
+            
             if (planDropdown) {
                 updatePlanDropdownOptions();
                 planDropdown.classList.remove('hidden');
@@ -269,13 +260,9 @@ document.addEventListener('DOMContentLoaded', () => {
         
         function selectPlan(planName) {
             const planSelector = document.getElementById('planSelector');
-            const planTitleInput = document.getElementById('planTitleInput');
             
             if (planSelector) {
                 planSelector.value = planName;
-            }
-            if (planTitleInput) {
-                planTitleInput.value = planName;
             }
             
             loadPlan(planName);
@@ -306,6 +293,8 @@ document.addEventListener('DOMContentLoaded', () => {
                 showConfirmModal('Mevcut tablo satırlarını temizlemek istediğinizden emin misiniz?', () => {
                     clearTable();
                     addNewRow();
+                    // Footer toplamlarını sıfırla
+                    updateTotals();
                     showToast('Tablo temizlendi');
                 });
             });
@@ -313,15 +302,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     function savePlan() {
-        const planTitleInput = document.getElementById('planTitleInput');
         const planSelector = document.getElementById('planSelector');
         
-        // Plan ismi önce planSelector'dan al, yoksa planTitleInput'tan
-        let planName = planSelector?.value.trim() || planTitleInput?.value.trim();
+        // Plan ismi planSelector'dan al
+        let planName = planSelector?.value.trim();
         
         if (!planName) {
             showToast('Lütfen plan adı girin', 'warning');
-            planSelector?.focus() || planTitleInput?.focus();
+            planSelector?.focus();
             return;
         }
         
@@ -545,10 +533,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="amount-input-wrapper">
                         <input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10">
                     </div>
-                    <div class="sub-values-container">
-                        <span class="sub-value gold-amount-sub-value">-</span>
-                        <span class="sub-value current-value-sub-value">-</span>
-                    </div>
+                </td>
+                <td class="gram-cell">
+                    <span class="gold-amount-sub-value">-</span>
+                </td>
+                <td class="current-value-cell">
+                    <span class="current-value-sub-value">-</span>
+                </td>
+                <td class="action-cell">
+                    <button class="delete-row-btn" title="Satırı sil">✕</button>
                 </td>
             `;
         } else {
@@ -570,10 +563,15 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="amount-input-wrapper">
                         <input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10">
                     </div>
-                    <div class="sub-values-container">
-                        <span class="sub-value gold-amount-sub-value">-</span>
-                        <span class="sub-value current-value-sub-value">-</span>
-                    </div>
+                </td>
+                <td class="gram-cell">
+                    <span class="gold-amount-sub-value">-</span>
+                </td>
+                <td class="current-value-cell">
+                    <span class="current-value-sub-value">-</span>
+                </td>
+                <td class="action-cell">
+                    <button class="delete-row-btn" title="Satırı sil">✕</button>
                 </td>
             `;
         }
@@ -627,11 +625,11 @@ document.addEventListener('DOMContentLoaded', () => {
                     const goldAmount = amount / historicalPrice;
                     const currentValue = goldAmount * currentGoldPrice;
                     
-                    // Sol alt: Altın miktarı (altın renginde)
+                    // Gram kolonuna altın miktarı
                     goldAmountSubValue.textContent = `${goldAmount.toFixed(1)} gr`;
                     
-                    // Sağ alt: Güncel etiket + değer (HTML ile)
-                    currentValueSubValue.innerHTML = `<span class="guncel-label">Güncel:</span><span class="guncel-value">${formatCurrency(currentValue, 'TRY', 0)}</span>`;
+                    // Güncel TL kolonuna güncel değer
+                    currentValueSubValue.innerHTML = `<span class="guncel-value">${formatCurrency(currentValue, 'TRY', 0)}</span>`;
                 } else {
                     goldAmountSubValue.textContent = '-';
                     currentValueSubValue.textContent = '-';
@@ -687,9 +685,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     const rawCurrentValue = currentText.replace(/[^\d,.]/g, '').replace(/\./g, '').replace(',', '.');
                     totalCurrentValue += parseFloat(rawCurrentValue) || 0;
                 } else {
-                    // Fallback: "Güncel: 296.073 ₺" formatından değeri çıkar
+                    // Fallback: "296.073 ₺" formatından değeri çıkar
                     const currentText = currentValueSubValue.textContent;
-                    const valueMatch = currentText.match(/Güncel:\s*([₺\d,.]+)/);
+                    const valueMatch = currentText.match(/([₺\d,.]+)/);
                     if (valueMatch) {
                         const rawCurrentValue = valueMatch[1].replace(/[^\d,.]/g, '').replace(/\./g, '').replace(',', '.');
                         totalCurrentValue += parseFloat(rawCurrentValue) || 0;
@@ -919,6 +917,27 @@ document.addEventListener('DOMContentLoaded', () => {
         // Drag to delete işlevselliği ekle
         addDragToDeleteListeners(row);
         
+        // Sil butonu event listener
+        const deleteBtn = row.querySelector('.delete-row-btn');
+        if (deleteBtn) {
+            deleteBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation(); // Drag event'ları ile çakışmasını önle
+                
+                // Tek satır varsa silmeye izin verme
+                const totalRows = tableBody.querySelectorAll('tr').length;
+                if (totalRows <= 1) {
+                    showToast('En az bir satır olmalı', 'warning');
+                    return;
+                }
+                
+                // Satırı sil
+                row.remove();
+                updateTotals();
+                showToast('Satır silindi');
+            });
+        }
+        
         const amountInput = row.querySelector('.amount-input');
         
         amountInput.addEventListener('focus', (e) => {
@@ -952,6 +971,13 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (e.key === 'Enter' || (e.key === 'Tab' && !e.shiftKey)) {
                 e.preventDefault();
+                
+                // Yeni özellik: Alt satırlarda miktar varsa onay sor
+                const currentAmount = amountInput.value.replace(/[^\d]/g, '');
+                if (currentAmount && hasSubsequentRowsWithAmount(row)) {
+                    showAmountUpdateConfirmModal(currentAmount, row);
+                    return;
+                }
                 
                 if (nextRow) {
                     nextRow.querySelector('.amount-input').focus();
@@ -989,6 +1015,54 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         
         return `${formatted} ${currency === 'TRY' ? '₺' : currency}`;
+    }
+
+    // Yardımcı fonksiyonlar
+    function hasSubsequentRowsWithAmount(currentRow) {
+        const allRows = Array.from(tableBody.querySelectorAll('tr'));
+        const currentIndex = allRows.indexOf(currentRow);
+        const subsequentRows = allRows.slice(currentIndex + 1);
+        
+        return subsequentRows.some(row => {
+            const amountInput = row.querySelector('.amount-input');
+            const rawAmount = amountInput.value.replace(/[^\d]/g, '');
+            return rawAmount && parseFloat(rawAmount) > 0;
+        });
+    }
+
+    function showAmountUpdateConfirmModal(amount, currentRow) {
+        const formattedAmount = parseInt(amount, 10).toLocaleString('tr-TR');
+        const allRows = Array.from(tableBody.querySelectorAll('tr'));
+        const currentIndex = allRows.indexOf(currentRow);
+        const subsequentRows = allRows.slice(currentIndex + 1);
+        const rowsWithAmount = subsequentRows.filter(row => {
+            const amountInput = row.querySelector('.amount-input');
+            const rawAmount = amountInput.value.replace(/[^\d]/g, '');
+            return rawAmount && parseFloat(rawAmount) > 0;
+        });
+        
+        const message = `Bu satırın altındaki ${rowsWithAmount.length} satırın miktar alanını da "${formattedAmount} ₺" yapmak istiyor musunuz?`;
+        
+        showConfirmModal(message, () => {
+            // Evet seçildiğinde - alt satırları güncelle
+            rowsWithAmount.forEach(row => {
+                const amountInput = row.querySelector('.amount-input');
+                amountInput.value = formattedAmount;
+                updateRow(row);
+            });
+            
+            // Sonra normal akışa devam et (sonraki satıra geç)
+            const nextRow = currentRow.nextElementSibling;
+            if (nextRow) {
+                nextRow.querySelector('.amount-input').focus();
+            }
+        }, () => {
+            // Hayır seçildiğinde - sadece normal akışa devam et
+            const nextRow = currentRow.nextElementSibling;
+            if (nextRow) {
+                nextRow.querySelector('.amount-input').focus();
+            }
+        });
     }
 
     // Modern Modal Fonksiyonları
