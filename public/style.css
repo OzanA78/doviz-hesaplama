@@ -162,6 +162,7 @@ h1 {
     border: 1px solid rgba(255, 255, 255, 0.1);
     position: relative;
     overflow: visible; /* Dropdown'un taşmasına izin ver */
+    z-index: 1000; /* Z-index eklendi */
 }
 
 .toolbar-container::before {
@@ -233,6 +234,7 @@ h1 {
     position: relative;
     display: inline-block;
     overflow: visible;
+    z-index: 100000; /* En yüksek z-index */
 }
 
 .plan-selector {
@@ -281,7 +283,7 @@ h1 {
     border: 1px solid rgba(184, 188, 200, 0.6);
     border-radius: 3px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    z-index: 10000;
+    z-index: 99999; /* Z-index maksimum yapıldı */
     max-height: 80px; /* Boy kısaltıldı */
     overflow-y: auto;
     margin-top: 1px;
@@ -619,7 +621,7 @@ table {
 thead {
     position: sticky;
     top: 0;
-    z-index: 1;
+    z-index: 1; /* Normal z-index'e geri döndürüldü */
     background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
 }
 
@@ -646,7 +648,7 @@ th {
 th:nth-child(1), td:nth-child(1) { min-width: 120px; } /* Yıl Kolonu - %20 küçültüldü */
 th:nth-child(2), td:nth-child(2) { min-width: 120px; } /* Ay Kolonu - %20 küçültüldü */
 th:nth-child(3), td:nth-child(3) { min-width: 96px; } /* Kur Kolonu - %20 küçültüldü (120->96) */
-th:nth-child(4), td:nth-child(4) { min-width: 84px; } /* Miktar kolonu - %40 azaltıldı (140->84) */
+th:nth-child(4), td:nth-child(4) { min-width: 105px; } /* Miktar kolonu - %50 genişletildi (70->105) */
 th:nth-child(5), td:nth-child(5) { min-width: 80px; text-align: center; } /* Gram kolonu */
 th:nth-child(6), td:nth-child(6) { min-width: 100px; text-align: center; } /* Güncel TL kolonu */
 th:nth-child(7), td:nth-child(7) { min-width: 50px; text-align: center; } /* İşlem kolonu - sil butonu */
@@ -768,10 +770,12 @@ td input.amount-input {
     font-weight: 600;
     letter-spacing: 0.5px;
     text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
-    padding: 0.5rem 0.7rem; /* Ay select ile aynı padding */
-    font-size: 0.9rem; /* Ay select ile aynı font boyutu */
+    padding: 0.3rem 0.4rem; /* Padding küçültüldü */
+    font-size: 0.8rem; /* Font boyutu küçültüldü */
     height: auto; /* Otomatik yükseklik */
     box-sizing: border-box; /* Padding dahil yükseklik hesaplama */
+    width: 100%; /* Input wrapper'ının tamamını kapla */
+    max-width: 98px; /* %50 genişletildi (65->98) */
 }
 
 td input.amount-input::placeholder {
@@ -788,8 +792,8 @@ td input.amount-input::placeholder {
 }
 
 .amount-input-wrapper {
-    width: 100%; /* Kolonu kapla */
-    flex: 1; /* Esnek genişlik */
+    width: 98px; /* %50 genişletildi (65->98) */
+    flex: none; /* Flex büyümesini devre dışı bırak */
 }
 
 .sub-values-container {
