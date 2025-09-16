@@ -233,18 +233,17 @@ h1 {
     border-radius: 6px;
     padding: 0.5rem 0.8rem;
     font-size: 0.85rem;
-    color: transparent;
+    color: #333;
     transition: all 0.2s ease;
-    min-width: 40px;
-    max-width: 40px;
-    width: 40px;
+    min-width: 140px;
+    max-width: 180px;
     margin-left: 8px;
-    cursor: pointer;
-    text-indent: -9999px;
+    cursor: text;
     background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23333'%3E%3Cpath d='M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: right 0.8rem center;
     background-size: 16px 16px;
+    padding-right: 2.5rem;
 }
 
 .plan-selector:hover,
@@ -255,17 +254,13 @@ h1 {
     border-color: rgba(184, 188, 200, 0.6);
     background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%23333'%3E%3Cpath d='M4.427 9.573l3.396-3.396a.25.25 0 01.354 0l3.396 3.396a.25.25 0 01-.177.427H4.604a.25.25 0 01-.177-.427z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: right 0.8rem center;
     background-size: 16px 16px;
 }
 
-.plan-selector option {
-    color: #2d3748 !important;
-    background: #ffffff !important;
-    font-size: 0.85rem !important;
-    font-weight: 500 !important;
-    padding: 0.5rem !important;
-    text-shadow: none !important;
+.plan-selector::placeholder {
+    color: #999;
+    font-style: italic;
 }
 
 .dropdown-btn {

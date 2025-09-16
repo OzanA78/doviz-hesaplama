@@ -43,9 +43,9 @@
             <div class="toolbar-left">
                 <div class="plan-controls">
                     <input type="text" id="planTitleInput" class="plan-input compact" placeholder="Plan adı..." maxlength="50">
-                    <select id="planSelector" class="plan-selector">
-                        <option value="">Plan seçin...</option>
-                    </select>
+                    <input type="text" id="planSelector" class="plan-selector" list="planOptions" placeholder="Plan seçin...">
+                    <datalist id="planOptions">
+                    </datalist>
                     <button id="savePlanBtn" class="toolbar-btn save-btn" title="Planı kaydet">💾 Kaydet</button>
                     <button id="deletePlanBtn" class="toolbar-btn delete-btn" title="Seçili planı sil">🗑️ Sil</button>
                 </div>
