@@ -136,33 +136,44 @@ document.addEventListener('DOMContentLoaded', () => {
                     savePlan();
                 }
             });
+            
+            // planTitleInput değiştiğinde planSelector'ı da güncelle
+            planTitleInput.addEventListener('input', function() {
+                if (planSelector) {
+                    planSelector.value = this.value;
+                }
+            });
         }
         
         // Plan selector değişimi
         if (planSelector) {
             planSelector.addEventListener('input', function() {
                 const selectedPlan = this.value;
+                // planTitleInput'u da güncelle
+                if (planTitleInput) {
+                    planTitleInput.value = selectedPlan;
+                }
+                
                 if (selectedPlan) {
                     // Mevcut planlardan birini seçtiyse yükle
                     const plans = JSON.parse(localStorage.getItem(PLANS_KEY) || '{}');
                     if (plans[selectedPlan]) {
                         loadPlan(selectedPlan);
-                        if (planTitleInput) {
-                            planTitleInput.value = selectedPlan;
-                        }
                     }
                 }
             });
             
             planSelector.addEventListener('change', function() {
                 const selectedPlan = this.value;
+                // planTitleInput'u da güncelle
+                if (planTitleInput) {
+                    planTitleInput.value = selectedPlan;
+                }
+                
                 if (selectedPlan) {
                     const plans = JSON.parse(localStorage.getItem(PLANS_KEY) || '{}');
                     if (plans[selectedPlan]) {
                         loadPlan(selectedPlan);
-                        if (planTitleInput) {
-                            planTitleInput.value = selectedPlan;
-                        }
                     }
                 }
             });
@@ -200,11 +211,14 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function savePlan() {
         const planTitleInput = document.getElementById('planTitleInput');
-        const planName = planTitleInput?.value.trim();
+        const planSelector = document.getElementById('planSelector');
+        
+        // Plan ismi önce planSelector'dan al, yoksa planTitleInput'tan
+        let planName = planSelector?.value.trim() || planTitleInput?.value.trim();
         
         if (!planName) {
             showToast('Lütfen plan adı girin', 'warning');
-            planTitleInput?.focus();
+            planSelector?.focus() || planTitleInput?.focus();
             return;
         }
         
@@ -224,6 +238,17 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem(PLANS_KEY, JSON.stringify(plans));
             
             currentPlanName = planName;
+            
+            // Her iki input'u da senkronize et
+            const planTitleInput = document.getElementById('planTitleInput');
+            const planSelector = document.getElementById('planSelector');
+            if (planTitleInput) {
+                planTitleInput.value = planName;
+            }
+            if (planSelector) {
+                planSelector.value = planName;
+            }
+            
             updateCacheStatus();
             updatePlanSelector();
             
@@ -280,8 +305,12 @@ document.addEventListener('DOMContentLoaded', () => {
             if (currentPlanName === planName) {
                 currentPlanName = '';
                 const planTitleInput = document.getElementById('planTitleInput');
+                const planSelector = document.getElementById('planSelector');
                 if (planTitleInput) {
                     planTitleInput.value = '';
+                }
+                if (planSelector) {
+                    planSelector.value = '';
                 }
                 clearTable();
                 addNewRow();
@@ -312,9 +341,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 planOptions.appendChild(option);
             });
             
-            // Mevcut plan varsa input'a yaz
+            // Mevcut plan varsa her iki input'a da yaz
             if (currentPlanName) {
                 planSelector.value = currentPlanName;
+                const planTitleInput = document.getElementById('planTitleInput');
+                if (planTitleInput) {
+                    planTitleInput.value = currentPlanName;
+                }
             }
             
             // Tek plan varsa otomatik seç, veya ilk plan otomatik yüklensin (sadece sayfa ilk açıldığında)
