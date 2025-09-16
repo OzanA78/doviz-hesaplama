@@ -147,12 +147,29 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Plan selector değişimi
         if (planSelector) {
+            const planDropdown = document.getElementById('planDropdown');
+            
+            // Dropdown açma/kapama
+            planSelector.addEventListener('focus', function() {
+                showPlanDropdown();
+            });
+            
+            planSelector.addEventListener('blur', function() {
+                // Dropdown seçeneklerine tıklama zamanı vermek için gecikmeli kapama
+                setTimeout(() => {
+                    hidePlanDropdown();
+                }, 200);
+            });
+            
             planSelector.addEventListener('input', function() {
                 const selectedPlan = this.value;
                 // planTitleInput'u da güncelle
                 if (planTitleInput) {
                     planTitleInput.value = selectedPlan;
                 }
+                
+                // Dropdown'u filtrele
+                filterPlanDropdown(selectedPlan);
                 
                 if (selectedPlan) {
                     // Mevcut planlardan birini seçtiyse yükle
@@ -177,6 +194,92 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
             });
+        }
+        
+        // Plan dropdown helper fonksiyonları
+        function showPlanDropdown() {
+            const planDropdown = document.getElementById('planDropdown');
+            if (planDropdown) {
+                updatePlanDropdownOptions();
+                planDropdown.classList.remove('hidden');
+            }
+        }
+        
+        function hidePlanDropdown() {
+            const planDropdown = document.getElementById('planDropdown');
+            if (planDropdown) {
+                planDropdown.classList.add('hidden');
+            }
+        }
+        
+        function updatePlanDropdownOptions() {
+            const planDropdown = document.getElementById('planDropdown');
+            if (!planDropdown) return;
+            
+            try {
+                const plans = JSON.parse(localStorage.getItem(PLANS_KEY) || '{}');
+                const planNames = Object.keys(plans).sort();
+                
+                planDropdown.innerHTML = '';
+                
+                if (planNames.length === 0) {
+                    const emptyOption = document.createElement('div');
+                    emptyOption.className = 'plan-dropdown-option empty';
+                    emptyOption.textContent = 'Henüz plan yok';
+                    planDropdown.appendChild(emptyOption);
+                } else {
+                    planNames.forEach(planName => {
+                        const option = document.createElement('div');
+                        option.className = 'plan-dropdown-option';
+                        option.textContent = planName;
+                        option.addEventListener('click', function() {
+                            selectPlan(planName);
+                        });
+                        planDropdown.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Dropdown güncelleme hatası:', error);
+            }
+        }
+        
+        function filterPlanDropdown(searchText) {
+            const planDropdown = document.getElementById('planDropdown');
+            if (!planDropdown) return;
+            
+            const options = planDropdown.querySelectorAll('.plan-dropdown-option:not(.empty)');
+            let hasVisible = false;
+            
+            options.forEach(option => {
+                const planName = option.textContent.toLowerCase();
+                const search = searchText.toLowerCase();
+                
+                if (planName.includes(search)) {
+                    option.style.display = 'block';
+                    hasVisible = true;
+                } else {
+                    option.style.display = 'none';
+                }
+            });
+            
+            if (!hasVisible && searchText) {
+                planDropdown.innerHTML = '<div class="plan-dropdown-option empty">Plan bulunamadı</div>';
+            }
+        }
+        
+        function selectPlan(planName) {
+            const planSelector = document.getElementById('planSelector');
+            const planTitleInput = document.getElementById('planTitleInput');
+            
+            if (planSelector) {
+                planSelector.value = planName;
+            }
+            if (planTitleInput) {
+                planTitleInput.value = planName;
+            }
+            
+            loadPlan(planName);
+            hidePlanDropdown();
         }
         
         // Kaydet butonu
@@ -326,21 +429,9 @@ document.addEventListener('DOMContentLoaded', () => {
     
     function updatePlanSelector() {
         const planSelector = document.getElementById('planSelector');
-        const planOptions = document.getElementById('planOptions');
-        if (!planSelector || !planOptions) return;
+        if (!planSelector) return;
         
         try {
-            const plans = JSON.parse(localStorage.getItem(PLANS_KEY) || '{}');
-            planOptions.innerHTML = '';
-            
-            const planNames = Object.keys(plans).sort();
-            
-            planNames.forEach(planName => {
-                const option = document.createElement('option');
-                option.value = planName;
-                planOptions.appendChild(option);
-            });
-            
             // Mevcut plan varsa her iki input'a da yaz
             if (currentPlanName) {
                 planSelector.value = currentPlanName;
@@ -349,6 +440,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     planTitleInput.value = currentPlanName;
                 }
             }
+            
+            const plans = JSON.parse(localStorage.getItem(PLANS_KEY) || '{}');
+            const planNames = Object.keys(plans).sort();
             
             // Tek plan varsa otomatik seç, veya ilk plan otomatik yüklensin (sadece sayfa ilk açıldığında)
             if (planNames.length === 1 || (planNames.length > 0 && !currentPlanName && !hasAutoLoaded)) {

@@ -227,6 +227,11 @@ h1 {
     font-style: italic;
 }
 
+.plan-selector-container {
+    position: relative;
+    display: inline-block;
+}
+
 .plan-selector {
     background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(255, 255, 255, 0.3);
@@ -261,6 +266,56 @@ h1 {
 .plan-selector::placeholder {
     color: #999;
     font-style: italic;
+}
+
+.plan-dropdown {
+    position: absolute;
+    bottom: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 1px solid rgba(184, 188, 200, 0.6);
+    border-radius: 6px;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    z-index: 9999;
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: 2px;
+}
+
+.plan-dropdown.hidden {
+    display: none;
+}
+
+.plan-dropdown-option {
+    padding: 0.6rem 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #333;
+    font-size: 0.85rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.plan-dropdown-option:last-child {
+    border-bottom: none;
+}
+
+.plan-dropdown-option:hover {
+    background: linear-gradient(45deg, #667eea, #764ba2);
+    color: white;
+    transform: translateX(3px);
+}
+
+.plan-dropdown-option.empty {
+    color: #999;
+    font-style: italic;
+    cursor: default;
+}
+
+.plan-dropdown-option.empty:hover {
+    background: transparent;
+    color: #999;
+    transform: none;
 }
 
 .dropdown-btn {
