@@ -855,20 +855,21 @@ td input.amount-input::placeholder {
 
     table tr {
         display: block;
-        margin-bottom: 1rem;
+        margin-bottom: 0.8rem; /* Küçültüldü */
         border: 1px solid #e0e0e0;
         border-radius: 8px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        padding: 0.5rem;
+        padding: 0.3rem; /* Küçültüldü */
     }
 
     table td {
         display: flex; /* Flexbox ile etiket ve içeriği yan yana getir */
         justify-content: space-between; /* Aralarına boşluk koy */
         align-items: center; /* Dikeyde ortala */
-        padding: 0.8rem 0.5rem;
+        padding: 0.4rem 0.3rem; /* Küçültüldü */
         border-bottom: 1px solid #f0f0f0;
         width: 100%;
+        min-height: 34px; /* YENİ: Minimum yükseklik eklendi */
     }
 
     table td:last-child {
@@ -879,19 +880,21 @@ td input.amount-input::placeholder {
         content: attr(data-label);
         font-weight: 600;
         color: #34495e;
-        flex-basis: 50%; /* Etiket için yer ayır */
+        flex-basis: 40%; /* Etiket için yer daraltıldı */
         text-align: left;
+        font-size: 0.7rem; /* YENİ: Font küçültüldü */
     }
 
     /* Input ve select'lerin genişliğini ayarla */
     table td .year-select,
     table td .month-select,
     table td .amount-input-wrapper {
-        flex-basis: 50%;
+        flex-basis: 60%; /* Genişletildi */
     }
 
     table td .amount-input {
         max-width: 100%;
+        font-size: 0.8rem; /* YENİ: Font küçültüldü */
     }
 
     .mobile-header {
@@ -1622,20 +1625,21 @@ td .current-value-cell {
 
     table tr {
         display: block;
-        margin-bottom: 1rem;
+        margin-bottom: 0.8rem; /* Küçültüldü */
         border: 1px solid #e0e0e0;
         border-radius: 8px;
         box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-        padding: 0.5rem;
+        padding: 0.3rem; /* Küçültüldü */
     }
 
     table td {
         display: flex; /* Flexbox ile etiket ve içeriği yan yana getir */
         justify-content: space-between; /* Aralarına boşluk koy */
         align-items: center; /* Dikeyde ortala */
-        padding: 0.8rem 0.5rem;
+        padding: 0.4rem 0.3rem; /* Küçültüldü */
         border-bottom: 1px solid #f0f0f0;
         width: 100%;
+        min-height: 34px; /* YENİ: Minimum yükseklik eklendi */
     }
 
     table td:last-child {
@@ -1646,28 +1650,30 @@ td .current-value-cell {
         content: attr(data-label);
         font-weight: 600;
         color: #34495e;
-        flex-basis: 50%; /* Etiket için yer ayır */
+        flex-basis: 40%; /* Etiket için yer daraltıldı */
         text-align: left;
+        font-size: 0.7rem; /* YENİ: Font küçültüldü */
     }
 
     /* Input ve select'lerin genişliğini ayarla */
     table td .year-select,
     table td .month-select,
     table td .amount-input-wrapper {
-        flex-basis: 50%;
+        flex-basis: 60%; /* Genişletildi */
     }
 
     table td .amount-input {
         max-width: 100%;
+        font-size: 0.8rem; /* YENİ: Font küçültüldü */
     }
 
     /* Mobilde drag area'yı biraz daha büyük yap */
     .table-container tbody tr td {
-        padding: 1rem 0.8rem;
+        padding: 0.5rem 0.4rem; /* Küçültüldü */
     }
     
     .table-container tbody tr {
-        min-height: 60px; /* Dokunma alanını büyüt */
+        min-height: auto; /* Küçültüldü */
     }
     
     /* Mobilde drag feedback'i daha belirgin yap */
