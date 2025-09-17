@@ -43,7 +43,7 @@ app.get('/api/data', async (req, res) => {
     try {
         const client = await auth.getClient();
         const googleSheets = google.sheets({ version: 'v4', auth: client });
-        const range = 'Sayfa1!A:B';
+        const range = 'GoldHistory!A:B';
 
         const response = await googleSheets.spreadsheets.values.get({
             spreadsheetId: spreadsheetId,
@@ -86,32 +86,38 @@ app.get('/api/current', async (req, res) => {
     try {
         const client = await auth.getClient();
         const googleSheets = google.sheets({ version: 'v4', auth: client });
-        
-        // Hem A1 (fiyat) hem de C1 (hata) hücrelerini tek seferde oku
+
+        // 'GoldHistory' sayfasının tamamını oku
         const response = await googleSheets.spreadsheets.values.get({
             spreadsheetId: spreadsheetId,
-            range: 'Guncel Kur!A1:C1',
+            range: 'GoldHistory!A:B', // Tarih ve Fiyat sütunlarını al
         });
 
-        const values = response.data.values ? response.data.values[0] : [];
-        const priceValue = values[0] || null; // A1 hücresi
-        const errorValue = values[2] || null; // C1 hücresi
+        const allRows = response.data.values;
+        if (!allRows || allRows.length <= 1) { // Başlık satırını hesaba kat
+            return res.status(404).json({ error: 'Tarihsel veri bulunamadı.' });
+        }
+
+        // Dizideki son satırı al
+        const lastRow = allRows[allRows.length - 1];
+        const priceValue = lastRow[1] || null; // B sütunundaki fiyat değeri
 
         if (!priceValue) {
-            return res.status(404).json({ error: 'Güncel kur verisi (A1) bulunamadı.' });
+            return res.status(404).json({ error: 'Güncel kur verisi (son satır) bulunamadı.' });
         }
 
         const priceString = priceValue.replace(/\./g, '').replace(',', '.');
         const formattedPrice = parseFloat(priceString);
 
-        const result = { 
+        const result = {
             price: formattedPrice,
-            error: errorValue // Hata mesajını da yanıta ekle
+            // Not: 'Guncel Kur' sayfasındaki hata hücresi artık okunmuyor.
+            error: null 
         };
 
         // 2. Sonucu önbelleğe kaydet
         currentPriceCache.set(cacheKey, result);
-        console.log('Güncel kur Google Sheets\'ten çekildi ve önbelleğe alındı.');
+        console.log('Güncel kur GoldHistory son satırından çekildi ve önbelleğe alındı.');
         res.json(result);
     } catch (error) {
         console.error('Google Sheets API Hatası (/api/current):', error);

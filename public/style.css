@@ -669,8 +669,6 @@ tbody tr:nth-child(even) {
 
 tbody tr:hover {
     background: linear-gradient(135deg, rgba(102, 126, 234, 0.08), rgba(118, 75, 162, 0.05)) !important;
-    transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
 }
 
 td select, td input {
@@ -1676,8 +1674,9 @@ td .current-value-cell {
 
 .delete-row-btn:hover {
     background: #f5f5f5; /* Hafif gri arka plan */
-    transform: scale(1.1);
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+   /* Daha belirgin bir "kalkma" efekti için transform ve box-shadow güncellendi */
+    transform: translateY(-2px) scale(1.1);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .delete-row-btn:active {
