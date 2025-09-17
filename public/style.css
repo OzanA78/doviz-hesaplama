@@ -245,19 +245,19 @@ h1 {
     background: rgba(255, 255, 255, 0.9);
     border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 3px;
-    padding: 0.02rem 16px 0.02rem 0.2rem;
-    font-size: 0.35rem; /* Daha da küçültüldü */
+    padding: 0.3rem 20px 0.3rem 0.5rem;
+    font-size: 0.75rem;
     color: #333;
     transition: all 0.2s ease;
-    min-width: 120px; /* %50 artırıldı (80->120) */
-    max-width: 180px; /* %50 artırıldı (120->180) */
+    min-width: 200px;
+    max-width: 280px;
     margin-left: 2px;
     cursor: pointer;
+    height: 28px;
     line-height: 1;
-    height: 16px;
     background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666'%3E%3Cpath d='M2 4l4 4 4-4z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 2px center;
+    background-position: right 0.5rem center;
     background-size: 8px 8px;
 }
 
@@ -267,10 +267,6 @@ h1 {
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     outline: none;
     border-color: rgba(184, 188, 200, 0.6);
-    background-image: url("data:image/svg+xml;charset=utf-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23666'%3E%3Cpath d='M2 4l4 4 4-4z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 2px center;
-    background-size: 8px 8px;
 }
 
 .plan-selector::placeholder {
@@ -282,16 +278,17 @@ h1 {
     position: absolute;
     top: 100%;
     left: 0;
-    right: -50px; /* Genişlik artırıldı */
+    right: auto;
+    width: 100%;
     background: white;
     border: 1px solid rgba(184, 188, 200, 0.6);
     border-radius: 3px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    z-index: 99999; /* Z-index maksimum yapıldı */
-    max-height: 80px; /* Boy kısaltıldı */
+    z-index: 99999;
+    max-height: 150px;
     overflow-y: auto;
     margin-top: 1px;
-    min-width: 120px; /* Minimum genişlik */
+    min-width: 200px;
 }
 
 .plan-dropdown.hidden {
@@ -299,15 +296,15 @@ h1 {
 }
 
 .plan-dropdown-option {
-    padding: 0.1rem 0.2rem; /* Daha da küçültüldü */
+    padding: 0.5rem 0.7rem;
     cursor: pointer;
     transition: all 0.2s ease;
     color: #333;
-    font-size: 0.65rem; /* Küçültüldü */
+    font-size: 0.75rem;
     border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    white-space: nowrap; /* Tek satırda kal */
+    white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis; /* Uzun metinler için ... */
+    text-overflow: ellipsis;
 }
 
 .plan-dropdown-option:last-child {
@@ -357,51 +354,6 @@ h1 {
     background: rgba(102, 126, 234, 0.8);
     color: white;
     transform: rotate(180deg);
-}
-
-.plan-dropdown {
-    position: absolute;
-    top: 100%;
-    left: 0;
-    right: 0;
-    background: white;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-    z-index: 9999; /* Yüksek z-index */
-    max-height: 200px;
-    overflow-y: auto;
-    margin-top: 2px;
-}
-
-.plan-dropdown.hidden {
-    display: none;
-}
-
-.plan-option {
-    padding: 0.6rem 0.8rem;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    font-size: 0.85rem;
-}
-
-.plan-option:hover {
-    background: rgba(102, 126, 234, 0.1);
-}
-
-.plan-option:last-child {
-    border-bottom: none;
-}
-
-.plan-option.empty {
-    color: #999;
-    font-style: italic;
-    cursor: default;
-}
-
-.plan-option.empty:hover {
-    background: transparent;
 }
 
 .plan-actions {
@@ -895,7 +847,6 @@ td input.amount-input::placeholder {
     min-width: 96px; /* %20 azaltıldı (120px -> 96px) */
 }
 
-/* Mobil Cihazlar İçin Özel Stiller */
 @media (max-width: 768px) {
     /* Kart Görünümü Stilleri */
     table thead {
