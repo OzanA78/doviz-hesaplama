@@ -1,0 +1,55 @@
+Proje Adı: Borçlanarak Altın Yatırımı Kârlılık Analizi
+
+---
+
+**Projenin Ana Amacı:**
+
+Belirli bir tarihte alınan borç paranın altına yatırılması durumunda, yapılan geri ödeme planı göz önünde bulundurularak bu yatırımın ne kadar kârlı veya zararlı olduğunun analiz edilmesi. Araç, kullanıcının girdiği verilere göre nihai Net Kâr/Zarar durumunu bugünün TL değeri üzerinden gösterecektir.
+
+---
+
+**Gerekli Girdi Alanları (UI/UX):**
+
+1.  **Borç Detayları Bölümü:**
+    *   `Borç Miktarı`: Alınan toplam kredi tutarı (TL).
+    *   `Borç Alınma Tarihi`: Kredinin çekildiği ve altına yatırımın yapıldığı tarih.
+
+2.  **Ödeme Planı Tablosu:**
+    *   Mevcut tablo yapısı geliştirilerek her satır için bir "Ödeme Tipi" kolonu eklenmelidir.
+    *   **Ödeme Tipleri:** Peşinat, Taksit, Ara Ödeme.
+    *   Her ödeme satırı `Tarih (Yıl/Ay)`, `Ödeme Miktarı (TL)` ve `Ödeme Tipi` bilgilerini içermelidir.
+    *   Taksitler için otomatik satır oluşturma özelliği korunmalıdır.
+
+3.  **Analiz Sonuçları Bölümü:**
+    *   Hesaplama sonrası sonuçların net ve anlaşılır bir şekilde gösterileceği bir alan.
+
+---
+
+**Hesaplama Mimarisi ve Mantığı:**
+
+Temel formül: `Net Kâr/Zarar = (Varlıkların Bugünkü Değeri) - (Yükümlülüklerin Bugünkü Maliyeti)`
+
+1.  **Varlık Değerinin Hesaplanması (Borçla Alınan Altının Bugünkü Değeri):**
+    *   Kullanıcının girdiği `Borç Alınma Tarihi`'ndeki altın kuru sistemden bulunur.
+    *   `Alınan Altın Miktarı (gr) = Borç Miktarı / O günkü Altın Kuru`.
+    *   `Varlığın Bugünkü Değeri (TL) = Alınan Altın Miktarı (gr) * Bugünkü Güncel Altın Kuru`.
+
+2.  **Yükümlülük Maliyetinin Hesaplanması (Ödemelerin Bugünkü Toplam Maliyeti):**
+    *   Ödeme planındaki her bir ödeme (peşinat, taksit, ara ödeme) için işlem tekrarlanır:
+        a. Ödemenin yapıldığı tarihteki altın kuru bulunur.
+        b. `Ödemenin Altın Karşılığı (gr) = Ödeme Miktarı / Ödeme günündeki Altın Kuru`.
+    *   Tüm ödemelerin altın karşılıkları toplanarak `Toplam Ödeme Maliyeti (gr)` bulunur.
+    *   `Yükümlülüğün Bugünkü Maliyeti (TL) = Toplam Ödeme Maliyeti (gr) * Bugünkü Güncel Altın Kuru`.
+
+3.  **Net Sonucun Hesaplanması:**
+    *   `Net Kâr/Zarar (TL) = Varlığın Bugünkü Değeri - Yükümlülüğün Bugünkü Maliyeti`.
+
+---
+
+**Sonuç Gösterim Fikri:**
+
+*   **Varlık (Altın):** `+ 500.000 ₺` (Borçla alınan altının bugünkü değeri)
+*   **Yükümlülük (Ödemeler):** `- 450.000 ₺` (Yaptığınız ödemelerin bugünkü toplam maliyeti)
+*   **Net Kâr:** `+ 50.000 ₺`
+
+Bu gösterim, kullanıcının durumu bir bakışta anlamasını kolaylaştıracaktır.

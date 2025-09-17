@@ -609,6 +609,7 @@ input[type="tel"],
 .table-container {
     flex: 1;
     overflow-y: auto;
+    overflow-x: auto; /* Yatay kaydırma eklendi */
     min-height: 0;
     background: #fff;
     border-radius: 8px;
@@ -896,6 +897,52 @@ td input.amount-input::placeholder {
 
 /* Mobil Cihazlar İçin Özel Stiller */
 @media (max-width: 768px) {
+    /* Kart Görünümü Stilleri */
+    table thead {
+        display: none; /* Başlıkları gizle */
+    }
+
+    table tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        padding: 0.5rem;
+    }
+
+    table td {
+        display: flex; /* Flexbox ile etiket ve içeriği yan yana getir */
+        justify-content: space-between; /* Aralarına boşluk koy */
+        align-items: center; /* Dikeyde ortala */
+        padding: 0.8rem 0.5rem;
+        border-bottom: 1px solid #f0f0f0;
+        width: 100%;
+    }
+
+    table td:last-child {
+        border-bottom: none;
+    }
+
+    table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #34495e;
+        flex-basis: 50%; /* Etiket için yer ayır */
+        text-align: left;
+    }
+
+    /* Input ve select'lerin genişliğini ayarla */
+    table td .year-select,
+    table td .month-select,
+    table td .amount-input-wrapper {
+        flex-basis: 50%;
+    }
+
+    table td .amount-input {
+        max-width: 100%;
+    }
+
     .mobile-header {
         display: table-row !important;
     }
@@ -1617,6 +1664,52 @@ td .current-value-cell {
 }
 
 @media (max-width: 768px) {
+    /* Kart Görünümü Stilleri */
+    table thead {
+        display: none; /* Başlıkları gizle */
+    }
+
+    table tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        padding: 0.5rem;
+    }
+
+    table td {
+        display: flex; /* Flexbox ile etiket ve içeriği yan yana getir */
+        justify-content: space-between; /* Aralarına boşluk koy */
+        align-items: center; /* Dikeyde ortala */
+        padding: 0.8rem 0.5rem;
+        border-bottom: 1px solid #f0f0f0;
+        width: 100%;
+    }
+
+    table td:last-child {
+        border-bottom: none;
+    }
+
+    table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #34495e;
+        flex-basis: 50%; /* Etiket için yer ayır */
+        text-align: left;
+    }
+
+    /* Input ve select'lerin genişliğini ayarla */
+    table td .year-select,
+    table td .month-select,
+    table td .amount-input-wrapper {
+        flex-basis: 50%;
+    }
+
+    table td .amount-input {
+        max-width: 100%;
+    }
+
     /* Mobilde drag area'yı biraz daha büyük yap */
     .table-container tbody tr td {
         padding: 1rem 0.8rem;

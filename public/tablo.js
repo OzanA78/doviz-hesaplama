@@ -559,31 +559,31 @@ document.addEventListener('DOMContentLoaded', () => {
         // Mobil için Yıl/Ay'ı tek hücrede birleştir
         if (isMobile) {
             newRow.innerHTML = `
-                <td class="year-cell">
+                <td class="year-cell" data-label="Yıl">
                     <select class="year-select">
                         ${years.map(y => `<option value="${y}" ${y === selectedYear ? 'selected' : ''}>${y}</option>`).join('')}
                     </select>
                 </td>
-                <td class="month-cell">
+                <td class="month-cell" data-label="Ay">
                     <select class="month-select">
                         ${months.map(m => `<option value="${m.value}" ${m.value === selectedMonth ? 'selected' : ''}>${m.name}</option>`).join('')}
                     </select>
                 </td>
-                <td class="rate-cell">
+                <td class="rate-cell" data-label="Kur">
                     <span class="rate-info">-</span>
                 </td>
-                <td class="amount-cell">
+                <td class="amount-cell" data-label="Miktar">
                     <div class="amount-input-wrapper">
                         <input type="tel" class="amount-input" placeholder="0" inputmode="numeric" maxlength="10">
                     </div>
                 </td>
-                <td class="gram-cell">
+                <td class="gram-cell" data-label="Gram">
                     <span class="gold-amount-sub-value">-</span>
                 </td>
-                <td class="current-value-cell">
+                <td class="current-value-cell" data-label="Güncel TL">
                     <span class="current-value-sub-value">-</span>
                 </td>
-                <td class="action-cell">
+                <td class="action-cell" data-label="İşlem">
                     <button class="delete-row-btn" title="Satırı sil">✕</button>
                 </td>
             `;
