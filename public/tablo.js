@@ -100,10 +100,10 @@ document.addEventListener('DOMContentLoaded', () => {
         toast.className = `toast ${type}`;
         toast.textContent = message;
         
-        // Save butonunu bul ve onun üzerine yerleştir
-        const saveBtn = document.getElementById('savePlanBtn');
-        if (saveBtn) {
-            const rect = saveBtn.getBoundingClientRect();
+        // payment-count-input elementini bul ve onun üzerine yerleştir
+        const paymentCountInput = document.getElementById('payment-count-input');
+        if (paymentCountInput) {
+            const rect = paymentCountInput.getBoundingClientRect();
             toast.style.position = 'fixed';
             toast.style.left = rect.left + 'px';
             toast.style.top = (rect.top - 45) + 'px';
@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', () => {
             toast.classList.add('show');
         }, 10);
         
-        // Hide after 1 second
+        // Hide after 1.5 seconds
         setTimeout(() => {
             toast.classList.add('hide');
             setTimeout(() => {
@@ -124,7 +124,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     toast.parentNode.removeChild(toast);
                 }
             }, 300);
-        }, 1000);
+        }, 1500);
     }
     
     function setupPlanManagement() {
@@ -518,11 +518,14 @@ document.addEventListener('DOMContentLoaded', () => {
         // Hata olsa bile, sunucudan gelen son geçerli verinin tarih damgası her zaman gösterilir.
         if (currentData.timestamp) {
             const date = new Date(currentData.timestamp);
-            // İstenen format: Tam tarih ve saat
-            const formattedDateTime = date.toLocaleString('tr-TR', {
-                day: 'numeric', month: 'numeric', year: 'numeric',
-                hour: '2-digit', minute: '2-digit'
-            });
+            // Use UTC methods to format the date, ignoring the browser's timezone.
+            // This will display the exact time as seen in the sheet.
+            const day = ('0' + date.getUTCDate()).slice(-2);
+            const month = ('0' + (date.getUTCMonth() + 1)).slice(-2);
+            const year = date.getUTCFullYear();
+            const hours = ('0' + date.getUTCHours()).slice(-2);
+            const minutes = ('0' + date.getUTCMinutes()).slice(-2);
+            const formattedDateTime = `${day}.${month}.${year} ${hours}:${minutes}`;
  
             const errorIndicator = currentData.error
                 ? `<span class="rate-error-indicator" title="${currentData.error}">( ! )</span>`
@@ -1159,4 +1162,50 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Uygulamayı Başlat
     initializeApp();
+
+    const generateRowsBtn = document.getElementById('generate-rows-btn');
+    generateRowsBtn.addEventListener('click', generateRows);
+
+    function generateRows() {
+        const paymentCountInput = document.getElementById('payment-count-input');
+        const targetRowCount = parseInt(paymentCountInput.value, 10);
+
+        if (isNaN(targetRowCount) || targetRowCount <= 0) {
+            showToast('Lütfen geçerli bir taksit sayısı girin.', 'warning');
+            return;
+        }
+
+        const currentRowCount = tableBody.rows.length;
+        const rowsToAdd = targetRowCount - currentRowCount;
+
+        if (rowsToAdd <= 0) {
+            showToast('Girilen taksit sayısı mevcut satır sayısından az veya eşit.', 'warning');
+            return;
+        }
+
+        const lastRow = tableBody.querySelector('tr:last-child');
+        if (!lastRow) {
+            showToast('Otomatik doldurma için en az bir satır olmalıdır.', 'warning');
+            return;
+        }
+
+        let { year, month, amount } = getRowData(lastRow);
+
+        if (!year || !month || !amount) {
+            showToast('Lütfen son satırdaki tüm alanları doldurun.', 'warning');
+            return;
+        }
+
+        let lastDate = new Date(year, month - 1, 1);
+
+        for (let i = 0; i < rowsToAdd; i++) {
+            lastDate.setMonth(lastDate.getMonth() + 1);
+            const nextYear = lastDate.getFullYear().toString();
+            const nextMonth = ('0' + (lastDate.getMonth() + 1)).slice(-2);
+
+            addNewRow({ date: { year: nextYear, month: nextMonth }, amount: amount });
+        }
+
+        paymentCountInput.value = '';
+    }
 });

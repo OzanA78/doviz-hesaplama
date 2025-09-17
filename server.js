@@ -24,15 +24,10 @@ function sheetsSerialNumberToDate(serial) {
   // The serial number from Sheets represents days since 1899-12-30.
   // This calculation gives milliseconds since the JS epoch (1970-01-01 UTC).
   // The key issue is that this conversion results in a UTC date that has the same
-  // clock time as the sheet's local time (e.g., 11:16 in sheet becomes 11:16 UTC).
+  // clock time as the local time in the sheet (e.g., 11:16 in sheet becomes a Date object for 11:16 UTC).
+  // The client will then be responsible for formatting this UTC time correctly.
   const msSinceEpoch = (serial - 25569) * 86400000;
-  const date = new Date(msSinceEpoch);
-
-  // To correct this, we get the timezone offset of the environment where this code runs
-  // (which is UTC on the server, so offset is 0) and add it. Then we subtract the
-  // known offset of the sheet's timezone (GMT+3 for Turkey).
-  const sheetTimezoneOffset = 3 * 60; // 3 hours in minutes
-  return new Date(date.getTime() + (date.getTimezoneOffset() - sheetTimezoneOffset) * 60000);
+  return new Date(msSinceEpoch);
 }
 
 // --- GOOGLE SHEETS API AYARLARI ---
