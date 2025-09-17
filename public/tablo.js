@@ -64,7 +64,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const currentData = await currentRes.json();
             currentGoldPrice = currentData.price;
             console.log('Current gold price set:', currentGoldPrice);
-            updateCurrentRateInHeader(currentData.error); // Hata mesajını da gönder
+            updateCurrentRateInHeader(currentData); // Tüm güncel kur verisini gönder
             // ...
             
             // Plan yönetimi sistemini başlat
@@ -508,17 +508,34 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function updateCurrentRateInHeader(errorMessage = null) {
-    const currentRateEl = document.getElementById('currentRateInfo');
-    if (currentRateEl && currentGoldPrice) {
-        let errorIndicator = '';
-        if (errorMessage) {
-            // Hata varsa, başlığı hata mesajı olan bir uyarı işareti ekle
-            errorIndicator = `<span class="rate-error-indicator" title="${errorMessage}">( ! )</span>`;
+    function updateCurrentRateInHeader(currentData) {
+        const currentRateEl = document.getElementById('currentRateInfo');
+        if (!currentRateEl || !currentData || !currentData.price) return;
+ 
+        const priceHTML = `<div class="rate-price">Güncel Kur: ${formatCurrency(currentData.price, 'TRY', 0)}</div>`;
+ 
+        let sublineHTML = '';
+        // Hata olsa bile, sunucudan gelen son geçerli verinin tarih damgası her zaman gösterilir.
+        if (currentData.timestamp) {
+            const date = new Date(currentData.timestamp);
+            // İstenen format: Tam tarih ve saat
+            const formattedDateTime = date.toLocaleString('tr-TR', {
+                day: 'numeric', month: 'numeric', year: 'numeric',
+                hour: '2-digit', minute: '2-digit'
+            });
+ 
+            const errorIndicator = currentData.error
+                ? `<span class="rate-error-indicator" title="${currentData.error}">( ! )</span>`
+                : '';
+ 
+            sublineHTML = `<div class="rate-subline">
+                <span class="rate-timestamp">${formattedDateTime}</span>
+                ${errorIndicator}
+            </div>`;
         }
-        currentRateEl.innerHTML = `Güncel Kur: ${formatCurrency(currentGoldPrice, 'TRY', 0)} ${errorIndicator}`;
+ 
+        currentRateEl.innerHTML = priceHTML + sublineHTML;
     }
-}
 
     function addNewRow(previousData = null, existingData = null) {
         const newRow = document.createElement('tr');

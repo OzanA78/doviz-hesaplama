@@ -107,7 +107,7 @@ h1 {
 
 .current-rate-info {
     color: #ffffff !important;
-    font-size: 0.85rem; /* Ayarlandı */
+    /* font-size: 0.85rem; Artık alt elemanlarda */
     font-weight: 500;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     /* Buton görünümü kaldırıldı */
@@ -120,6 +120,10 @@ h1 {
     right: 0; /* Sağa yasla */
     top: 50%;
     transform: translateY(-50%); /* Dikey ortala */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    text-align: right;
 }
 
 .header-container .subtitle {
@@ -1724,8 +1728,29 @@ td .current-value-cell {
 .rate-error-indicator {
     color: #ff4d4d; /* Canlı kırmızı */
     font-weight: bold;
-    font-size: 1.1rem;
-    margin-left: 0.3rem;
+    font-size: 0.9rem; /* Biraz küçültüldü */
+    /* margin-left: 0.3rem; Kaldırıldı, gap ile yönetiliyor */
     cursor: help; /* Üzerine gelince yardım imleci */
     text-shadow: 0 0 5px rgba(255, 0, 0, 0.7);
+}
+
+.rate-price {
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+.rate-subline {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 2px;
+}
+
+.rate-timestamp {
+    font-size: 0.75rem; /* Küçültüldü */
+    color: #e0e0e0; /* Ana metinden biraz daha soluk */
+    /* margin-left: 0.5rem; Kaldırıldı, gap ile yönetiliyor */
+    font-style: italic;
+    opacity: 0.9;
+    /* cursor: help; Kaldırıldı, artık title yok */
 }
