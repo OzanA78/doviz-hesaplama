@@ -1179,6 +1179,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // Uygulamayı Başlat
     initializeApp();
 
+    const resetCounterBtn = document.getElementById('resetCounterBtn');
+    if (resetCounterBtn) {
+        resetCounterBtn.addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/counter/reset', { method: 'POST' });
+                const data = await response.json();
+                const counterElement = document.getElementById('counter');
+                if (counterElement) {
+                    counterElement.textContent = data.count;
+                }
+            } catch (error) {
+                console.error('Sayaç sıfırlanırken hata oluştu:', error);
+            }
+        });
+    }
+
     const generateRowsBtn = document.getElementById('generate-rows-btn');
     generateRowsBtn.addEventListener('click', generateRows);
 

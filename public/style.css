@@ -93,15 +93,40 @@ h1 {
     position: relative;
 }
 
-#counter {
+.counter-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 5px;
+    left: 5px;
+}
+
+#counter {
+    position: relative;
+    top: auto;
+    left: auto;
     background: rgba(0, 0, 0, 0.2);
     color: white;
     padding: 5px 10px;
     border-radius: 5px;
     font-size: 14px;
+}
+
+#resetCounterBtn {
+    padding: 2px;
+    font-size: 0.8rem;
+    line-height: 1;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .header-container h1 {
