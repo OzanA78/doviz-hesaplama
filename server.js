@@ -218,6 +218,18 @@ app.post('/api/counter/increment', async (req, res) => {
     }
 });
 
+// Sayaç sıfırlama endpoint'i
+app.post('/api/counter/reset', async (req, res) => {
+    try {
+        const counter = { count: 0 };
+        await writeCounter(counter);
+        res.json(counter);
+    } catch (error) {
+        console.error('Sayaç sıfırlanırken hata:', error);
+        res.status(500).json({ error: 'Sayaç verisi sıfırlanamadı.' });
+    }
+});
+
 // Ana sayfa için yönlendirme
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
