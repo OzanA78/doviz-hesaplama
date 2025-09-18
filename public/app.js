@@ -82,6 +82,9 @@ amountInput.addEventListener('input', (e) => {
             // Başlangıçta ay listesini boş ve pasif yap
             disableMonthSelect();
 
+            // Sayfa yüklendiğinde sayacı artır
+            incrementCounter();
+
         } catch (error) {
             console.error('Initialization Error:', error);
             resultDiv.textContent = 'Hata: ' + error.message;
@@ -233,5 +236,14 @@ amountInput.addEventListener('input', (e) => {
         performCalculation();
     });
 
+    async function incrementCounter() {
+        try {
+            const response = await fetch('/api/counter/increment', { method: 'POST' });
+            const data = await response.json();
+            document.getElementById('counter').textContent = data.count;
+        } catch (error) {
+            console.error('Sayaç artırılırken hata oluştu:', error);
+        }
+    }
+
     initializeApp();
-});

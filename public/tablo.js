@@ -75,6 +75,9 @@ document.addEventListener('DOMContentLoaded', () => {
             if (tableBody && tableBody.rows.length === 0) {
                 addNewRow();
             }
+
+            // Sayfa yüklendiğinde sayacı artır
+            incrementCounter();
             
             console.log('İnitializeApp başarıyla tamamlandı');
         } catch (error) {
@@ -1158,6 +1161,19 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
         document.addEventListener('keydown', escHandler);
+    }
+
+    async function incrementCounter() {
+        try {
+            const response = await fetch('/api/counter/increment', { method: 'POST' });
+            const data = await response.json();
+            const counterElement = document.getElementById('counter');
+            if (counterElement) {
+                counterElement.textContent = data.count;
+            }
+        } catch (error) {
+            console.error('Sayaç artırılırken hata oluştu:', error);
+        }
     }
 
     // Uygulamayı Başlat

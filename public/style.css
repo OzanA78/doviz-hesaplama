@@ -93,6 +93,17 @@ h1 {
     position: relative;
 }
 
+#counter {
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.2);
+    color: white;
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
 .header-container h1 {
     color: #ffffff !important;
     -webkit-text-fill-color: #ffffff !important;

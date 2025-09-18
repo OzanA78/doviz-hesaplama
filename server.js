@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const { google } = require('googleapis');
 const NodeCache = require('node-cache');
+const fs = require('fs').promises;
 
 const app = express();
 const port = 3000;
@@ -171,6 +172,51 @@ app.get('/api/current', async (req, res) => {
     }
 });
 
+const counterFilePath = path.join(__dirname, 'counter.json');
+
+// Sayaç verisini okuma
+async function readCounter() {
+    try {
+        const data = await fs.readFile(counterFilePath, 'utf8');
+        return JSON.parse(data);
+    } catch (error) {
+        // Dosya yoksa veya bozuksa, varsayılan sayaç oluştur
+        if (error.code === 'ENOENT') {
+            await writeCounter({ count: 0 });
+            return { count: 0 };
+        }
+        throw error;
+    }
+}
+
+// Sayaç verisini yazma
+async function writeCounter(data) {
+    await fs.writeFile(counterFilePath, JSON.stringify(data, null, 2), 'utf8');
+}
+
+// Sayaç endpoint'i
+app.get('/api/counter', async (req, res) => {
+    try {
+        const counter = await readCounter();
+        res.json(counter);
+    } catch (error) {
+        console.error('Sayaç okunurken hata:', error);
+        res.status(500).json({ error: 'Sayaç verisi okunamadı.' });
+    }
+});
+
+// Sayaç artırma endpoint'i
+app.post('/api/counter/increment', async (req, res) => {
+    try {
+        const counter = await readCounter();
+        counter.count++;
+        await writeCounter(counter);
+        res.json(counter);
+    } catch (error) {
+        console.error('Sayaç artırılırken hata:', error);
+        res.status(500).json({ error: 'Sayaç verisi güncellenemedi.' });
+    }
+});
 
 // Ana sayfa için yönlendirme
 app.get('/', (req, res) => {
