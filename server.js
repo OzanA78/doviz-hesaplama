@@ -49,13 +49,17 @@ if (process.env.GOOGLE_CREDENTIALS_JSON) {
 
 const spreadsheetId = '1_dxzqWIgQqhONb53dxv39nVIG3JeN5iO-co8Lgbb6fw';
 
+// --- DOSYA YOLLARI ---
+const counterFilePath = path.join(__dirname, 'counter.json');
+const cacheStatusFilePath = path.join(__dirname, 'cacheStatus.json'); // YENİ EKLENDİ
+
 // --- STATİK DOSYALARI SUNMA ---
 app.use(express.static(path.join(__dirname, 'public')));
 
 
 // --- WEBHOOK ENDPOINT: ÖNBELLEĞİ TEMİZLEME ---
 // Bu endpoint, Google Apps Script'ten gelen isteği dinleyecek
-app.post('/api/cache/clear', express.json(), (req, res) => {
+app.post('/api/cache/clear', express.json(), async (req, res) => { // async EKLENDİ
     // Google Apps Script'e yazdığınız gizli anahtarın BİREBİR AYNISINI buraya yazın
     const GIZLI_ANAHTAR = 'c7e2a1b3d4f5e6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1';
     
@@ -63,8 +67,19 @@ app.post('/api/cache/clear', express.json(), (req, res) => {
 
     if (secret === GIZLI_ANAHTAR) {
         // Anahtar doğruysa, sadece güncel kur önbelleğini temizle.
-        // 'currentGoldPrice' anahtarı, /api/current endpoint'inizde kullandığınızla aynı.
         currentPriceCache.del('currentGoldPrice');
+        
+        // --- DEĞİŞİKLİK BAŞLANGICI ---
+        try {
+            // Şu anki zamanı dosyaya kaydet
+            const newStatus = { lastCleared: new Date() };
+            await writeCacheStatus(newStatus);
+            console.log('Webhook received: Cache status file updated.');
+        } catch (error) {
+            console.error('Cache status dosyasına yazılırken hata:', error);
+        }
+        // --- DEĞİŞİKLİK SONU ---
+
         console.log('Webhook received: currentGoldPrice cache cleared successfully.');
         res.status(200).json({ message: 'Cache cleared.' });
     } else {
@@ -73,6 +88,18 @@ app.post('/api/cache/clear', express.json(), (req, res) => {
         res.status(403).json({ error: 'Forbidden' });
     }
 });
+
+// --- API ENDPOINT: CACHE DURUMUNU GÖNDER --- YENİ EKLENDİ
+app.get('/api/cache/status', async (req, res) => {
+    try {
+        const status = await readCacheStatus();
+        res.json(status);
+    } catch (error) {
+        console.error('Cache status okunurken hata:', error);
+        res.status(500).json({ error: 'Cache status verisi okunamadı.' });
+    }
+});
+
 
 // --- API ENDPOINT (TÜM VERİYİ GÖNDER) ---
 app.get('/api/data', async (req, res) => {
@@ -195,7 +222,8 @@ app.get('/api/current', async (req, res) => {
     }
 });
 
-const counterFilePath = path.join(__dirname, 'counter.json');
+
+// --- YARDIMCI FONKSİYONLAR: Sayaç ve Cache Durumu ---
 
 // Sayaç verisini okuma
 async function readCounter() {
@@ -216,6 +244,28 @@ async function readCounter() {
 async function writeCounter(data) {
     await fs.writeFile(counterFilePath, JSON.stringify(data, null, 2), 'utf8');
 }
+
+// Cache durumunu okuma -- YENİ EKLENDİ
+async function readCacheStatus() {
+    try {
+        const data = await fs.readFile(cacheStatusFilePath, 'utf8');
+        return JSON.parse(data);
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            const defaultStatus = { lastCleared: null };
+            await writeCacheStatus(defaultStatus);
+            return defaultStatus;
+        }
+        throw error;
+    }
+}
+
+// Cache durumunu yazma -- YENİ EKLENDİ
+async function writeCacheStatus(data) {
+    await fs.writeFile(cacheStatusFilePath, JSON.stringify(data, null, 2), 'utf8');
+}
+
+// --- SAYAÇ API ENDPOINT'LERİ ---
 
 // Sayaç endpoint'i
 app.get('/api/counter', async (req, res) => {
