@@ -8,9 +8,10 @@ const app = express();
 const port = 3000;
 
 // --- ÖNBELLEK AYARLARI ---
-// Tarihsel veri için 10 dakika, güncel kur için 2 dakika önbellek süresi
-const historicalDataCache = new NodeCache({ stdTTL: 600 });
-const currentPriceCache = new NodeCache({ stdTTL: 120 });
+
+// Tarihsel veri için uzun bir süre (örn: 1 gün), güncel kur için sonsuz önbellek. Kur sheet değiştiğinde otomatik sunucuya cache rset komuutu tetikleniyor.
+const historicalDataCache = new NodeCache({ stdTTL: 86400 }); // 1 gün (saniye cinsinden)
+const currentPriceCache = new NodeCache({ stdTTL: 0 }); // 0 = asla otomatik silme
 
 /**
  * Converts a Google Sheets serial number to a JavaScript Date object.
@@ -50,6 +51,28 @@ const spreadsheetId = '1_dxzqWIgQqhONb53dxv39nVIG3JeN5iO-co8Lgbb6fw';
 
 // --- STATİK DOSYALARI SUNMA ---
 app.use(express.static(path.join(__dirname, 'public')));
+
+
+// --- WEBHOOK ENDPOINT: ÖNBELLEĞİ TEMİZLEME ---
+// Bu endpoint, Google Apps Script'ten gelen isteği dinleyecek
+app.post('/api/cache/clear', express.json(), (req, res) => {
+    // Google Apps Script'e yazdığınız gizli anahtarın BİREBİR AYNISINI buraya yazın
+    const GIZLI_ANAHTAR = 'c7e2a1b3d4f5e6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1d2e3f4a5b6c7d8e9f0a1';
+    
+    const { secret } = req.body;
+
+    if (secret === GIZLI_ANAHTAR) {
+        // Anahtar doğruysa, sadece güncel kur önbelleğini temizle.
+        // 'currentGoldPrice' anahtarı, /api/current endpoint'inizde kullandığınızla aynı.
+        currentPriceCache.del('currentGoldPrice');
+        console.log('Webhook received: currentGoldPrice cache cleared successfully.');
+        res.status(200).json({ message: 'Cache cleared.' });
+    } else {
+        // Anahtar yanlışsa veya yoksa, yetkisiz erişim hatası ver
+        console.warn('Unauthorized attempt to clear cache received.');
+        res.status(403).json({ error: 'Forbidden' });
+    }
+});
 
 // --- API ENDPOINT (TÜM VERİYİ GÖNDER) ---
 app.get('/api/data', async (req, res) => {
@@ -205,8 +228,19 @@ app.get('/api/counter', async (req, res) => {
     }
 });
 
+const rateLimit = require('express-rate-limit');
+
+// Rate limiting için ayar
+const incrementLimiter = rateLimit({
+	windowMs: 15 * 60 * 1000, // 15 dakika
+	max: 100, // Her IP için 15 dakikada 100 istek limiti
+	message: 'Çok fazla sayaç artırma isteği gönderdiniz, lütfen 15 dakika sonra tekrar deneyin.',
+    standardHeaders: true, // `RateLimit-*` başlıklarını yanıta ekle
+	legacyHeaders: false, // `X-RateLimit-*` başlıklarını devre dışı bırak
+});
+
 // Sayaç artırma endpoint'i
-app.post('/api/counter/increment', async (req, res) => {
+app.post('/api/counter/increment', incrementLimiter, async (req, res) => {
     try {
         const counter = await readCounter();
         counter.count++;

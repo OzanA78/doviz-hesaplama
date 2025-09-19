@@ -49,6 +49,10 @@ amountInput.addEventListener('input', (e) => {
     ];
 
     async function initializeApp() {
+        const originalBtnText = calculateBtn.textContent;
+        calculateBtn.textContent = 'Veriler Yükleniyor...';
+        calculateBtn.disabled = true;
+
         try {
             // Sunucudan sıralanmış veriyi al
             const response = await fetch('/api/data');
@@ -69,7 +73,8 @@ amountInput.addEventListener('input', (e) => {
 
             if (historicalData.length === 0) {
                 resultDiv.textContent = 'Hesaplama için veri bulunamadı.';
-                calculateBtn.disabled = true; // Veri yoksa butonu devre dışı bırak
+                calculateBtn.textContent = 'Veri Yok'; // Hata yerine bilgi
+                // Buton zaten disabled
                 return;
             }
 
@@ -78,16 +83,50 @@ amountInput.addEventListener('input', (e) => {
             yearSelect.addEventListener('change', () => {
                 const selectedYear = yearSelect.value;
                 updateMonthsForYear(selectedYear);
+                calculateBtn.disabled = !yearSelect.value || !monthSelect.value;
             });
+            monthSelect.addEventListener('change', () => {
+                calculateBtn.disabled = !yearSelect.value || !monthSelect.value;
+            });
+
             // Başlangıçta ay listesini boş ve pasif yap
             disableMonthSelect();
 
-            // Sayfa yüklendiğinde sayacı artır
-            incrementCounter();
+            // Sayfa yüklendiğinde sayacı başlat ve artır
+            initializeAndIncrementCounter();
+
+            calculateBtn.textContent = originalBtnText;
+            // Buton başlangıçta pasif kalmalı, seçim yapılınca aktif olacak
+            calculateBtn.disabled = true; 
 
         } catch (error) {
             console.error('Initialization Error:', error);
             resultDiv.textContent = 'Hata: ' + error.message;
+            calculateBtn.textContent = 'Hata Oluştu';
+            // Hata durumunda buton pasif kalır
+        }
+    }
+
+    async function initializeAndIncrementCounter() {
+        try {
+            // 1. Önce mevcut değeri al ve göster
+            const getRes = await fetch('/api/counter');
+            if (getRes.ok) {
+                const initialData = await getRes.json();
+                document.getElementById('counter').textContent = initialData.count;
+            }
+
+            // 2. Sonra artırmayı dene
+            const postRes = await fetch('/api/counter/increment', { method: 'POST' });
+            if (postRes.ok) {
+                const incrementedData = await postRes.json();
+                document.getElementById('counter').textContent = incrementedData.count;
+            }
+            // Not: postRes.ok değilse (rate limit gibi), bir şey yapma.
+            // Ekranda GET ile alınan son doğru değer kalır.
+
+        } catch (error) {
+            console.error('Sayaç başlatılırken veya artırılırken hata oluştu:', error);
         }
     }
 
